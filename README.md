@@ -1,7 +1,5 @@
-ep-cascades-infra
-=================
-
-ep-cascades-test-framework
+labs-truphone-cascades-test
+===========================
 
 overview
 ========
