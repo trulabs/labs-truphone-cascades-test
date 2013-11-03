@@ -224,5 +224,4 @@ the html documentation under ./doc
 
 limitations
 ===========
-* only tested on the simulator
 * i'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly
