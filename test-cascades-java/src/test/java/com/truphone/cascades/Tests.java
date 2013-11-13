@@ -107,8 +107,15 @@ public final class Tests {
 										 new InputStreamReader(client.getInputStream()));
 						 String line = reader.readLine();
 						 while (line != null) {
-							 System.out.println(line);
 							 if (line.equals("record")) {
+								 client.getOutputStream().write("OK\n".getBytes());
+							 } else if (line.equals("click theLoginButton")) {
+								 client.getOutputStream().write("OK\n".getBytes());
+							 } else if (line.equals("text myUsernameField my.user-name")) {
+								 client.getOutputStream().write("OK\n".getBytes());
+							 } else if (line.equals("toast You didn't enter a password")) {
+								 client.getOutputStream().write("OK\n".getBytes());
+							 } else if (line.equals("sleep 3000")) {
 								 client.getOutputStream().write("OK\n".getBytes());
 							 }
 							 line = reader.readLine();
