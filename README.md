@@ -134,14 +134,15 @@ the following:
 in your project file add the following:
 
 	...
-	simulator {
+	simulator { # or device
         	CONFIG(release, debug|release) {
                 	DESTDIR = o
 	        }
 	        CONFIG(debug, debug|release) {
 	                DESTDIR = o-g
-	                INCLUDEPATH += ${QNX_TARGET}/usr/include/test-cascades-lib
-        	        LIBS += -ltest-cascades-lib -L${QNX_TARGET}/x86/lib/test-cascades-lib/Simulator-Debug
+	                INCLUDEPATH += <path/to/lib>/test-cascades-lib
+	                # Simulator-Debug can be replaced with Device-Debug or Device-Release as needed
+        	        LIBS += -ltest-cascades-lib -L<path/to/lib>/test-cascades-lib/Simulator-Debug
 	        }
 	}
 	...
