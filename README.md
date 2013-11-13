@@ -67,20 +67,32 @@ there are two projects
 * test-cascades-cli - the cli application
 
 or you can just use make
+	1. make					# get some info up
+	2. make all-host			# build the cli
+	3. source <bbndk-path>/bbndk-env.sh	# pull in the blackberry tools
+	4. make all-target			# build it for the target
+	5. sudo -E make install-cli		# install cli into /usr/bin (linux only)
 
-	source <bbndk-path>/bbndk-env.sh
-	make
-	make install-lib		# install lib into bbndk
-	sudo -E make install-cli	# install cli into /usr/bin
+building on windows (mingw)
+===========================
+on windows you may need (depending if you have other make systems present) to
+tell the makefile which make binary to use, for example, i needed to do the following
 
-* by default it will build for the simulator rather than the device
+	1. mingw32-make MAKE=mingw32-make all-host	# build on windows
+	2. c:\bbndk\bbndk-env.bat 			# (for example)
+	3. make all-target				# build it for the target
+
+you should only need to do that for the host - once you've sourced bbdnk
+then you won't need to
+
+building cont.
+==============
 
 other options are
 	
 	make doc			# generate API documentation
 	make clean			# clean the build
 	sudo -E make uninstall-lib	# uninstall the library
-	sudo -E make uninstall-cli	# uninstall the cli
 
 if you want to edit & build the projects:
 

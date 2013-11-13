@@ -13,6 +13,7 @@ QT       += network
 TARGET = test-cascades-cli
 CONFIG   += console
 CONFIG   -= app_bundle
+DEFINES += BUFFER_ON_HOST
 
 INCLUDEPATH += include \
     ../test-cascades-lib/
