@@ -111,6 +111,7 @@ public final class Tests {
 							 if (line.equals("record")) {
 								 client.getOutputStream().write("OK\n".getBytes());
 							 }
+							 line = reader.readLine();
 						 }
 						 client = null;
 					 }
