@@ -67,6 +67,7 @@ there are two projects
 * test-cascades-cli - the cli application
 
 or you can just use make
+
 	1. make					# get some info up
 	2. make all-host			# build the cli
 	3. source <bbndk-path>/bbndk-env.sh	# pull in the blackberry tools
