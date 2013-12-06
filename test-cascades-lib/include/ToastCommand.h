@@ -65,15 +65,15 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~ToastCommand();
+        ~ToastCommand();
         /*
          * See super
          */
-        virtual bool executeCommand(QStringList * const arguments);
+        bool executeCommand(QStringList * const arguments);
         /*
          * See super
          */
-        virtual void showHelp(void);
+        void showHelp(void);
     protected:
         /*!
          * \brief findVisibleToast From top object, scan and find a toast that's visible

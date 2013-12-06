@@ -66,29 +66,29 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~SleepCommand();
+        ~SleepCommand();
         /*
          * See super
          */
-        virtual bool executeCommand(QStringList * const rguments);
+        bool executeCommand(QStringList * const rguments);
         /*
          * See super
          */
-        virtual void cleanUp(void)
+        void cleanUp(void)
         {
             /* do nothing */
         }
         /*
          * See super
          */
-        virtual void showHelp(void);
+        void showHelp(void);
     protected slots:
         /*!
          * \brief timedOut Slot for when the timer expires
          *
          * @since test-cascades 1.0.0
          */
-        virtual void timedOut();
+        void timedOut();
     private:
         /*!
          * \brief CMD_NAME The name of this command

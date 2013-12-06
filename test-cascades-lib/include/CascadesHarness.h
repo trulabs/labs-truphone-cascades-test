@@ -54,7 +54,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual ~CascadesHarness();
+            ~CascadesHarness();
             /*!
              * \brief startHarness Start the TCP server and listen for
              * test client connections
@@ -64,7 +64,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual bool startHarness(const quint16 port = (quint16)(15000u));
+            bool startHarness(const quint16 port = (quint16)(15000u));
         protected:
         private:
             /*!

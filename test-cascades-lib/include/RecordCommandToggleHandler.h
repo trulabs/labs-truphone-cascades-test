@@ -50,7 +50,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual ~RecordCommandToggleHandler()
+            ~RecordCommandToggleHandler()
             {
             }
         protected:
@@ -71,7 +71,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual void toggled(const bool newState)
+            void toggled(const bool newState)
             {
                 this->recorder->toggled(this->button, newState);
             }

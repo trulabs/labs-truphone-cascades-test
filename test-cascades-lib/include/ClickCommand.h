@@ -63,15 +63,15 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~ClickCommand();
+        ~ClickCommand();
         /*
          * See super
          */
-        virtual bool executeCommand(QStringList * const arguments);
+        bool executeCommand(QStringList * const arguments);
         /*
          * See super
          */
-        virtual void showHelp(void);
+        void showHelp(void);
     protected:
     private:
         /*!

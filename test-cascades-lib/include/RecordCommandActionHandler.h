@@ -51,7 +51,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~RecordCommandActionHandler()
+        ~RecordCommandActionHandler()
         {
             disconnect(action,
                        SIGNAL(triggered()));
@@ -63,7 +63,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void executed()
+        void executed()
         {
             this->recorder->actionExecuted(this->action);
         }
