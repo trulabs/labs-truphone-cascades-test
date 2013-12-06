@@ -73,6 +73,7 @@ namespace cascades
          */
         void showHelp(void);
     protected:
+        bool clickOnChildren(QObject * const parent);
     private:
         /*!
          * \brief CMD_NAME The name of this command

@@ -43,6 +43,7 @@ namespace cascades
             QObject * const obj = this->scenePane->findChild<QObject*>(arguments->first());
             if (obj)
             {
+                // if it's a standard button, try clicking as normal
                 const bool invoked = QMetaObject::invokeMethod(obj, "clicked");
                 if (invoked)
                 {
@@ -53,7 +54,13 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: Failed to invoke function\r\n");
+                    // may not be a normal thing, recursivly search for something
+                    // that we can click on
+                    ret = clickOnChildren(obj);
+                    if (not ret)
+                    {
+                        this->client->write("ERROR: Failed to invoke function\r\n");
+                    }
                 }
             }
             else
@@ -66,6 +73,28 @@ namespace cascades
             this->client->write("ERROR: Not enough arguments, click <object>\r\n");
         }
         return ret;
+    }
+
+    bool ClickCommand::clickOnChildren(QObject * const parent)
+    {
+        bool found = false;
+        foreach (QObject * object, parent->children())
+        {
+            found = QMetaObject::invokeMethod(object, "clicked");
+            if (!found)
+            {
+                found = clickOnChildren(object);
+                if (found)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        return found;
     }
 
     void ClickCommand::showHelp()
