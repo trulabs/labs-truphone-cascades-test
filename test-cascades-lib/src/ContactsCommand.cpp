@@ -11,9 +11,9 @@
 #include <bb/pim/contacts/ContactAttributeBuilder>
 #include <bb/pim/contacts/ContactSearchFilters>
 
-#include "include/Connection.h"
-#include "include/Buffer.h"
-#include "include/Utils.h"
+#include "Connection.h"
+#include "Buffer.h"
+#include "Utils.h"
 
 using bb::pim::contacts::ContactService;
 using bb::pim::contacts::Contact;

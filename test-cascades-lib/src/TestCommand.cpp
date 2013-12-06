@@ -1,15 +1,15 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/TestCommand.h"
+#include "TestCommand.h"
 
 #include <bb/cascades/Application>
 #include <bb/cascades/UIObject>
 #include <bb/cascades/AbstractActionItem>
 #include <bb/cascades/TouchEvent>
 
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using truphone::test::cascades::Utils;
 

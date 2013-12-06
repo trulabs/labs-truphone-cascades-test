@@ -12,7 +12,7 @@
 #include <QString>
 #include <QObject>
 
-#include "include/Connection.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 using bb::cascades::AbstractPane;

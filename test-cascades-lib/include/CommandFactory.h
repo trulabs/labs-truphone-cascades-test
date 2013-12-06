@@ -8,7 +8,7 @@
 #include <QTcpSocket>
 #include <QHash>
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {

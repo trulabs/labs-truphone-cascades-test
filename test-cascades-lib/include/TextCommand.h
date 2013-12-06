@@ -6,7 +6,7 @@
 
 #include <QObject>
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {

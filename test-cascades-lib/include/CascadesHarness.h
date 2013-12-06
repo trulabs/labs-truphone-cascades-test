@@ -7,8 +7,8 @@
 #include <QObject>
 #include <bb/cascades/Application>
 
-#include "include/Buffer.h"
-#include "include/CascadesTest.h"
+#include "Buffer.h"
+#include "CascadesTest.h"
 
 namespace truphone
 {

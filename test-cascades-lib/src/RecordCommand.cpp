@@ -21,14 +21,14 @@
 #include <bb/cascades/UIObject>
 #include <bb/cascades/VisualNode>
 
-#include "include/RecordCommandTouchHandler.h"
-#include "include/RecordCommandKeyHandler.h"
-#include "include/RecordCommandActionHandler.h"
-#include "include/RecordCommandToggleHandler.h"
-#include "include/RecordCommandDropDownHandler.h"
-#include "include/Buffer.h"
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "RecordCommandTouchHandler.h"
+#include "RecordCommandKeyHandler.h"
+#include "RecordCommandActionHandler.h"
+#include "RecordCommandToggleHandler.h"
+#include "RecordCommandDropDownHandler.h"
+#include "Buffer.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using bb::cascades::AbstractPane;
 using bb::cascades::AbstractActionItem;

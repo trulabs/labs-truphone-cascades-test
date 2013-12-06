@@ -11,8 +11,8 @@
 #include <bb/cascades/DropDown>
 #include <bb/cascades/Option>
 
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 using bb::cascades::AbstractPane;

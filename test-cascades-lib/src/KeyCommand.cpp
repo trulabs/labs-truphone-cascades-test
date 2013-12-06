@@ -7,9 +7,9 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/Control>
 
-#include "include/Buffer.h"
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Buffer.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using bb::cascades::AbstractTextControl;
 using bb::cascades::Application;

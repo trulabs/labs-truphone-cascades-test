@@ -1,7 +1,7 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/ToggleCommand.h"
+#include "ToggleCommand.h"
 
 #include <bb/cascades/Application>
 #include <QList>
@@ -10,8 +10,8 @@
 #include <bb/cascades/AbstractToggleButton>
 #include <bb/cascades/AbstractPane>
 
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 using bb::cascades::AbstractPane;

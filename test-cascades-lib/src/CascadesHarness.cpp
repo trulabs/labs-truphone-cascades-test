@@ -8,11 +8,11 @@
 #include <bb/cascades/ActionItem>
 #include <QTcpSocket>
 
-#include "include/CascadesHarness.h"
-#include "include/Connection.h"
-#include "include/CommandFactory.h"
-#include "include/Utils.h"
-#include "include/Server.h"
+#include "CascadesHarness.h"
+#include "Connection.h"
+#include "CommandFactory.h"
+#include "Utils.h"
+#include "Server.h"
 
 namespace truphone
 {

@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QList>
 
-#include "include/Buffer.h"
+#include "Buffer.h"
 
 namespace truphone
 {

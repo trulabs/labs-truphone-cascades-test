@@ -18,7 +18,7 @@
 #include <bb/system/SystemToast>
 #include <bb/system/SystemUiResult>
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {

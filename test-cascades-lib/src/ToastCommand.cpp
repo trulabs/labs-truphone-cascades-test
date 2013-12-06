@@ -1,14 +1,14 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/ToastCommand.h"
+#include "ToastCommand.h"
 
 #include <bb/cascades/Application>
 #include <QList>
 #include <QString>
 #include <QObject>
 
-#include "include/Connection.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 using bb::system::SystemToast;

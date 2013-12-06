@@ -122,7 +122,7 @@ integration
 
 at the top you need to add the following:
 
-        #include <include/CascadesHarness.h>
+        #include <CascadesHarness.h>
         using truphone::test::cascades::CascadesHarness;
 
 somewhere in your main.cpp you need to add (before the blocking app.exec())

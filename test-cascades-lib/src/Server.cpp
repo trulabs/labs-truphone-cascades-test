@@ -1,8 +1,8 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/Server.h"
-#include "include/Connection.h"
+#include "Server.h"
+#include "Connection.h"
 
 namespace truphone
 {

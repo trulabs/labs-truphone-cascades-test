@@ -8,7 +8,7 @@
 #include <bb/cascades/Tab>
 #include <bb/cascades/TabbedPane>
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {
