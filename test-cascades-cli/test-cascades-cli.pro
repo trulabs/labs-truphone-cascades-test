@@ -16,7 +16,7 @@ CONFIG   -= app_bundle
 DEFINES += BUFFER_ON_HOST
 
 INCLUDEPATH += include \
-    ../test-cascades-lib/
+    ../test-cascades-lib/include
 
 TEMPLATE = app
 
