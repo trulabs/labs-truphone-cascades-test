@@ -65,7 +65,7 @@ namespace cascades
              *
              *@since test-cascades 1.0.0
              */
-            virtual ~RecordCommandHandler() {}
+            ~RecordCommandHandler() {}
         };
 
         /*!
@@ -121,7 +121,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            explicit StopRecordingCommand(QObject * parent = 0)
+            StopRecordingCommand(QObject * parent = 0)
                 : Command(parent)
             {
             }
@@ -130,15 +130,15 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual ~StopRecordingCommand()
+            ~StopRecordingCommand()
             {
             }
-            virtual bool executeCommand(QStringList * const arguments)
+            bool executeCommand(QStringList * const arguments)
             {
                 Q_UNUSED(arguments);
                 return true;
             }
-            virtual void showHelp(void)
+            void showHelp(void)
             {
             }
         protected:
@@ -181,11 +181,11 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~RecordCommand();
+        ~RecordCommand();
         /*
          * See super
          */
-        virtual bool executeCommand(QStringList * const arguments);
+        bool executeCommand(QStringList * const arguments);
         /*!
          * \brief eventFilter Used to work out when new objects are added
          * or removed from the scene. We use this to install our listeners.
@@ -198,7 +198,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual bool eventFilter(QObject * const receiver, QEvent * const event);
+        bool eventFilter(QObject * const receiver, QEvent * const event);
         /*!
          * \brief touched Call-back called from a listener. Used to write out
          * the event details back to the client
@@ -208,8 +208,8 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void touched(const QObject * const receiver,
-                             const bb::cascades::TouchEvent * const event);
+        void touched(const QObject * const receiver,
+                     const bb::cascades::TouchEvent * const event);
         /*!
          * \brief keyed Call-back called from a listener. Used to write out
          * the event details back to the client
@@ -219,8 +219,8 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void keyed(const QObject * const receiver,
-                           const bb::cascades::KeyEvent * const event);
+        void keyed(const QObject * const receiver,
+                   const bb::cascades::KeyEvent * const event);
         /*!
          * \brief toggled Call-back called from a listener. Used to write out
          * the event details back to the client
@@ -230,8 +230,8 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void toggled(const bb::cascades::AbstractToggleButton * const button,
-                             const bool newState);
+         void toggled(const bb::cascades::AbstractToggleButton * const button,
+                      const bool newState);
         /*!
          * \brief dropDownChanged Call-back called from a listener. Used to write out
          * the event details back to the client
@@ -241,7 +241,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void dropDownChanged(
+         void dropDownChanged(
                 const bb::cascades::DropDown * const dropDown,
                 const bb::cascades::Option* const option);
         /*!
@@ -252,20 +252,20 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void actionExecuted(bb::cascades::AbstractActionItem * action);
+        void actionExecuted(bb::cascades::AbstractActionItem * action);
         /*!
          * \brief cleanUp Special case - never clean up the record command.
          *
          * @since test-cascades 1.0.0
          */
-        virtual void cleanUp(void)
+        void cleanUp(void)
         {
             /* do nothing */
         }
         /*
          * See super
          */
-        virtual void showHelp(void);
+        void showHelp(void);
     private slots:
         /*!
          * \brief tabChanged Slot for when tabs change
@@ -274,7 +274,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void tabChanged(bb::cascades::Tab* tab);
+        void tabChanged(bb::cascades::Tab* tab);
         /*!
          * \brief onPopFinished Slot for when a Page is popped from a NavigationPane
          *
@@ -282,7 +282,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void onPopFinished(bb::cascades::Page* page);
+        void onPopFinished(bb::cascades::Page* page);
         /*!
          * \brief toastStarted Slot for when a new toast is opened
          *
@@ -290,7 +290,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void toastStarted(const QString& text);
+        void toastStarted(const QString& text);
         /*!
          * \brief toastEnded Slot for when a toast is removed/finished
          *
@@ -298,7 +298,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void toastEnded(bb::system::SystemUiResult::Type result);
+        void toastEnded(bb::system::SystemUiResult::Type result);
     private:
         /*!
          * \brief CMD_NAME The name of this command

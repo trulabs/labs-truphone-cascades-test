@@ -49,7 +49,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual ~RecordCommandTouchHandler()
+            ~RecordCommandTouchHandler()
             {
             }
         protected:
@@ -70,7 +70,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual void touched(bb::cascades::TouchEvent *event)
+            void touched(bb::cascades::TouchEvent *event)
             {
                 this->recorder->touched(this->receiver, event);
             }

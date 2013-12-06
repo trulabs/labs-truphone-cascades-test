@@ -65,15 +65,15 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~PopCommand();
+        ~PopCommand();
         /*
          * See super
          */
-        virtual bool executeCommand(QStringList * const arguments);
+        bool executeCommand(QStringList * const arguments);
         /*
          * See super
          */
-        virtual void showHelp(void);
+        void showHelp(void);
     protected:
         /*!
          * \brief popFromAbstractPane Given a current pane, find a navigation pane
@@ -87,7 +87,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual bool popFromAbstractPane(
+        bool popFromAbstractPane(
                 bb::cascades::AbstractPane * const pane,
                 const size_t callLevel = 0,
                 const size_t maxCallLevel = 100);

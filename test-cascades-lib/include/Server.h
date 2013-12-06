@@ -42,7 +42,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual ~Server();
+            ~Server();
             /*!
              * \brief startServer Start the TCP server and listen for
              * test client connections
@@ -73,7 +73,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual void acceptConnection(void);
+            void acceptConnection(void);
             /*!
              * \brief connectionDied Slot used when a connection has been terminated
              *

@@ -67,15 +67,15 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~SpyCommand();
+        ~SpyCommand();
         /*
          * See super
          */
-        virtual bool executeCommand(QStringList * const rguments);
+        bool executeCommand(QStringList * const rguments);
         /*
          * See super
          */
-        virtual void cleanUp(void)
+        void cleanUp(void)
         {
             /* do nothing */
         }

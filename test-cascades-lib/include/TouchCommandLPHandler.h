@@ -52,7 +52,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~TouchCommandLPHandler()
+        ~TouchCommandLPHandler()
         {
             this->cancel();
         }
@@ -61,7 +61,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void cancel()
+        void cancel()
         {
             timer.stop();
         }
@@ -72,7 +72,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual bool hasExpired() const
+        bool hasExpired() const
         {
             return this->expired;
         }
@@ -82,7 +82,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual void onTimeout()
+        void onTimeout()
         {
             this->expired = true;
             bool fired = QMetaObject::invokeMethod(

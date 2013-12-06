@@ -74,7 +74,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            virtual ~RecordCommandKeyHandler()
+            ~RecordCommandKeyHandler()
             {
                 // the ownership of the keyhandler is with the
                 // receiver and remains with the owner and it's
