@@ -8,7 +8,7 @@
 #include <QTcpSocket>
 #include <bb/cascades/Application>
 
-#include "include/Buffer.h"
+#include "Buffer.h"
 
 namespace truphone
 {

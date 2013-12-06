@@ -6,8 +6,8 @@
 #include <QString>
 #include <QList>
 
-#include "include/CommandFactory.h"
-#include "include/Connection.h"
+#include "CommandFactory.h"
+#include "Connection.h"
 
 using truphone::test::cascades::CommandFactory;
 

@@ -1,7 +1,7 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/TapCommand.h"
+#include "TapCommand.h"
 
 #include <bb/cascades/Application>
 #include <bb/cascades/UIObject>
@@ -10,8 +10,8 @@
 #include <bb/cascades/VisualNode>
 #include <QCoreApplication>
 
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using truphone::test::cascades::Utils;
 using bb::cascades::Application;

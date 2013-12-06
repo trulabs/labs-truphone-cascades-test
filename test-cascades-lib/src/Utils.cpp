@@ -1,12 +1,12 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/Utils.h"
+#include "Utils.h"
 
 #include <string.h>
 #include <bb/cascades/Application>
 
-#include "include/Buffer.h"
+#include "Buffer.h"
 
 using bb::cascades::Application;
 

@@ -7,7 +7,7 @@
 #include <QObject>
 #include <bb/system/SystemToast>
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {

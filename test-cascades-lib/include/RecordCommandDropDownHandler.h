@@ -8,7 +8,7 @@
 #include <bb/cascades/DropDown>
 #include <bb/cascades/Option>
 
-#include "include/RecordCommand.h"
+#include "RecordCommand.h"
 
 namespace truphone
 {

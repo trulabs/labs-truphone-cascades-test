@@ -8,7 +8,7 @@
 #include <bb/cascades/AbstractActionItem>
 #include <QCoreApplication>
 
-#include "include/Connection.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 

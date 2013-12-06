@@ -6,7 +6,7 @@
 
 #include <bb/cascades/AbstractActionItem>
 
-#include "include/RecordCommand.h"
+#include "RecordCommand.h"
 
 namespace truphone
 {

@@ -8,8 +8,8 @@
 #include <bb/cascades/AbstractActionItem>
 #include <QCoreApplication>
 
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using truphone::test::cascades::Utils;
 using bb::cascades::Application;

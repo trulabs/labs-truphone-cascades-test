@@ -7,7 +7,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/AbstractPane>
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {

@@ -1,7 +1,7 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/Buffer.h"
+#include "Buffer.h"
 
 #include <QTimer>
 #include <QQueue>

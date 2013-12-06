@@ -1,13 +1,13 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/SleepCommand.h"
+#include "SleepCommand.h"
 
 #include <QString>
 #include <QList>
 #include <QObject>
 
-#include "include/Connection.h"
+#include "Connection.h"
 
 namespace truphone
 {

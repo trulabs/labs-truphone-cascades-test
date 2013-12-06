@@ -1,7 +1,7 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/SpyCommand.h"
+#include "SpyCommand.h"
 
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/Application>
@@ -10,8 +10,8 @@
 #include <QObject>
 #include <QSignalSpy>
 
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using truphone::test::cascades::Utils;
 using bb::cascades::AbstractPane;

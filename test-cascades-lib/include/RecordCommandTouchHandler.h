@@ -7,7 +7,7 @@
 #include <QObject>
 #include <bb/cascades/TouchEvent>
 
-#include "include/RecordCommand.h"
+#include "RecordCommand.h"
 
 namespace truphone
 {

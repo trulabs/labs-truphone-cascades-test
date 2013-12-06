@@ -1,9 +1,8 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/Connection.h"
-
-#include "include/Buffer.h"
+#include "Connection.h"
+#include "Buffer.h"
 
 using truphone::test::cascades::Buffer;
 

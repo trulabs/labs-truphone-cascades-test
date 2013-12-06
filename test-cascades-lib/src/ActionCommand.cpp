@@ -7,8 +7,8 @@
 #include <bb/cascades/Menu>
 #include <bb/cascades/TabbedPane>
 
-#include "include/ActionCommand.h"
-#include "include/Connection.h"
+#include "ActionCommand.h"
+#include "Connection.h"
 
 using bb::cascades::AbstractPane;
 using bb::cascades::AbstractActionItem;

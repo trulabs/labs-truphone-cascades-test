@@ -7,7 +7,7 @@
 #include <QObject>
 #include <QTcpServer>
 
-#include "include/Buffer.h"
+#include "Buffer.h"
 
 namespace truphone
 {

@@ -8,7 +8,7 @@
 #include <QSemaphore>
 #include <QTimer>
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {

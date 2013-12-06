@@ -1,7 +1,7 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/TouchCommand.h"
+#include "TouchCommand.h"
 
 #include <bb/cascades/AbstractTextControl>
 #include <bb/cascades/Application>
@@ -10,10 +10,10 @@
 #include <bb/cascades/TouchType>
 #include <bb/cascades/VisualNode>
 
-#include "include/Buffer.h"
-#include "include/Utils.h"
-#include "include/TouchCommandLPHandler.h"
-#include "include/Connection.h"
+#include "Buffer.h"
+#include "Utils.h"
+#include "TouchCommandLPHandler.h"
+#include "Connection.h"
 
 using bb::cascades::AbstractTextControl;
 using bb::cascades::Application;

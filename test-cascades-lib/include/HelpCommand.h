@@ -4,7 +4,7 @@
 #ifndef HELPCOMMAND_H_
 #define HELPCOMMAND_H_
 
-#include "include/Command.h"
+#include "Command.h"
 
 namespace truphone
 {

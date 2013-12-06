@@ -1,7 +1,7 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/TextCommand.h"
+#include "TextCommand.h"
 
 #include <bb/cascades/Application>
 #include <bb/cascades/AbstractPane>
@@ -10,7 +10,7 @@
 #include <QString>
 #include <QObject>
 
-#include "include/Connection.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 using bb::cascades::TextField;

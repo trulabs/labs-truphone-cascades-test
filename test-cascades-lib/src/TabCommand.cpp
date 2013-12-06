@@ -1,7 +1,7 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/TabCommand.h"
+#include "TabCommand.h"
 
 #include <QString>
 #include <QList>
@@ -9,7 +9,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/AbstractPane>
 
-#include "include/Connection.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 using bb::cascades::AbstractPane;

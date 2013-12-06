@@ -9,8 +9,8 @@
 #include <QStringList>
 #include <string.h>
 
-#include "include/Utils.h"
-#include "include/Connection.h"
+#include "Utils.h"
+#include "Connection.h"
 
 using bb::cascades::Application;
 using bb::cascades::QmlDocument;
