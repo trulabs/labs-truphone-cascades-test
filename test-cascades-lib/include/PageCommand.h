@@ -1,11 +1,12 @@
 /**
  * Copyright 2013 Truphone
  */
-#ifndef POPCOMMAND_H_
-#define POPCOMMAND_H_
+#ifndef PAGECOMMAND_H_
+#define PAGECOMMAND_H_
 
 #include <QObject>
 #include <bb/cascades/AbstractPane>
+#include <bb/cascades/Page>
 
 #include "Command.h"
 
@@ -16,12 +17,11 @@ namespace test
 namespace cascades
 {
     /*!
-     * \brief The PopCommand class is used to pop classes from a
-     * navigation pane
+     * \brief The PageCommand class is used to query the current page
      *
-     * @since test-cascades 1.0.0
+     * @since test-cascades 1.0.5
      */
-    class PopCommand : public Command
+    class PageCommand : public Command
     {
     Q_OBJECT
     public:
@@ -30,7 +30,7 @@ namespace cascades
          *
          * \return Command name
          *
-         * @since test-cascades 1.0.0
+         * @since test-cascades 1.0.5
          */
         static QString getCmd()
         {
@@ -43,29 +43,29 @@ namespace cascades
          * \param parent The parent object
          * \return Returns a new instance of the Command
          *
-         * @since test-cascades 1.0.0
+         * @since test-cascades 1.0.5
          */
         static Command* create(class Connection * const s,
                                QObject * parent = 0)
         {
-            return new PopCommand(s, parent);
+            return new PageCommand(s, parent);
         }
         /*!
-         * \brief PopCommand Constructor
+         * \brief PageCommand Constructor
          *
          * \param socket The TCP socket associated with the client
          * \param parent The parent object
          *
          * @since test-cascades 1.0.0
          */
-        PopCommand(class Connection * const socket,
-                      QObject* parent = 0);
+        PageCommand(class Connection * const socket,
+                    QObject* parent = 0);
         /*!
-         * \brief ~PopCommand Destructor
+         * \brief ~PageCommand Destructor
          *
          * @since test-cascades 1.0.0
          */
-        ~PopCommand();
+        ~PageCommand();
         /*
          * See super
          */
@@ -76,18 +76,16 @@ namespace cascades
         void showHelp(void);
     protected:
         /*!
-         * \brief popFromAbstractPane Given a current pane, find a navigation pane
-         * that's active/being used/on-top and pop the a page off the stack
+         * \brief findCurrentPage Find the current page on top
          *
          * \param pane The root pane to search
          * \param callLevel The current recursive call level
          * \param maxCallLevel The maximum recursive call level
-         * \return @c true if a Navigation Pane is found and there's more than
-         * one page and if so that on the stack and that a single page is popped
+         * \return The top page or @c NULL if there isn't one
          *
          * @since test-cascades 1.0.0
          */
-        bool popFromAbstractPane(
+        bb::cascades::Page * findCurrentPage(
                 bb::cascades::AbstractPane * const pane,
                 const size_t callLevel = 0,
                 const size_t maxCallLevel = 100);
@@ -106,4 +104,4 @@ namespace cascades
 }  // namespace truphone
 
 
-#endif  // POPCOMMAND_H_
+#endif  // PAGECOMMAND_H_

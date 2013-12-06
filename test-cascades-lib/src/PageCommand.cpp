@@ -1,13 +1,14 @@
 /**
  * Copyright 2013 Truphone
  */
-#include "include/PopCommand.h"
+#include "include/PageCommand.h"
 
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/Application>
 #include <bb/cascades/NavigationPane>
 #include <bb/cascades/PaneProperties>
 #include <bb/cascades/TabbedPane>
+#include <bb/cascades/TitleBar>
 #include <QList>
 #include <QString>
 #include <QObject>
@@ -20,6 +21,7 @@ using bb::cascades::Page;
 using bb::cascades::NavigationPane;
 using bb::cascades::PaneProperties;
 using bb::cascades::TabbedPane;
+using bb::cascades::TitleBar;
 
 namespace truphone
 {
@@ -27,39 +29,59 @@ namespace test
 {
 namespace cascades
 {
-    const QString truphone::test::cascades::PopCommand::CMD_NAME = "pop";
+    const QString truphone::test::cascades::PageCommand::CMD_NAME = "page";
 
-    truphone::test::cascades::PopCommand::PopCommand(Connection * const socket,
+    truphone::test::cascades::PageCommand::PageCommand(Connection * const socket,
                                                      QObject* parent)
         : Command(parent),
           client(socket)
     {
     }
 
-    truphone::test::cascades::PopCommand::~PopCommand()
+    truphone::test::cascades::PageCommand::~PageCommand()
     {
     }
 
-    bool PopCommand::executeCommand(QStringList * const arguments)
+    bool PageCommand::executeCommand(QStringList * const arguments)
     {
         bool ret = false;
-        if (arguments->empty())
+        if (arguments->size() == 1)
         {
-            ret = popFromAbstractPane(Application::instance()->scene());
+            Page * const page = findCurrentPage(Application::instance()->scene());
+            if (page)
+            {
+                const QString expectedPage = arguments->first();
+                if (page->objectName() == expectedPage)
+                {
+                    ret = true;
+                }
+                else
+                {
+                    this->client->write("ERROR: Page is named {");
+                    this->client->write(page->objectName().toUtf8().constData());
+                    this->client->write("} which wasn't expected {");
+                    this->client->write(expectedPage.toUtf8().constData());
+                    this->client->write("}\r\n");
+                }
+            }
+            else
+            {
+                this->client->write("ERROR: Couldn't find a page\r\n");
+            }
         }
         else
         {
-            this->client->write("ERROR: No parameters for pop\r\n");
+            this->client->write("ERROR: No parameters for page\r\n");
         }
         return ret;
     }
 
-    bool PopCommand::popFromAbstractPane(
+    Page * PageCommand::findCurrentPage(
             AbstractPane * const pane,
             const size_t callLevel,
             const size_t maxCallLevel)
     {
-        bool ret = false;
+        Page * page = NULL;
 
         if (callLevel < maxCallLevel)
         {
@@ -69,15 +91,9 @@ namespace cascades
             NavigationPane * const navPane = qobject_cast<NavigationPane*>(pane);
             if (navPane)
             {
-                const int stackSize = navPane->count();
-                if (stackSize > 1)
+                if (navPane->count() > 0)
                 {
-                    navPane->pop();
-                    ret = true;
-                }
-                else
-                {
-                    this->client->write("ERROR: You can't pop now, there's only 1 thing left\r\n");
+                    page = navPane->top();
                 }
             }
             else
@@ -87,9 +103,9 @@ namespace cascades
                 {
                     // we don't know what the tabbed pane is looked at so we need
                     // to recurse down and find out
-                    ret = popFromAbstractPane(tabbedPane->activePane(),
-                                              callLevel + 1,
-                                              maxCallLevel);
+                    page = findCurrentPage(tabbedPane->activePane(),
+                                           callLevel + 1,
+                                           maxCallLevel);
                 }
                 else
                 {
@@ -103,13 +119,13 @@ namespace cascades
             this->client->write("ERROR: The depth of Panes is too deep!\r\n");
         }
 
-        return ret;
+        return page;
     }
 
-    void PopCommand::showHelp()
+    void PageCommand::showHelp()
     {
-        this->client->write("> pop\r\n");
-        this->client->write("Pop a page from the Navigation stack\r\n");
+        this->client->write("> page <name>\r\n");
+        this->client->write("Ok if the current page objectName is right\r\n");
     }
 }  // namespace cascades
 }  // namespace test

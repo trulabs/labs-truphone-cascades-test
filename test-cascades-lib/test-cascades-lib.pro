@@ -42,7 +42,8 @@ SOURCES += \
     src/TouchCommand.cpp \
     src/SpyCommand.cpp \
     src/Server.cpp \
-    src/ContactsCommand.cpp
+    src/ContactsCommand.cpp \
+    src/PageCommand.cpp
 
 HEADERS +=\
     include/CascadesTest.h \
@@ -77,7 +78,8 @@ HEADERS +=\
     include/TouchCommandLPHandler.h \
     include/SpyCommand.h \
     include/Server.h \
-    include/ContactsCommand.h
+    include/ContactsCommand.h \
+    include/PageCommand.h
 
 unix:!symbian {
     maemo5 {
