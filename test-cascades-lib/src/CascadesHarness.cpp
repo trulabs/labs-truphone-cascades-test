@@ -72,24 +72,27 @@ namespace cascades
         if (not tokens.empty())
         {
             const QString command = tokens.first();
-            tokens.removeFirst();
-            Command * const cmd = CommandFactory::getCommand(connection,
-                                                             command,
-                                                             this);
-            if (cmd)
+            if (not command.startsWith("#", Qt::CaseInsensitive))
             {
-                const bool cmdOk = cmd->executeCommand(&tokens);
-                if (cmdOk)
+                tokens.removeFirst();
+                Command * const cmd = CommandFactory::getCommand(connection,
+                                                                 command,
+                                                                 this);
+                if (cmd)
                 {
-                    connection->write("OK\r\n");
+                    const bool cmdOk = cmd->executeCommand(&tokens);
+                    if (cmdOk)
+                    {
+                        connection->write("OK\r\n");
+                    }
+                    // may not actually clean/delete anything right
+                    // now if the command is async
+                    cmd->cleanUp();
                 }
-                // may not actually clean/delete anything right
-                // now if the command is async
-                cmd->cleanUp();
-            }
-            else
-            {
-                connection->write("ERROR: I don't understand that command\r\n");
+                else
+                {
+                    connection->write("ERROR: I don't understand that command\r\n");
+                }
             }
         }
     }
