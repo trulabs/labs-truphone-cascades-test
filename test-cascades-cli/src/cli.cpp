@@ -250,12 +250,13 @@ const char * HarnessCli::EVENT_NAMES[] =
         {
             if (bytesRead > 0)
             {
-                if (outputBuffer.cdata()[0] == '#')
+                const char * const raw = outputBuffer.cdata();
+                if (raw[0] == '#')
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
                 }
-                else if (strcmp(outputBuffer.cdata(), "\r\n")==0)
+                else if (strcmp(raw, "\r\n")==0 || strcmp(raw, "\n")==0)
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
