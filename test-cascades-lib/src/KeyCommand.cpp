@@ -62,7 +62,7 @@ namespace cascades
 
         if (processed not_eq 6)  // 6 items are expected
         {
-            this->client->write("ERROR: play key could not decode the numeric key value\r\n");
+            this->client->write("ERROR: wrong number of arguments to key command\r\n");
         }
         else
         {
@@ -127,7 +127,7 @@ namespace cascades
 
     void KeyCommand::showHelp()
     {
-        this->client->write("> key <code> <pressed> <alt> <shift> <ctrl>\r\n");
+        this->client->write("> key <code> <pressed> <alt> <shift> <ctrl> <target>\r\n");
         this->client->write("Simulate a key press\r\n");
     }
 }  // namespace cascades
