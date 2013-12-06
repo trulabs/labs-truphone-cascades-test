@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QTimer>
 #include <QSemaphore>
-#include "include/Buffer.h"
+#include "Buffer.h"
 
 namespace truphone
 {
