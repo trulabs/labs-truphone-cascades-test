@@ -244,21 +244,38 @@ const char * HarnessCli::EVENT_NAMES[] =
         const Buffer outputBuffer;
         this->stateMachine.setState(WAITING_FOR_REPLY);
 
-        const qint64 bytesRead = this->inputFile->readLine(outputBuffer.data(),
-                                                           outputBuffer.length());
-        if (bytesRead > 0)
+        qint64 bytesRead = this->inputFile->readLine(outputBuffer.data(),
+                                                     outputBuffer.length());
+        while(bytesRead > 0)
         {
-            this->stream->write(outputBuffer.cdata(), bytesRead);
-            this->outputFile->write("\t<command>\r\n");
-            this->outputFile->write("\t\t<request sent=\"");
-            stripNl(outputBuffer.data(), outputBuffer.length());
-            qDebug() << "<<" << outputBuffer.cdata();
-            this->outputFile->write(outputBuffer.cdata());
-            this->outputFile->write("\"/>\r\n");
-        }
-        else
-        {
-            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+            if (bytesRead > 0)
+            {
+                if (outputBuffer.cdata()[0] == '#')
+                {
+                    bytesRead = this->inputFile->readLine(outputBuffer.data(),
+                                                          outputBuffer.length());
+                }
+                else if (strcmp(outputBuffer.cdata(), "\r\n")==0)
+                {
+                    bytesRead = this->inputFile->readLine(outputBuffer.data(),
+                                                          outputBuffer.length());
+                }
+                else
+                {
+                    this->stream->write(outputBuffer.cdata(), bytesRead);
+                    this->outputFile->write("\t<command>\r\n");
+                    this->outputFile->write("\t\t<request sent=\"");
+                    stripNl(outputBuffer.data(), outputBuffer.length());
+                    qDebug() << "<<" << outputBuffer.cdata();
+                    this->outputFile->write(outputBuffer.cdata());
+                    this->outputFile->write("\"/>\r\n");
+                    break;
+                }
+            }
+            else
+            {
+                this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+            }
         }
     }
 
