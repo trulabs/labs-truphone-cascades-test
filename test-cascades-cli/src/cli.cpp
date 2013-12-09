@@ -250,7 +250,9 @@ const char * HarnessCli::EVENT_NAMES[] =
         qint64 bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                      outputBuffer.length());
 
+#if defined(QT_DEBUG)
         qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
+#endif
         if (bytesRead <= 0)
         {
             this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -265,8 +267,9 @@ const char * HarnessCli::EVENT_NAMES[] =
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
-
+#if defined(QT_DEBUG)
                     qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
+#endif
                     if (bytesRead <= 0)
                     {
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -276,7 +279,9 @@ const char * HarnessCli::EVENT_NAMES[] =
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
+#if defined(QT_DEBUG)
                     qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
+#endif
                     if (bytesRead <= 0)
                     {
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -284,7 +289,9 @@ const char * HarnessCli::EVENT_NAMES[] =
                 }
                 else
                 {
+#if defined(QT_DEBUG)
                     qDebug() << "transmitNextCommand writing" << bytesRead << "bytes";
+#endif
                     this->stream->write(outputBuffer.cdata(), bytesRead);
                     this->outputFile->write("\t<command>\r\n");
                     this->outputFile->write("\t\t<request sent=\"");
