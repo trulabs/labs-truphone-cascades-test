@@ -172,6 +172,9 @@ const char * HarnessCli::EVENT_NAMES[] =
             case RECEIVED_RECORD_COMMAND:
                 this->waitForCommandToRecord();
                 break;
+            case ERROR:
+                this->shutdown(1);
+                break;
             case DISCONNECT:
                 this->shutdown();
                 break;
@@ -198,7 +201,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                  << EVENT_NAMES[event];
     }
 
-    void HarnessCli::shutdown()
+    void HarnessCli::shutdown(const int exitCode)
     {
         this->stateMachine.setState(DISCONNECTED);
         if (this->inputFile)
@@ -225,7 +228,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                 this->stream->close();
             }
         }
-        QCoreApplication::exit(0);
+        QCoreApplication::exit(exitCode);
     }
 
     void HarnessCli::startRecording()
@@ -246,6 +249,13 @@ const char * HarnessCli::EVENT_NAMES[] =
 
         qint64 bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                      outputBuffer.length());
+
+        qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
+        if (bytesRead <= 0)
+        {
+            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+        }
+
         while(bytesRead > 0)
         {
             if (bytesRead > 0)
@@ -255,6 +265,8 @@ const char * HarnessCli::EVENT_NAMES[] =
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
+
+                    qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
                     if (bytesRead <= 0)
                     {
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -264,6 +276,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
+                    qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
                     if (bytesRead <= 0)
                     {
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -271,6 +284,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                 }
                 else
                 {
+                    qDebug() << "transmitNextCommand writing" << bytesRead << "bytes";
                     this->stream->write(outputBuffer.cdata(), bytesRead);
                     this->outputFile->write("\t<command>\r\n");
                     this->outputFile->write("\t\t<request sent=\"");
@@ -340,7 +354,9 @@ const char * HarnessCli::EVENT_NAMES[] =
                     break;
 
                 case WAITING_FOR_REPLY:
-                    if (strncmp(inputBuffer.cdata(), "OK", 2) == 0)
+                {
+                    const bool ok = strncmp(inputBuffer.cdata(), "OK", 2) == 0;
+                    if (ok)
                     {
                         // thats fine
                         this->outputFile->write("\t\t<pass recv=\"");
@@ -355,9 +371,16 @@ const char * HarnessCli::EVENT_NAMES[] =
                     }
                     this->outputFile->write("\t</command>\r\n");
 
-                    this->postEventToStateMachine(RECEIVED_COMMAND_REPLY);
+                    if (ok)
+                    {
+                        this->postEventToStateMachine(RECEIVED_COMMAND_REPLY);
+                    }
+                    else
+                    {
+                        this->postEventToStateMachine(ERROR);
+                    }
                     break;
-
+                }
                 case WAITING_FOR_RECORDED_COMMAND:
                     this->inputFile->write(inputBuffer.cdata());
                     this->inputFile->flush();

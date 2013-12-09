@@ -118,7 +118,11 @@ namespace cli
                 /*!
                  * Disconnected
                  */
-                DISCONNECT
+                DISCONNECT,
+                /*!
+                 * There was an error in the script
+                 */
+                ERROR
             } event_t;
 
             /*!
@@ -219,7 +223,7 @@ namespace cli
              *
              * @since test-cascades 1.0.0
              */
-            virtual void shutdown();
+            virtual void shutdown(const int exitCode = 0);
             /*!
              * \brief postEventToStateMachine Post an event to the
              * classes state machine
