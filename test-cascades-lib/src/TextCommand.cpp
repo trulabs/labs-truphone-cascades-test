@@ -6,6 +6,7 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/AbstractPane>
 #include <bb/cascades/TextField>
+#include <bb/cascades/TextArea>
 #include <QList>
 #include <QString>
 #include <QObject>
@@ -14,6 +15,7 @@
 
 using bb::cascades::Application;
 using bb::cascades::TextField;
+using bb::cascades::TextArea;
 
 namespace truphone
 {
@@ -53,7 +55,18 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: Object isn't a TextField\r\n");
+                    TextArea * const area = qobject_cast<TextArea*>(obj);
+                    if (area)
+                    {
+                        arguments->removeFirst();
+                        const QString tmp = arguments->join(" ");
+                        area->setText(tmp);
+                        ret = true;
+                    }
+                    else
+                    {
+                        this->client->write("ERROR: Object isn't a TextField or TextArea\r\n");
+                    }
                 }
             }
             else
