@@ -29,7 +29,8 @@ const char * HarnessCli::EVENT_NAMES[] =
     "Received Command Reply",
     "Received Record Command",
     "No more commands to play",
-    "Disconnected"
+    "Disconnected",
+    "Error"
 };
 
     HarnessCli::HarnessCli(QString host,
@@ -123,6 +124,9 @@ const char * HarnessCli::EVENT_NAMES[] =
                     this->transmitNextCommand();
                 }
                 break;
+            case ERROR:
+                this->shutdown(1);
+                break;
             case DISCONNECT:
                 this->shutdown();
                 break;
@@ -141,6 +145,9 @@ const char * HarnessCli::EVENT_NAMES[] =
             case NO_MORE_COMMANDS_TO_PLAY:
                 this->shutdown();
                 break;
+            case ERROR:
+                this->shutdown(1);
+                break;
             case DISCONNECT:
                 this->outputFile->write("\t\t<fail terminated=\"true\"/>\r\n");
                 this->shutdown();
@@ -156,7 +163,7 @@ const char * HarnessCli::EVENT_NAMES[] =
             {
             case RECEIVED_COMMAND_REPLY:
                 this->waitForCommandToRecord();
-                break;
+                break;                
             case DISCONNECT:
                 this->shutdown();
                 break;
@@ -171,9 +178,6 @@ const char * HarnessCli::EVENT_NAMES[] =
             {
             case RECEIVED_RECORD_COMMAND:
                 this->waitForCommandToRecord();
-                break;
-            case ERROR:
-                this->shutdown(1);
                 break;
             case DISCONNECT:
                 this->shutdown();
