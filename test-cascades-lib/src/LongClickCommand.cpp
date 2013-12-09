@@ -50,7 +50,13 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: Failed to invoke function\r\n");
+                    // may not be a normal thing, recursivly search for something
+                    // that we can click on
+                    ret = clickOnChildren(obj);
+                    if (not ret)
+                    {
+                        this->client->write("ERROR: Failed to invoke function\r\n");
+                    }
                 }
             }
             else
@@ -63,6 +69,28 @@ namespace cascades
             this->client->write("ERROR: Not enough arguments, longClick <object>\r\n");
         }
         return ret;
+    }
+
+    bool LongClickCommand::clickOnChildren(QObject * const parent)
+    {
+        bool found = false;
+        foreach (QObject * object, parent->children())
+        {
+            found = QMetaObject::invokeMethod(object, "longClicked");
+            if (!found)
+            {
+                found = clickOnChildren(object);
+                if (found)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        return found;
     }
 
     void LongClickCommand::showHelp()
