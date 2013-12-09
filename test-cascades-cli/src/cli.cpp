@@ -255,11 +255,19 @@ const char * HarnessCli::EVENT_NAMES[] =
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
+                    if (bytesRead <= 0)
+                    {
+                        this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+                    }
                 }
                 else if (strcmp(raw, "\r\n")==0 || strcmp(raw, "\n")==0)
                 {
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
+                    if (bytesRead <= 0)
+                    {
+                        this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+                    }
                 }
                 else
                 {
