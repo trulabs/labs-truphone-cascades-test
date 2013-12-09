@@ -141,10 +141,10 @@ namespace cascades
                 QStringList params = Utils::tokenise(settingDelim, &buffer);
                 if (params.size() == 3)
                 {
-                    const QString varName = params.first();
+                    const QString varName = params.first().trimmed();
                     params.removeFirst();
                     params.removeFirst();
-                    const QString varVal = params.first();
+                    const QString varVal = params.first().trimmed();
                     params.removeFirst();
 
                     if (varName=="forename")
