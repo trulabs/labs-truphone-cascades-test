@@ -121,28 +121,22 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            StopRecordingCommand(QObject * parent = 0)
-                : Command(parent)
-            {
-            }
+            StopRecordingCommand(class Connection * const s,
+                                 QObject * parent = 0);
             /*!
              * \brief ~StopRecordingCommand Destructor
              *
              * @since test-cascades 1.0.0
              */
-            ~StopRecordingCommand()
-            {
-            }
-            bool executeCommand(QStringList * const arguments)
-            {
-                Q_UNUSED(arguments);
-                return true;
-            }
-            void showHelp(void)
-            {
-            }
+            ~StopRecordingCommand();
+            bool executeCommand(QStringList * const arguments);
+            void showHelp(void);
         protected:
         private:
+            /*!
+             * \brief client The TCP socket associated with the client
+             */
+            class Connection * const client;
         };
 
         /*!
@@ -158,12 +152,11 @@ namespace cascades
         static Command* createStop(class Connection * const s,
                                    QObject * parent = 0)
         {
-            Q_UNUSED(s);
             if (instance)
             {
                 delete instance;
             }
-            return new StopRecordingCommand(parent);
+            return new StopRecordingCommand(s, parent);
         }
 
         /*!
