@@ -269,6 +269,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                 const char * const raw = outputBuffer.cdata();
                 if (raw[0] == '#')
                 {
+                    qDebug() << "CC" << QString(raw).trimmed();
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
 #if defined(QT_DEBUG)
@@ -281,6 +282,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                 }
                 else if (strcmp(raw, "\r\n")==0 || strcmp(raw, "\n")==0)
                 {
+                    qDebug() << "CC";
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
                                                           outputBuffer.length());
 #if defined(QT_DEBUG)
