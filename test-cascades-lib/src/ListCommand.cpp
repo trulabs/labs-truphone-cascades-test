@@ -35,6 +35,7 @@ namespace cascades
 
     bool ListCommand::executeCommand(QStringList * const arguments)
     {
+        bool ret = false;
         if (arguments->size() > 1)
         {
             const QString listViewName = arguments->first();
@@ -44,11 +45,20 @@ namespace cascades
             {
                 const QString command = arguments->first();
                 arguments->removeFirst();
-                if (command == "count")
+                if (command == "count" && !arguments->isEmpty())
                 {
-                    const int s = listView->dataModel()->childCount(listView->rootIndexPath());
-                    this->client->write(QString::number(s).toUtf8().constData());
-                    this->client->write("\r\n");
+                    bool ok = false;
+                    const int expected = arguments->first().toInt(&ok);
+                    if (ok)
+                    {
+                        const int actual =
+                                listView->dataModel()->childCount(listView->rootIndexPath());
+                        ret = (actual == expected);
+                    }
+                    else
+                    {
+                        this->client->write("ERROR: Expected list size wasn't an integer\r\n");
+                    }
                 }
                 else
                 {
@@ -64,12 +74,12 @@ namespace cascades
         {
             this->client->write("ERROR: Not enough arguments, sleep <timeInMs>\r\n");
         }
-        return false;
+        return ret;
     }
 
     void ListCommand::showHelp()
     {
-        this->client->write("> list....?\r\n");
+        this->client->write("> list <list> count <expectedSize>\r\n");
     }
 }  // namespace cascades
 }  // namespace test
