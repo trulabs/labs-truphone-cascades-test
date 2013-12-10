@@ -73,6 +73,15 @@ namespace cascades
          */
         void showHelp(void);
     protected:
+        /*!
+         * \brief clickOnChildren Find the onLongClicked on all the children
+         *
+         * \param parent The parent object to search through
+         *
+         * \return @c true if an element was found
+         *
+         * @since test-cascades 1.0.5
+         */
         bool clickOnChildren(QObject * const parent);
     private:
         /*!

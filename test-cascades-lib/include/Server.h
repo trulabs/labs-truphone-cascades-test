@@ -66,6 +66,13 @@ namespace cascades
              */
             QTcpServer * const serverSocket;
         signals:
+            /*!
+             * \brief newConnection Signal emitted when a new client connects to the server
+             *
+             * \param connection The new connection
+             *
+             * @since test-cascades 1.0.1
+             */
             void newConnection(class Connection * connection);
         private slots:
             /*!
