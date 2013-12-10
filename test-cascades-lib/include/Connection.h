@@ -56,17 +56,39 @@ namespace cascades
                     this->socket->close();
                 }
             }
-
+            /*!
+             * \brief write Write data out on the connection
+             *
+             * \param data The data you wish to send
+             * \return The amount of data sent in bytes
+             *
+             * @since test-cascades 1.0.1
+             */
             inline qint64 write(const char * const data)
             {
                 return this->socket->write(data);
             }
+            /*!
+             * \brief flush Flush the socket
+             *
+             * \return
+             *
+             * @since test-cascades 1.0.1
+             */
             bool flush(void)
             {
                 return this->socket->flush();
             }
 
         signals:
+            /*!
+             * \brief packetReceived Signal emitted when a new packet is received
+             *
+             * \param connection The connection that received the packet
+             * \param packet The packet itself
+             *
+             * @since test-cascades 1.0.1
+             */
             void packetReceived(Connection* connection, const Buffer& packet);
         protected:
         private:
