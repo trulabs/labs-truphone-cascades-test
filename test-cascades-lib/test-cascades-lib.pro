@@ -43,7 +43,8 @@ SOURCES += \
     src/SpyCommand.cpp \
     src/Server.cpp \
     src/ContactsCommand.cpp \
-    src/PageCommand.cpp
+    src/PageCommand.cpp \
+    src/ExitCommand.cpp
 
 HEADERS +=\
     include/CascadesTest.h \
@@ -79,7 +80,8 @@ HEADERS +=\
     include/SpyCommand.h \
     include/Server.h \
     include/ContactsCommand.h \
-    include/PageCommand.h
+    include/PageCommand.h \
+    include/ExitCommand.h
 
 unix:!symbian {
     maemo5 {
