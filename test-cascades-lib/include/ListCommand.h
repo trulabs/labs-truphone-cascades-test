@@ -1,8 +1,8 @@
 /**
  * Copyright 2013 Truphone
  */
-#ifndef CLICKCOMMAND_H_
-#define CLICKCOMMAND_H_
+#ifndef LISTCOMMAND_H_
+#define LISTCOMMAND_H_
 
 #include <bb/cascades/AbstractPane>
 
@@ -15,19 +15,20 @@ namespace test
 namespace cascades
 {
     /*!
-     * \brief The ClickCommand class is used to simulate onClick(ed) events
+     * \brief The List class is used to check and manipulate lists
      *
-     * @since test-cascades 1.0.0
+     * @since test-cascades 1.0.5
      */
-    class ClickCommand : public Command
+    class ListCommand : public Command
     {
+    Q_OBJECT
     public:
         /*!
          * \brief getCmd Return the name of this command
          *
          * \return Command name
          *
-         * @since test-cascades 1.0.0
+         * @since test-cascades 1.0.5
          */
         static QString getCmd()
         {
@@ -40,56 +41,61 @@ namespace cascades
          * \param parent The parent object
          * \return Returns a new instance of the Command
          *
-         * @since test-cascades 1.0.0
+         * @since test-cascades 1.0.5
          */
         static Command* create(class Connection * const s,
                                QObject * parent = 0)
         {
-            return new ClickCommand(s, parent);
+            return new ListCommand(s, parent);
         }
         /*!
-         * \brief ClickCommand Constructor
+         * \brief ListCommand Constructor
          *
          * \param socket The TCP socket associated with the client
          * \param parent The parent object
          *
-         * @since test-cascades 1.0.0
+         * @since test-cascades 1.0.5
          */
-        explicit ClickCommand(class Connection * const socket,
-                              QObject * parent = 0);
+        ListCommand(class Connection * const socket,
+                      QObject* parent = 0);
         /*!
-         * \brief ~ClickCommand Destructor
+         * \brief ~ListCommand Destructor
          *
-         * @since test-cascades 1.0.0
+         * @since test-cascades 1.0.5
          */
-        ~ClickCommand();
+        ~ListCommand();
         /*
          * See super
          */
-        bool executeCommand(QStringList * const arguments);
+        bool executeCommand(QStringList * const rguments);
+        /*
+         * See super
+         */
+        void cleanUp(void)
+        {
+            /* do nothing */
+        }
         /*
          * See super
          */
         void showHelp(void);
-    protected:
-        bool clickOnChildren(QObject * const parent);
+    protected slots:
     private:
         /*!
          * \brief CMD_NAME The name of this command
          */
         static const QString CMD_NAME;
         /*!
-         * \brief scenePane The scene that we're working with
-         */
-        bb::cascades::AbstractPane * const scenePane;
-        /*!
          * \brief client The TCP socket associated with the client
          */
         class Connection * const client;
+        /*!
+         * \brief scenePane The scene that we're working with
+         */
+        bb::cascades::AbstractPane * const scenePane;
     };
 }  // namespace cascades
 }  // namespace test
 }  // namespace truphone
 
-
-#endif  // CLICKCOMMAND_H_
+#endif  // LISTCOMMAND_H_

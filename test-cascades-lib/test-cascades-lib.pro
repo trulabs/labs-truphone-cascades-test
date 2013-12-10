@@ -44,7 +44,8 @@ SOURCES += \
     src/Server.cpp \
     src/ContactsCommand.cpp \
     src/PageCommand.cpp \
-    src/ExitCommand.cpp
+    src/ExitCommand.cpp \
+    src/ListCommand.cpp
 
 HEADERS +=\
     include/CascadesTest.h \
@@ -81,7 +82,8 @@ HEADERS +=\
     include/Server.h \
     include/ContactsCommand.h \
     include/PageCommand.h \
-    include/ExitCommand.h
+    include/ExitCommand.h \
+    include/ListCommand.h
 
 unix:!symbian {
     maemo5 {
@@ -93,5 +95,4 @@ unix:!symbian {
 }
 
 OTHER_FILES += \
-    bar-descriptor.xml \
     ../README.md
