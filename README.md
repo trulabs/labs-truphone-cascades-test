@@ -150,6 +150,12 @@ in your project file add the following:
 the click/touch commands can work on objectNames so you can make the script
 shorter by using them, otherwise it'll use a path to the object
 
+running on the device
+=====================
+
+to connect to the server running on the phone (i.e. 169.254.0.x) you'll need
+to ensure development mode is enabled.
+
 commands
 ========
 
