@@ -651,6 +651,30 @@ namespace cascades
                             "terminate the connection\r\n");
         this->client->write("- it's really for debugging rather than for use in scripts\r\n");
     }
+
+    RecordCommand::StopRecordingCommand::StopRecordingCommand(
+            class Connection * const s,
+            QObject * parent)
+        : Command(parent)
+        , client(s)
+    {
+    }
+
+    RecordCommand::StopRecordingCommand::~StopRecordingCommand()
+    {
+    }
+
+    bool RecordCommand::StopRecordingCommand::executeCommand(QStringList * const arguments)
+    {
+        Q_UNUSED(arguments);
+        return true;
+    }
+
+    void RecordCommand::StopRecordingCommand::showHelp(void)
+    {
+        this->client->write("> stop\r\n");
+        this->client->write("Stop the current recording session\r\n");
+    }
 }  // namespace cascades
 }  // namespace test
 }  // namespace truphone
