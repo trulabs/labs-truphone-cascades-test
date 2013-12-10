@@ -234,9 +234,10 @@ namespace cascades
             {
                 if (not this->touchListeners.contains(obj))
                 {
-                    this->touchListeners.insert(obj, new RecordCommandTouchHandler(this,
-                                                                                   vs,
-                                                                                   this));
+                    this->touchListeners.insert(obj, new RecordCommandTouchHandler(
+                                                    this,
+                                                    vs,
+                                                    this));
                 }
             }
 
@@ -245,9 +246,9 @@ namespace cascades
             {
                 if (not this->keyListeners.contains(ctrl))
                 {
-                    this->keyListeners.insert(obj, new RecordCommandKeyHandler(this,
-                                                                               ctrl,
-                                                                               this));
+                    this->keyListeners.insert(obj, new RecordCommandKeyHandler(
+                                                  this,
+                                                  ctrl,this));
                 }
             }
             else
@@ -257,9 +258,10 @@ namespace cascades
                 {
                     if (not this->keyListeners.contains(pane))
                     {
-                        this->keyListeners.insert(pane, new RecordCommandKeyHandler(this,
-                                                                                    pane,
-                                                                                    this));
+                        this->keyListeners.insert(pane, new RecordCommandKeyHandler(
+                                                      this,
+                                                      pane,
+                                                      this));
                     }
                 }
             }
@@ -296,9 +298,10 @@ namespace cascades
                 {
                     this->actionListeners.insert(
                                 obj,
-                                new RecordCommandActionHandler(this,
-                                                               actionItem,
-                                                               this));
+                                new RecordCommandActionHandler(
+                                    this,
+                                    actionItem,
+                                    this));
                 }
             }
 
@@ -324,9 +327,8 @@ namespace cascades
                 {
                     this->toggleListeners.insert(
                                 obj,
-                                new RecordCommandToggleHandler(this,
-                                                               toggleButton,
-                                                               this));
+                                new RecordCommandToggleHandler(
+                                    this,toggleButton,this));
                 }
             }
 
@@ -337,9 +339,10 @@ namespace cascades
                 {
                     this->dropDownListeners.insert(
                                 obj,
-                                new RecordCommandDropDownHandler(this,
-                                                                 dropDown,
-                                                                 this));
+                                new RecordCommandDropDownHandler(
+                                    this,
+                                    dropDown,
+                                    this));
                 }
             }
 
