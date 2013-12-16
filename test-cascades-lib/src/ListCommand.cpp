@@ -28,7 +28,10 @@ namespace cascades
                              QObject* parent)
         : Command(parent),
           client(socket),
-          scenePane(bb::cascades::Application::instance()->scene())
+          scenePane(bb::cascades::Application::instance()->scene()),
+          namedPathEnd("^"),
+          namedPathSep("~"),
+          assignSep("=")
     {
     }
 
@@ -44,14 +47,13 @@ namespace cascades
             const QString listViewName = arguments->first();
             arguments->removeFirst();
             ListView * const listView = scenePane->findChild<ListView*>(listViewName);
+
             if (listView)
             {
                 const QString command = arguments->first();
                 arguments->removeFirst();
-                //
                 // check the count/size of the list
-                //
-                if (command == "count" && !arguments->isEmpty())
+                if (command == "count" && not arguments->isEmpty())
                 {
                     bool ok = false;
                     const int expected = arguments->first().toInt(&ok);
@@ -61,7 +63,7 @@ namespace cascades
                         const int actual =
                                 listView->dataModel()->childCount(listView->rootIndexPath());
                         ret = (actual == expected);
-                        if (!ret)
+                        if (not ret)
                         {
                             this->client->write("ERROR: List size is {");
                             this->client->write(QString::number(actual).toUtf8().constData());
@@ -75,99 +77,27 @@ namespace cascades
                         this->client->write("ERROR: Expected list size wasn't an integer\r\n");
                     }
                 }
-                //
                 // check an element by index
-                //
                 else if (command == "index")
                 {
                     const QVariant element = findElementByIndex(listView, arguments->first());
-                    qDebug() << "got" << element.toString();
-                    if (!element.isNull() && element.isValid())
+                    arguments->removeFirst();
+                    if (arguments->isEmpty())
                     {
-                        const QString elementType = QString(element.typeName());
-                        if (elementType == "QString")
-                        {
-                            qDebug() << "Result" << element.toString();
-                        }
-                        else if (elementType == "QVariantMap")
-                        {
-                            QVariantMap elementMap(element.toMap());
-                            Q_FOREACH(QString key, elementMap.keys())
-                            {
-                                qDebug() << "Key" << key << "=" << elementMap.value(key).toString();
-                            }
-                        }
-                        else
-                        {
-                            this->client->write("ERROR: Unsupported list element type\r\n");
-                        }
+                        ret = checkElement(element, NULL);
                     }
                     else
                     {
-                        this->client->write("ERROR: Couldn't find the index in the list\r\n");
+                        ret = checkElement(element, arguments->join(" "));
                     }
                 }
-                //
                 // check an element by named index
-                //
                 else if (command == "name")
                 {
                     const QString tmp = arguments->join(" ").trimmed();
-                    const QString namedIndex = tmp.left(tmp.lastIndexOf("."));
+                    const QString namedIndex = tmp.left(tmp.lastIndexOf(namedPathEnd.cdata()));
                     const QVariant element = findElementByName(listView, namedIndex);
-                    if (!element.isNull() && element.isValid())
-                    {
-                        const QString elementType = QString(element.typeName());
-                        if (elementType == "QString")
-                        {
-                            qDebug() << "Result" << element.toString();
-                        }
-                        else if (elementType == "QVariantMap")
-                        {
-                            QStringList keyValuePair = elementName.split("=");
-                            if (keyValuePair.size() == 2)
-                            {
-                                const QString key = keyValuePair.first().trimmed();
-                                keyValuePair.removeFirst();
-                                const QString value = keyValuePair.first().trimmed();
-
-                                if (!key.isNull() && !key.isEmpty()
-                                        && !value.isNull() && !value.isEmpty())
-                                {
-                                    const QVariantMap elementMap(element.toMap());
-                                    const QString actual = elementMap[key].toString();
-                                    if (actual == value)
-                                    {
-
-                                    }
-                                    else
-                                    {
-                                        this->client->write("ERROR: Value is {");
-                                        this->client->write(value.toUtf8().constData());
-                                        this->client->write("} expected {");
-                                        this->client->write(actual.toUtf8().constData());
-                                        this->client->write("}\r\n");
-                                    }
-                                }
-                                else
-                                {
-                                    this->client->write("ERROR: You didn't enter a key=value pair\r\n");
-                                }
-                            }
-                            else
-                            {
-                                this->client->write("ERROR: You didn't enter a key=value pair\r\n");
-                            }
-                        }
-                        else
-                        {
-                            this->client->write("ERROR: Unsupported list element type\r\n");
-                        }
-                    }
-                    else
-                    {
-                        this->client->write("ERROR: Couldn't find the index in the list\r\n");
-                    }
+                    ret = checkElement(element, arguments->join(" "));
                 }
                 else
                 {
@@ -188,13 +118,12 @@ namespace cascades
 
     QVariant ListCommand::findElementByIndex(
             ListView * const list,
-            const QString& index)
+            const QString& index) const
     {
         QVariant result;
-        Buffer delim(".");
         Buffer indexString (index.toUtf8().constData());
         DataModel * const model = list->dataModel();
-        QStringList indexes = Utils::tokenise(&delim, &indexString, false);
+        QStringList indexes = Utils::tokenise(&namedPathSep, &indexString, false);
 
         bool failed = false;
         QVariantList indexList;
@@ -213,7 +142,7 @@ namespace cascades
             }
         }
 
-        if (!failed)
+        if (not failed)
         {
             result = model->data(indexList);
         }
@@ -222,17 +151,16 @@ namespace cascades
 
     QVariant ListCommand::findElementByName(
             bb::cascades::ListView * const list,
-            const QString& index)
+            const QString& index) const
     {
         QVariant result;
-        Buffer delim(".");
-        Buffer indexString (index.toUtf8().constData());
+        const Buffer indexString (index.toUtf8().constData());
         DataModel * const model = list->dataModel();
-        QStringList indexes = Utils::tokenise(&delim, &indexString, false);
+        QStringList indexes = Utils::tokenise(&namedPathSep, &indexString, false);
 
         bool failed = false;
         QVariantList indexList;
-        while(!indexes.isEmpty())
+        while(not indexes.isEmpty())
         {
             const QString elementName = indexes.first();
             bool found = false;
@@ -256,15 +184,15 @@ namespace cascades
                 // look up the name/value pair
                 else if (type == "QVariantMap")
                 {
-                    QStringList keyValuePair = elementName.split("=");
+                    QStringList keyValuePair = elementName.split(assignSep.cdata());
                     if (keyValuePair.size() == 2)
                     {
                         const QString key = keyValuePair.first().trimmed();
                         keyValuePair.removeFirst();
                         const QString value = keyValuePair.first().trimmed();
 
-                        if (!key.isNull() && !key.isEmpty()
-                                && !value.isNull() && !value.isEmpty())
+                        if (not key.isNull() && not key.isEmpty()
+                                && not value.isNull() && not value.isEmpty())
                         {
                             const QVariantMap elementMap(v.toMap());
                             const QString actual = elementMap[key].toString();
@@ -278,7 +206,7 @@ namespace cascades
                     }
                 }
             }
-            if (!found)
+            if (not found)
             {
             	failed = true;
             	break;
@@ -286,16 +214,108 @@ namespace cascades
             indexes.removeFirst();
         }
 
-        if (!failed)
+        if (not failed)
         {
              result = model->data(indexList);
         }
         return result;
     }
 
+    bool ListCommand::checkElement(
+                    const QVariant element,
+                    const QString& check) const
+    {
+        bool ret = false;
+
+        if (check == NULL)
+        {
+            ret = ((check == NULL) == element.isNull());
+            if (not ret)
+            {
+                this->client->write("ERROR: Value is {not null} expected {null}}\r\n");
+            }
+        }
+        else
+        {
+            if (not element.isNull() && element.isValid())
+            {
+                const QString elementType = QString(element.typeName());
+                if (elementType == "QString")
+                {
+                    ret = (check == element.toString());
+                    if (not ret)
+                    {
+                        this->client->write("ERROR: Value is {");
+                        this->client->write(check.toUtf8().constData());
+                        this->client->write("} expected {");
+                        this->client->write(element.toString().toUtf8().constData());
+                        this->client->write("}\r\n");
+                    }
+                }
+                else if (elementType == "QVariantMap")
+                {
+                    QStringList keyValuePair = check.split(assignSep.cdata());
+                    if (keyValuePair.size() == 2)
+                    {
+                        const QString key = keyValuePair.first().trimmed();
+                        keyValuePair.removeFirst();
+                        const QString value = keyValuePair.first().trimmed();
+
+                        if (not key.isNull() && not key.isEmpty()
+                                && not value.isNull() && not value.isEmpty())
+                        {
+                            const QVariantMap elementMap(element.toMap());
+                            const QString actual = elementMap[key].toString();
+                            ret = (actual == value);
+                            if (not ret)
+                            {
+                                this->client->write("ERROR: Value is {");
+                                this->client->write(value.toUtf8().constData());
+                                this->client->write("} expected {");
+                                this->client->write(actual.toUtf8().constData());
+                                this->client->write("}\r\n");
+                            }
+                        }
+                        else
+                        {
+                            this->client->write("ERROR: You didn't enter a key=value pair\r\n");
+                        }
+                    }
+                    else
+                    {
+                        this->client->write("ERROR: You didn't enter a key=value pair\r\n");
+                    }
+                }
+                else
+                {
+                    this->client->write("ERROR: Unsupported list element type\r\n");
+                }
+            }
+            else
+            {
+                this->client->write("ERROR: Element is null or non-valid type\r\n");
+            }
+        }
+
+        return ret;
+    }
+
     void ListCommand::showHelp()
     {
         this->client->write("> list <list> count <expectedSize>\r\n");
+        this->client->write("> list <list> <index> <expected value> - check string values\r\n");
+        this->client->write("e.g. list someList 0~1~2 /etc/files/file\r\n");
+        this->client->write("> list <list> <index> <key>=<expected value> - check QVarientMap values\r\n");
+        this->client->write("e.g. list someList 0~1~2 filename=/etc/files/file\r\n");
+        this->client->write("> list <list> <name> <expected value> - check string values\r\n");
+        this->client->write("e.g. list someList /~etc~files^ /etc/files/file\r\n");
+        this->client->write("> list <list> <name> <key>=<expected value> - check QVarientMap values\r\n");
+        this->client->write("e.g. list someList /~etc~files^ filename=/etc/files/file\r\n");
+        this->client->write(">\r\n");
+        this->client->write("> <index> should be numerical and separated by ~ (i.e. 0~1~2)\r\n");
+        this->client->write("> <name> should be text and separated by ~ and terminated by ^\r\n");
+        this->client->write("\t level 1~level 2~level 3^");
+
     }
 }  // namespace cascades
 }  // namespace test
