@@ -5,6 +5,7 @@
 #define LISTCOMMAND_H_
 
 #include <bb/cascades/AbstractPane>
+#include <bb/cascades/ListView>
 
 #include "Command.h"
 
@@ -81,6 +82,14 @@ namespace cascades
         void showHelp(void);
     protected slots:
     private:
+        static QVariant findElementByIndex(
+                bb::cascades::ListView * const list,
+                const QString& index);
+
+        static QVariant findElementByName(
+                bb::cascades::ListView * const list,
+                const QString& index);
+
         /*!
          * \brief CMD_NAME The name of this command
          */
