@@ -124,10 +124,39 @@ namespace cascades
                         }
                         else if (elementType == "QVariantMap")
                         {
-                            QVariantMap elementMap(element.toMap());
-                            Q_FOREACH(QString key, elementMap.keys())
+                            QStringList keyValuePair = elementName.split("=");
+                            if (keyValuePair.size() == 2)
                             {
-                                qDebug() << "Key" << key << "=" << elementMap.value(key).toString();
+                                const QString key = keyValuePair.first().trimmed();
+                                keyValuePair.removeFirst();
+                                const QString value = keyValuePair.first().trimmed();
+
+                                if (!key.isNull() && !key.isEmpty()
+                                        && !value.isNull() && !value.isEmpty())
+                                {
+                                    const QVariantMap elementMap(element.toMap());
+                                    const QString actual = elementMap[key].toString();
+                                    if (actual == value)
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        this->client->write("ERROR: Value is {");
+                                        this->client->write(value.toUtf8().constData());
+                                        this->client->write("} expected {");
+                                        this->client->write(actual.toUtf8().constData());
+                                        this->client->write("}\r\n");
+                                    }
+                                }
+                                else
+                                {
+                                    this->client->write("ERROR: You didn't enter a key=value pair\r\n");
+                                }
+                            }
+                            else
+                            {
+                                this->client->write("ERROR: You didn't enter a key=value pair\r\n");
                             }
                         }
                         else
@@ -172,12 +201,10 @@ namespace cascades
         Q_FOREACH(QString sIndex, indexes)
         {
             bool ok = false;
-            qDebug() << "findElementByIndex" << sIndex;
             const int iIndex = sIndex.toInt(&ok);
             if (ok)
             {
-                qDebug() << "findElementByIndex converted to" << iIndex;
-                indexList.push_back(iIndex);
+                 indexList.push_back(iIndex);
             }
             else
             {
@@ -188,7 +215,6 @@ namespace cascades
 
         if (!failed)
         {
-            qDebug() << "findElementByIndex index is" << indexList;
             result = model->data(indexList);
         }
         return result;
@@ -222,8 +248,6 @@ namespace cascades
                     const QString value = v.toString();
                     if (value == elementName)
                     {
-                        qDebug() << "findElementByName " << value << "<" << type << ")" << "=" << elementName;
-                        qDebug() << "findElementByName converted to" << i;
                         indexList.push_back(i);
                         found = true;
                         break;
@@ -242,12 +266,10 @@ namespace cascades
                         if (!key.isNull() && !key.isEmpty()
                                 && !value.isNull() && !value.isEmpty())
                         {
-                            QVariantMap elementMap(v.toMap());
+                            const QVariantMap elementMap(v.toMap());
                             const QString actual = elementMap[key].toString();
                             if (actual == value)
                             {
-                                qDebug() << "findElementByName found map" << key << value;
-                                qDebug() << "findElementByName converted to" << i;
                                 indexList.push_back(i);
                                 found = true;
                                 break;
@@ -266,8 +288,7 @@ namespace cascades
 
         if (!failed)
         {
-            qDebug() << "findElementByName index is" << indexList;
-            result = model->data(indexList);
+             result = model->data(indexList);
         }
         return result;
     }
