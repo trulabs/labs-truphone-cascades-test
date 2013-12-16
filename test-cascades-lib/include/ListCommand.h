@@ -95,6 +95,8 @@ namespace cascades
                 const QVariant element,
                 const QString& check = 0) const;
 
+        static void normaliseValue(QString& value);
+
         /*!
          * \brief CMD_NAME The name of this command
          */
