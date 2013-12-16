@@ -309,9 +309,9 @@ namespace cascades
                             if (not ret)
                             {
                                 this->client->write("ERROR: Value is {");
-                                this->client->write(value.toUtf8().constData());
-                                this->client->write("} expected {");
                                 this->client->write(actual.toUtf8().constData());
+                                this->client->write("} expected {");
+                                this->client->write(value.toUtf8().constData());
                                 this->client->write("}\r\n");
                             }
                         }
@@ -350,12 +350,12 @@ namespace cascades
         this->client->write("e.g. list someList /~etc~files^ /etc/files/file\r\n");
         this->client->write("> list <list> <name> <key>=<expected value> - check QVarientMap values\r\n");
         this->client->write("e.g. list someList /~etc~files^ filename=/etc/files/file\r\n");
-        this->client->write("> list <list> select <index> - select an index\r\n");
-        this->client->write("> list <list> select <name> - select a named index\r\n");
-        this->client->write("> list <list> unselect <index> - unselect an index\r\n");
-        this->client->write("> list <list> unselect <name> - unselect a named index\r\n");
-        this->client->write("> list <list> scroll <index> - scroll to an index\r\n");
-        this->client->write("> list <list> scroll <name> - scroll to a named index\r\n");
+        this->client->write("> list <list> select index <index> - select an index\r\n");
+        this->client->write("> list <list> select name <name> - select a named index\r\n");
+        this->client->write("> list <list> unselect index <index> - unselect an index\r\n");
+        this->client->write("> list <list> unselect name <name> - unselect a named index\r\n");
+        this->client->write("> list <list> scroll index <index> - scroll to an index\r\n");
+        this->client->write("> list <list> scroll name <name> - scroll to a named index\r\n");
         this->client->write("> list <list> clear\r\n");
         this->client->write(">\r\n");
         this->client->write("> <index> should be numerical and separated by ~ (i.e. 0~1~2)\r\n");
