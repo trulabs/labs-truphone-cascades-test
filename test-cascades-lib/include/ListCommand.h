@@ -8,6 +8,7 @@
 #include <bb/cascades/ListView>
 
 #include "Command.h"
+#include "Buffer.h"
 
 namespace truphone
 {
@@ -82,13 +83,17 @@ namespace cascades
         void showHelp(void);
     protected slots:
     private:
-        static QVariant findElementByIndex(
+        QVariant findElementByIndex(
                 bb::cascades::ListView * const list,
-                const QString& index);
+                const QString& index) const;
 
-        static QVariant findElementByName(
+        QVariant findElementByName(
                 bb::cascades::ListView * const list,
-                const QString& index);
+                const QString& index) const;
+
+        bool checkElement(
+                const QVariant element,
+                const QString& check = 0) const;
 
         /*!
          * \brief CMD_NAME The name of this command
@@ -102,6 +107,18 @@ namespace cascades
          * \brief scenePane The scene that we're working with
          */
         bb::cascades::AbstractPane * const scenePane;
+        /*!
+         * @brief namedPathEnd Path end marker
+         */
+        const Buffer namedPathEnd;
+        /*!
+         * \brief namedPathSep Path/Index separator
+         */
+        const Buffer namedPathSep;
+        /*!
+         * \brief assignSep Assignment separator
+         */
+        const Buffer assignSep;
     };
 }  // namespace cascades
 }  // namespace test
