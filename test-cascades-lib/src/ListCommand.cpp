@@ -94,10 +94,39 @@ namespace cascades
                 // check an element by named index
                 else if (command == "name")
                 {
-                    const QString tmp = arguments->join(" ").trimmed();
+                    QStringList path;
+                    while(not arguments->isEmpty())
+                    {
+                        QString arg = arguments->first();
+                        path.push_back(arg);
+                        arguments->removeFirst();
+                        if (arg.endsWith("^"))
+                        {
+                            break;
+                        }
+                    }
+
+                    QString tmp = path.join(" ").trimmed();
+                    normaliseValue(tmp);
                     const QString namedIndex = tmp.left(tmp.lastIndexOf(namedPathEnd.cdata()));
                     const QVariant element = findElementByName(listView, namedIndex);
                     ret = checkElement(element, arguments->join(" "));
+                }
+                else if (command == "select")
+                {
+                    this->client->write("ERROR: Not supported yet\r\n");
+                }
+                else if (command == "clear")
+                {
+                    this->client->write("ERROR: Not supported yet\r\n");
+                }
+                else if (command == "unselect")
+                {
+                    this->client->write("ERROR: Not supported yet\r\n");
+                }
+                else if (command == "scroll")
+                {
+                    this->client->write("ERROR: Not supported yet\r\n");
                 }
                 else
                 {
@@ -114,6 +143,14 @@ namespace cascades
             this->client->write("ERROR: Not enough arguments, sleep <timeInMs>\r\n");
         }
         return ret;
+    }
+
+    void ListCommand::normaliseValue(QString& value)
+    {
+        if (value.endsWith("^"))
+        {
+            value.chop(1);
+        }
     }
 
     QVariant ListCommand::findElementByIndex(
@@ -254,7 +291,9 @@ namespace cascades
                 }
                 else if (elementType == "QVariantMap")
                 {
-                    QStringList keyValuePair = check.split(assignSep.cdata());
+                    QString normalisedCheck(check);
+                    normaliseValue(normalisedCheck);
+                    QStringList keyValuePair = normalisedCheck.split(assignSep.cdata());
                     if (keyValuePair.size() == 2)
                     {
                         const QString key = keyValuePair.first().trimmed();
@@ -311,6 +350,13 @@ namespace cascades
         this->client->write("e.g. list someList /~etc~files^ /etc/files/file\r\n");
         this->client->write("> list <list> <name> <key>=<expected value> - check QVarientMap values\r\n");
         this->client->write("e.g. list someList /~etc~files^ filename=/etc/files/file\r\n");
+        this->client->write("> list <list> select <index> - select an index\r\n");
+        this->client->write("> list <list> select <name> - select a named index\r\n");
+        this->client->write("> list <list> unselect <index> - unselect an index\r\n");
+        this->client->write("> list <list> unselect <name> - unselect a named index\r\n");
+        this->client->write("> list <list> scroll <index> - scroll to an index\r\n");
+        this->client->write("> list <list> scroll <name> - scroll to a named index\r\n");
+        this->client->write("> list <list> clear\r\n");
         this->client->write(">\r\n");
         this->client->write("> <index> should be numerical and separated by ~ (i.e. 0~1~2)\r\n");
         this->client->write("> <name> should be text and separated by ~ and terminated by ^\r\n");
