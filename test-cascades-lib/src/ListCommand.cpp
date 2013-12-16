@@ -215,15 +215,45 @@ namespace cascades
                 QVariantList tmp(indexList);
                 tmp.push_back(i);
                 const QVariant v = model->data(tmp);
-                const QString value = v.toString();
                 const QString type = v.typeName();
-                if (value == elementName)
+                // just compare the value
+                if (type == "QString")
                 {
-                    qDebug() << "findElementByName " << value << "<" << type << ")" << "=" << elementName;
-                    qDebug() << "findElementByName converted to" << i;
-                    indexList.push_back(i);
-                    found = true;
-                    break;
+                    const QString value = v.toString();
+                    if (value == elementName)
+                    {
+                        qDebug() << "findElementByName " << value << "<" << type << ")" << "=" << elementName;
+                        qDebug() << "findElementByName converted to" << i;
+                        indexList.push_back(i);
+                        found = true;
+                        break;
+                    }
+                }
+                // look up the name/value pair
+                else if (type == "QVariantMap")
+                {
+                    QStringList keyValuePair = elementName.split("=");
+                    if (keyValuePair.size() == 2)
+                    {
+                        const QString key = keyValuePair.first().trimmed();
+                        keyValuePair.removeFirst();
+                        const QString value = keyValuePair.first().trimmed();
+
+                        if (!key.isNull() && !key.isEmpty()
+                                && !value.isNull() && !value.isEmpty())
+                        {
+                            QVariantMap elementMap(v.toMap());
+                            const QString actual = elementMap[key].toString();
+                            if (actual == value)
+                            {
+                                qDebug() << "findElementByName found map" << key << value;
+                                qDebug() << "findElementByName converted to" << i;
+                                indexList.push_back(i);
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
                 }
             }
             if (!found)
