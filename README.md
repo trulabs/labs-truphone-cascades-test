@@ -57,7 +57,6 @@ todo
 
 * look at integrating the new Automatic Input Control (_sys_inject_events)
 * without the above:
-* add list support
 * add lots of other support (hopefully AID will mean we don't have to)
 
 building
@@ -113,39 +112,39 @@ java library
 the java library uses gradle for dependancy management
 
     gradle build # build the library file
-	gradle test # run the unit tests (-D properties are needed to define the server address)
-	gradle clean # clean everything out
-	gradle eclipse # generate an eclipse project
+    gradle test # run the unit tests (-D properties are needed to define the server address)
+    gradle clean # clean everything out
+    gradle eclipse # generate an eclipse project
 
 integration
 ===========
 
 at the top you need to add the following:
 
-        #include <CascadesHarness.h>
-        using truphone::test::cascades::CascadesHarness;
+    #include <CascadesHarness.h>
+    using truphone::test::cascades::CascadesHarness;
 
 somewhere in your main.cpp you need to add (before the blocking app.exec())
 the following:
 
-	CascadesHarness * harness = new CascadesHarness(&app);
-	harness->startHarness(15000); // 15000 is the tcp port number to listen on
+    CascadesHarness * harness = new CascadesHarness(&app);
+    harness->startHarness(15000); // 15000 is the tcp port number to listen on
 
 in your project file add the following:
 
-	...
-	simulator { # or device
-        	CONFIG(release, debug|release) {
-                	DESTDIR = o
-	        }
-	        CONFIG(debug, debug|release) {
-	                DESTDIR = o-g
-	                INCLUDEPATH += <path/to/lib>/test-cascades-lib
-	                # Simulator-Debug can be replaced with Device-Debug or Device-Release as needed
-        	        LIBS += -ltest-cascades-lib -L<path/to/lib>/test-cascades-lib/Simulator-Debug
-	        }
-	}
-	...
+    ...
+    simulator { # or device
+        CONFIG(release, debug|release) {
+            DESTDIR = o
+        }
+        CONFIG(debug, debug|release) {
+            DESTDIR = o-g
+            INCLUDEPATH += <path/to/lib>/test-cascades-lib
+            # Simulator-Debug can be replaced with Device-Debug or Device-Release as needed
+            LIBS += -ltest-cascades-lib -L<path/to/lib>/test-cascades-lib/Simulator-Debug
+        }
+    }
+    ...
 
 the click/touch commands can work on objectNames so you can make the script
 shorter by using them, otherwise it'll use a path to the object
@@ -163,24 +162,28 @@ the list of available commands will change as the bb10 ndk
 adds more functionality and we add more so it's best to simply
 execute the help command (or read the code)
 
-here is a short list
+here is a list:
 
 * contacts
 * click
 * longClick
 * tap (up/down/move/cancel)
+* list (select, scroll, check)
 * tab
 * sleep
 * text
 * test
-* touch (screenx, screeny, winx, winy, localx, localy, target)
+* touch (screenx, screeny, winx, winy, localx, localy, target, <receiver>)
 * record
+* stop (recording)
 * key
 * touch
 * action
 * qml
 * toggle
 * spy
+* page
+* pop
 
 test-cascades-cli
 =================
@@ -206,30 +209,30 @@ as the text value of a textfield)
 example script
 ==============
 
-	text createOrLoginUserName myUsername
-	text createOrLoginPassword noPassword
-	test createOrLoginUserName text myUsername
-	test createOrLoginPassword text noPassword
-	click createOrLoginLogin
-	sleep 5000
-	tab Contacts
-	click keyNum5
-	click keyNum0
-	click keyNum4
-	click keyNumBackspace
-	click keyNum5
-	test keyNumToDial text 505
-	touch down keyNumCall
-	qml app.logout
+    text createOrLoginUserName myUsername
+    text createOrLoginPassword noPassword
+    test createOrLoginUserName text myUsername
+    test createOrLoginPassword text noPassword
+    click createOrLoginLogin
+    sleep 5000
+    tab Contacts
+    click keyNum5
+    click keyNum0
+    click keyNum4
+    click keyNumBackspace
+    click keyNum5
+    test keyNumToDial text 505
+    touch down keyNumCall
+    qml app.logout
 
 script recording
 ================
 
-	test-cascades-cli 192.168.70.130 15000 script --record
+    test-cascades-cli 192.168.70.130 15000 script --record
 
 Once you've exited or logged out you'll find a file named 'script' which you can play back with
 
-	test-cascades-cli 192.168.70.130 15000 script
+    test-cascades-cli 192.168.70.130 15000 script
 
 correctness & style
 ===================
