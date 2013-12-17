@@ -176,7 +176,6 @@ namespace cascades
             else if (selectType == "name")
             {
                 const QString namedIndex = extractNamedPath(arguments,namedPathEnd.cdata());
-                QVariantList indexPath;
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -233,7 +232,6 @@ namespace cascades
             else if (selectType == "name")
             {
                 const QString namedIndex = extractNamedPath(arguments,namedPathEnd.cdata());
-                QVariantList indexPath;
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -305,7 +303,6 @@ namespace cascades
             else if (selectType == "name")
             {
                 const QString namedIndex = extractNamedPath(arguments,namedPathEnd.cdata());
-                QVariantList indexPath;
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -559,6 +556,8 @@ namespace cascades
         this->client->write("> list <list> scroll name <name> - scroll to a named index\r\n");
         this->client->write("> list <list> key index <index> - list the keys in Map for index\r\n");
         this->client->write("> list <list> key name <name> - list the keys in Map for named index\r\n");
+        this->client->write("e.g. list contacts scroll name J~Name=John Smith^\r\n");
+        this->client->write("e.g. list contacts select index 0~1\r\n");
         this->client->write("> list <list> clear\r\n");
         this->client->write(">\r\n");
         this->client->write("> <index> should be numerical and separated by ~ (i.e. 0~1~2)\r\n");
