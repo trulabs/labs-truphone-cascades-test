@@ -83,19 +83,37 @@ namespace cascades
         void showHelp(void);
     protected slots:
     private:
-        QVariant findElementByIndex(
-                bb::cascades::ListView * const list,
-                const QString& index) const;
+        bool findElementByIndex(
+                const QString& index,
+                QVariantList& elementIndexPath) const;
 
-        QVariant findElementByName(
+        bool findElementByName(
                 bb::cascades::ListView * const list,
-                const QString& index) const;
+                const QString& index,
+                QVariantList& elementIndexPath) const;
 
         bool checkElement(
                 const QVariant element,
                 const QString& check = 0) const;
 
-        static void normaliseValue(QString& value);
+        static void normalisePath(QString& value);
+
+        static QString extractNamedPath(
+                QStringList * const arguments,
+                const char * const endOfPath);
+
+        bool selectUnselectPath(
+                QStringList * const arguments,
+                bb::cascades::ListView * const listView,
+                const bool select);
+
+        bool scrollToPath(
+                QStringList * const arguments,
+                bb::cascades::ListView * const listView);
+
+        bool showKeysOnPath(
+                QStringList * const arguments,
+                bb::cascades::ListView * const listView);
 
         /*!
          * \brief CMD_NAME The name of this command
