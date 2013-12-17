@@ -25,10 +25,10 @@ check:
 	@cat cppcheck.lib.xml
 	cppcheck --enable=all --inline-suppr --xml -I test-cascades-cli test-cascades-cli/src/ 2> cppcheck.cli.xml
 	@cat cppcheck.cli.xml
-	vera++ -p default test-cascades-lib/include/*.h test-cascades-lib/src/*.cpp -s -x vera.lib.xml
-	@cat vera.lib.xml
-	vera++ -p default test-cascades-cli/include/*.h test-cascades-cli/src/*.cpp -s -x vera.cli.xml
-	@cat vera.cli.xml
+	vera++ test-cascades-lib/include/*.h test-cascades-lib/src/*.cpp 2>@1 1> vera.lib
+	@cat vera.lib
+	vera++ test-cascades-cli/include/*.h test-cascades-cli/src/*.cpp 2>@1 1> vera.cli
+	@cat vera.cli
 	cpplint.py --output=xml --root=test-cascades-lib/include test-cascades-lib/include/*.h test-cascades-lib/src/*.cpp 2>&1 | tee cpplint.lib.xml
 	cpplint.py --output=xml --root=test-cascades-cli/include test-cascades-cli/include/*.h test-cascades-cli/src/*.cpp 2>&1 | tee cpplint.cli.xml
 
