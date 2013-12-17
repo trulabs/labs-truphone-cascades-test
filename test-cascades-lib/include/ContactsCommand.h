@@ -1,13 +1,13 @@
 /**
  * Copyright 2013 Truphone
  */
-#ifndef CONTACTSCOMMAND_H
-#define CONTACTSCOMMAND_H
+#ifndef CONTACTSCOMMAND_H_
+#define CONTACTSCOMMAND_H_
+
+#include <bb/pim/contacts/ContactAttribute.hpp>
 
 #include "include/Command.h"
 #include "include/Buffer.h"
-
-#include <bb/pim/contacts/ContactAttribute.hpp>
 
 namespace bb
 {
@@ -18,9 +18,9 @@ namespace bb
             class ContactService;
             class Contact;
             class ContactBuilder;
-        }
-    }
-}
+        }  // namespace contacts
+    }  // namespace pim
+}  // namespace bb
 
 namespace truphone
 {
@@ -170,4 +170,4 @@ namespace cascades
 }  // namespace test
 }  // namespace truphone
 
-#endif // CONTACTSCOMMAND_H
+#endif  // CONTACTSCOMMAND_H_

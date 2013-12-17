@@ -82,6 +82,6 @@ namespace cascades
             const_cast<Connection*>(connection)->deleteLater();
         }
     }
-}
-}
-}
+}  // namespace cascades
+}  // namespace test
+}  // namespace truphone

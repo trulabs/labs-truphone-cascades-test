@@ -117,6 +117,7 @@ namespace cascades
             /*!
              * \brief StopRecordingCommand Constructor
              *
+             * \param s The connection for the command
              * \param parent The parent object
              *
              * @since test-cascades 1.0.0

@@ -42,11 +42,11 @@ namespace cascades
             const QString property = arguments->at(1);
             arguments->removeFirst();
             arguments->removeFirst();
-            QString * expected = NULL;
+            const QString * expected = NULL;
             const QString expectedValue = arguments->join(" ");
             if (arguments->size())
             {
-                expected = (QString*)&expectedValue;
+                expected = reinterpret_cast<const QString*>(&expectedValue);
             }
 
             // try and find the element by object name, otherwise
