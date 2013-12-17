@@ -389,7 +389,7 @@ namespace cascades
                 break;
             }
         }
-        return failed;
+        return not failed;
     }
 
     bool ListCommand::findElementByName(
@@ -456,7 +456,7 @@ namespace cascades
             indexes.removeFirst();
         }
 
-        return failed;
+        return not failed;
     }
 
     bool ListCommand::checkElement(
