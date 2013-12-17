@@ -43,7 +43,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.1
              */
-            Buffer(const char * v);
+            explicit Buffer(const char * v);
             /*!
              * \brief ~Buffer Free the buffer (memory will be returned to the pool)
              *

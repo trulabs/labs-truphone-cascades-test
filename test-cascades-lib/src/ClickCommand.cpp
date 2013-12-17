@@ -78,7 +78,7 @@ namespace cascades
     bool ClickCommand::clickOnChildren(QObject * const parent)
     {
         bool found = false;
-        foreach (QObject * object, parent->children())
+        Q_FOREACH(QObject * object, parent->children())
         {
             found = QMetaObject::invokeMethod(object, "clicked");
             if (!found)

@@ -83,34 +83,117 @@ namespace cascades
         void showHelp(void);
     protected slots:
     private:
+        /*!
+         * \brief findElementByIndex Find an index path based on numeric index
+         *
+         * \param index The index (i.e. 0~1~2)
+         * \param elementIndexPath The result index path
+         *
+         * \return @c true if the find was successful
+         *
+         * @since test-cascades 1.0.5
+         */
         bool findElementByIndex(
                 const QString& index,
                 QVariantList& elementIndexPath) const;
 
+        /*!
+         * \brief findElementByName Find an index path based on a name
+         *
+         * \param list The list to work on
+         * \param index The named index (i.e. "S~Name=Sam^" or "S~Sam")
+         * \param elementIndexPath The result index path
+         *
+         * \return @c true if the find was successful
+         *
+         * @since test-cascades 1.0.5
+         */
         bool findElementByName(
                 bb::cascades::ListView * const list,
                 const QString& index,
                 QVariantList& elementIndexPath) const;
 
+        /*!
+         * \brief checkElement Check if an element matches the expected value
+         *
+         * \param element The element to check
+         * \param check The check value we wish to use or @c NULL if it should be empty
+         *
+         * \return @c true if it's correct
+         *
+         * @since test-cascades 1.0.5
+         */
         bool checkElement(
                 const QVariant element,
                 const QString& check = 0) const;
 
-        static void normalisePath(QString& value);
+        /*!
+         * \brief normalisePath Removed @c namedPathEnd from the end of paths
+         *
+         * \param value The value that's changed
+         * \param endOfPath The end of path
+         *
+         * @since test-cascades 1.0.5
+         */
+        static void normalisePath(
+                QString * const value,
+                const char * const endOfPath);
 
+        /*!
+         * \brief extractNamedPath Iterate over arguments building up
+         * a list of separated elements until the @c endOfPath is seen
+         *
+         * \param arguments The arguments to parse
+         * \param endOfPath The end of path variable to look for
+         *
+         * \return A string for the full path
+         *
+         * @since test-cascades 1.0.5
+         */
         static QString extractNamedPath(
                 QStringList * const arguments,
                 const char * const endOfPath);
 
+        /*!
+         * \brief selectUnselectPath (Un)Select a path
+         *
+         * \param arguments The arguments for the selection
+         * \param listView The list view to work on
+         * \param select @c true to select, @c false to unselect
+         *
+         * \return @c true if the selection works
+         *
+         * @since test-cascades 1.0.5
+         */
         bool selectUnselectPath(
                 QStringList * const arguments,
                 bb::cascades::ListView * const listView,
                 const bool select);
 
+        /*!
+         * \brief scrollToPath Scrolls to a known path
+         *
+         * \param arguments The arguments used to scroll to
+         * \param listView The list view to work on
+         *
+         * \return @c true if the scoll works
+         *
+         * @since test-cascades 1.0.5
+         */
         bool scrollToPath(
                 QStringList * const arguments,
                 bb::cascades::ListView * const listView);
 
+        /*!
+         * \brief showKeysOnPath Show the keys for a paths QVaraintMap
+         *
+         * \param arguments The arguments to use
+         * \param listView The list view to work on
+         *
+         * \return @c true if the lookup works and element is a map
+         *
+         * @since test-cascades 1.0.5
+         */
         bool showKeysOnPath(
                 QStringList * const arguments,
                 bb::cascades::ListView * const listView);

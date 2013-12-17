@@ -53,7 +53,7 @@ namespace cascades
                 const QString command = arguments->first();
                 arguments->removeFirst();
                 // check the count/size of the list
-                if (command == "count" && not arguments->isEmpty())
+                if (command == "count" and not arguments->isEmpty())
                 {
                     bool ok = false;
                     const int expected = arguments->first().toInt(&ok);
@@ -102,7 +102,7 @@ namespace cascades
                 // check an element by named index
                 else if (command == "name")
                 {
-                    const QString namedIndex = extractNamedPath(arguments,namedPathEnd.cdata());
+                    const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
                     QVariantList indexPath;
                     if (findElementByName(listView, namedIndex, indexPath))
                     {
@@ -171,11 +171,10 @@ namespace cascades
                     indexPathOk = false;
                 }
                 arguments->removeFirst();
-
             }
             else if (selectType == "name")
             {
-                const QString namedIndex = extractNamedPath(arguments,namedPathEnd.cdata());
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -190,7 +189,7 @@ namespace cascades
             if (indexPathOk)
             {
                 QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() && element.isValid())
+                if (not element.isNull() and element.isValid())
                 {
                     listView->scrollToItem(indexPath);
                     ret = true;
@@ -227,11 +226,10 @@ namespace cascades
                     indexPathOk = false;
                 }
                 arguments->removeFirst();
-
             }
             else if (selectType == "name")
             {
-                const QString namedIndex = extractNamedPath(arguments,namedPathEnd.cdata());
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -245,8 +243,8 @@ namespace cascades
             }
             if (indexPathOk)
             {
-                QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() && element.isValid())
+                const QVariant element = listView->dataModel()->data(indexPath);
+                if (not element.isNull() and element.isValid())
                 {
                     if (QString(element.typeName()) == "QVariantMap")
                     {
@@ -258,7 +256,7 @@ namespace cascades
                         this->client->write("OK (");
                         this->client->write(keys.join(", ").toUtf8().constData());
                         this->client->write(")\r\n");
-                        ret = false; // yep, false. Stops OK getting reported twice.
+                        ret = false;  // yep, false. Stops OK getting reported twice.
                     }
                     else
                     {
@@ -298,11 +296,10 @@ namespace cascades
                     indexPathOk = false;
                 }
                 arguments->removeFirst();
-
             }
             else if (selectType == "name")
             {
-                const QString namedIndex = extractNamedPath(arguments,namedPathEnd.cdata());
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -317,7 +314,7 @@ namespace cascades
             if (indexPathOk)
             {
                 QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() && element.isValid())
+                if (not element.isNull() and element.isValid())
                 {
                     listView->select(indexPath, select);
                     ret = true;
@@ -340,7 +337,7 @@ namespace cascades
             const char * const endOfPath)
     {
         QStringList path;
-        while(not arguments->isEmpty())
+        while (not arguments->isEmpty())
         {
             QString arg = arguments->first();
             path.push_back(arg);
@@ -352,15 +349,17 @@ namespace cascades
         }
 
         QString tmp = path.join(" ").trimmed();
-        normalisePath(tmp);
+        normalisePath(&tmp, endOfPath);
         return tmp.left(tmp.lastIndexOf(endOfPath));
     }
 
-    void ListCommand::normalisePath(QString& value)
+    void ListCommand::normalisePath(
+            QString * const value,
+            const char * const endOfPath)
     {
-        if (value.endsWith("^"))
+        if (value->endsWith(endOfPath))
         {
-            value.chop(1);
+            value->chop(1);
         }
     }
 
@@ -368,7 +367,7 @@ namespace cascades
             const QString& index,
             QVariantList& elementIndexPath) const
     {
-        Buffer indexString (index.toUtf8().constData());
+        Buffer indexString(index.toUtf8().constData());
         QStringList indexes = Utils::tokenise(&namedPathSep, &indexString, false);
 
         bool failed = false;
@@ -394,12 +393,12 @@ namespace cascades
             const QString& index,
             QVariantList& elementIndexPath) const
     {
-        const Buffer indexString (index.toUtf8().constData());
+        const Buffer indexString(index.toUtf8().constData());
         DataModel * const model = list->dataModel();
         QStringList indexes = Utils::tokenise(&namedPathSep, &indexString, false);
 
         bool failed = false;
-        while(not indexes.isEmpty())
+        while (not indexes.isEmpty())
         {
             const QString elementName = indexes.first();
             bool found = false;
@@ -430,8 +429,8 @@ namespace cascades
                         keyValuePair.removeFirst();
                         const QString value = keyValuePair.first().trimmed();
 
-                        if (not key.isNull() && not key.isEmpty()
-                                && not value.isNull() && not value.isEmpty())
+                        if (not key.isNull() and not key.isEmpty()
+                                and not value.isNull() and not value.isEmpty())
                         {
                             const QVariantMap elementMap(v.toMap());
                             const QString actual = elementMap[key].toString();
@@ -447,8 +446,8 @@ namespace cascades
             }
             if (not found)
             {
-            	failed = true;
-            	break;
+                failed = true;
+                break;
             }
             indexes.removeFirst();
         }
@@ -472,7 +471,7 @@ namespace cascades
         }
         else
         {
-            if (not element.isNull() && element.isValid())
+            if (not element.isNull() and element.isValid())
             {
                 const QString elementType = QString(element.typeName());
                 if (elementType == "QString")
@@ -490,7 +489,7 @@ namespace cascades
                 else if (elementType == "QVariantMap")
                 {
                     QString normalisedCheck(check);
-                    normalisePath(normalisedCheck);
+                    normalisePath(&normalisedCheck, namedPathEnd.cdata());
                     QStringList keyValuePair = normalisedCheck.split(assignSep.cdata());
                     if (keyValuePair.size() == 2)
                     {
@@ -498,8 +497,8 @@ namespace cascades
                         keyValuePair.removeFirst();
                         const QString value = keyValuePair.first().trimmed();
 
-                        if (not key.isNull() && not key.isEmpty()
-                                && not value.isNull() && not value.isEmpty())
+                        if (not key.isNull() and not key.isEmpty()
+                                and not value.isNull() and not value.isEmpty())
                         {
                             const QVariantMap elementMap(element.toMap());
                             const QString actual = elementMap[key].toString();
@@ -563,7 +562,6 @@ namespace cascades
         this->client->write("> <index> should be numerical and separated by ~ (i.e. 0~1~2)\r\n");
         this->client->write("> <name> should be text and separated by ~ and terminated by ^\r\n");
         this->client->write("\t level 1~level 2~level 3^");
-
     }
 }  // namespace cascades
 }  // namespace test

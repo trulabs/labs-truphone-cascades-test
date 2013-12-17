@@ -248,7 +248,8 @@ namespace cascades
                 {
                     this->keyListeners.insert(obj, new RecordCommandKeyHandler(
                                                   this,
-                                                  ctrl,this));
+                                                  ctrl,
+                                                  this));
                 }
             }
             else
@@ -328,7 +329,7 @@ namespace cascades
                     this->toggleListeners.insert(
                                 obj,
                                 new RecordCommandToggleHandler(
-                                    this,toggleButton,this));
+                                    this, toggleButton, this));
                 }
             }
 

@@ -34,7 +34,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            Server(QObject * parent = 0);
+            explicit Server(QObject * parent = 0);
             /*!
              * \brief ~Server
              *

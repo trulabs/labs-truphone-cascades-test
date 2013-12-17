@@ -147,7 +147,7 @@ namespace cascades
                     const QString varVal = params.first().trimmed();
                     params.removeFirst();
 
-                    if (varName=="forename")
+                    if (varName == "forename")
                     {
                         ContactAttributeBuilder nameAttributeBuilder;
                         nameAttributeBuilder.setKind(AttributeKind::Name)
@@ -155,7 +155,7 @@ namespace cascades
                                             .setValue(varVal);
                         contactBuilder.addAttribute(nameAttributeBuilder);
                     }
-                    else if (varName=="surname")
+                    else if (varName == "surname")
                     {
                         ContactAttributeBuilder nameAttributeBuilder;
                         nameAttributeBuilder.setKind(AttributeKind::Name)
@@ -163,7 +163,7 @@ namespace cascades
                                             .setValue(varVal);
                         contactBuilder.addAttribute(nameAttributeBuilder);
                     }
-                    else if (varName=="mobile")
+                    else if (varName == "mobile")
                     {
                         ContactAttributeBuilder phoneAttributeBuilder;
                         phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -171,7 +171,7 @@ namespace cascades
                                               .setValue(varVal);
                         contactBuilder.addAttribute(phoneAttributeBuilder);
                     }
-                    else if (varName=="work")
+                    else if (varName == "work")
                     {
                         ContactAttributeBuilder phoneAttributeBuilder;
                         phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -179,7 +179,7 @@ namespace cascades
                                               .setValue(varVal);
                         contactBuilder.addAttribute(phoneAttributeBuilder);
                     }
-                    else if (varName=="home")
+                    else if (varName == "home")
                     {
                         ContactAttributeBuilder phoneAttributeBuilder;
                         phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -187,7 +187,7 @@ namespace cascades
                                               .setValue(varVal);
                         contactBuilder.addAttribute(phoneAttributeBuilder);
                     }
-                    else if (varName=="other")
+                    else if (varName == "other")
                     {
                         ContactAttributeBuilder phoneAttributeBuilder;
                         phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -195,7 +195,7 @@ namespace cascades
                                               .setValue(varVal);
                         contactBuilder.addAttribute(phoneAttributeBuilder);
                     }
-                    else if (varName=="email")
+                    else if (varName == "email")
                     {
                         ContactAttributeBuilder emailAttributeBuilder;
                         emailAttributeBuilder.setKind(AttributeKind::Email)
@@ -310,49 +310,49 @@ namespace cascades
                         // remove the option
                         const QString varName = params.first().trimmed();
                         params.removeFirst();
-                        if (varName=="forename")
+                        if (varName == "forename")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
                                                      AttributeKind::Name,
                                                      AttributeSubKind::NameGiven);
                         }
-                        else if (varName=="surname")
+                        else if (varName == "surname")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
                                                      AttributeKind::Name,
                                                      AttributeSubKind::NameSurname);
                         }
-                        else if (varName=="mobile")
+                        else if (varName == "mobile")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
                                                      AttributeKind::Phone,
                                                      AttributeSubKind::PhoneMobile);
                         }
-                        else if (varName=="work")
+                        else if (varName == "work")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
                                                      AttributeKind::Phone,
                                                      AttributeSubKind::Work);
                         }
-                        else if (varName=="home")
+                        else if (varName == "home")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
                                                      AttributeKind::Phone,
                                                      AttributeSubKind::Home);
                         }
-                        else if (varName=="other")
+                        else if (varName == "other")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
                                                      AttributeKind::Phone,
                                                      AttributeSubKind::Other);
                         }
-                        else if (varName=="email")
+                        else if (varName == "email")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
@@ -375,7 +375,7 @@ namespace cascades
                         const QString varVal = params.first().trimmed();
                         params.removeFirst();
 
-                        if (varName=="forename")
+                        if (varName == "forename")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
@@ -387,7 +387,7 @@ namespace cascades
                                                 .setValue(varVal);
                             contactBuilder = contactBuilder.addAttribute(nameAttributeBuilder);
                         }
-                        else if (varName=="surname")
+                        else if (varName == "surname")
                         {
                             modify = removeAttribute(&contact,
                                                      &contactBuilder,
@@ -399,7 +399,7 @@ namespace cascades
                                                 .setValue(varVal);
                             contactBuilder = contactBuilder.addAttribute(nameAttributeBuilder);
                         }
-                        else if (varName=="mobile")
+                        else if (varName == "mobile")
                         {
                             ContactAttributeBuilder phoneAttributeBuilder;
                             phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -407,7 +407,7 @@ namespace cascades
                                                   .setValue(varVal);
                             contactBuilder = contactBuilder.addAttribute(phoneAttributeBuilder);
                         }
-                        else if (varName=="work")
+                        else if (varName == "work")
                         {
                             ContactAttributeBuilder phoneAttributeBuilder;
                             phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -415,7 +415,7 @@ namespace cascades
                                                   .setValue(varVal);
                             contactBuilder = contactBuilder.addAttribute(phoneAttributeBuilder);
                         }
-                        else if (varName=="home")
+                        else if (varName == "home")
                         {
                             ContactAttributeBuilder phoneAttributeBuilder;
                             phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -423,7 +423,7 @@ namespace cascades
                                                   .setValue(varVal);
                             contactBuilder = contactBuilder.addAttribute(phoneAttributeBuilder);
                         }
-                        else if (varName=="other")
+                        else if (varName == "other")
                         {
                             ContactAttributeBuilder phoneAttributeBuilder;
                             phoneAttributeBuilder.setKind(AttributeKind::Phone)
@@ -431,7 +431,7 @@ namespace cascades
                                                   .setValue(varVal);
                             contactBuilder = contactBuilder.addAttribute(phoneAttributeBuilder);
                         }
-                        else if (varName=="email")
+                        else if (varName == "email")
                         {
                             ContactAttributeBuilder emailAttributeBuilder;
                             emailAttributeBuilder.setKind(AttributeKind::Email)
@@ -481,7 +481,7 @@ namespace cascades
         const QList<ContactAttribute> attrs =  contact->attributes();
         Q_FOREACH(const ContactAttribute attr, attrs)
         {
-            if ((attr.kind() == kind) && (attr.subKind() == subKind))
+            if ((attr.kind() == kind) and (attr.subKind() == subKind))
             {
                 *builder = builder->deleteAttribute(attr);
                 ret = true;
@@ -490,6 +490,6 @@ namespace cascades
 
         return ret;
     }
-}
-}
-}
+}  // namespace cascades
+}  // namespace test
+}  // namespace truphone
