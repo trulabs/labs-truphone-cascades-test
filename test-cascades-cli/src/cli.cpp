@@ -280,7 +280,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
                     }
                 }
-                else if (strcmp(raw, "\r\n") == 0 || strcmp(raw, "\n") == 0)
+                else if (strcmp(raw, "\r\n") == 0 or strcmp(raw, "\n") == 0)
                 {
                     qDebug() << "";
                     bytesRead = this->inputFile->readLine(outputBuffer.data(),
