@@ -31,11 +31,11 @@ public final class Tests {
 	
 	@Before
 	public void testInit() {
-		device = new FakeDevice(15000);
-		device.listen();
-        conn = new SynchronousConnection("localhost", 15000);
+		this.device = new FakeDevice(15000);
+		this.device.listen();
+		this.conn = new SynchronousConnection("localhost", 15000);
         try {
-        	conn.connect(DEFAULT_TIMEOUT_PERIOD);
+        	this.conn.connect(DEFAULT_TIMEOUT_PERIOD);
         } catch(TimeoutException exception) {
         	Assert.fail(exception.getLocalizedMessage());
         }
@@ -44,7 +44,7 @@ public final class Tests {
 	@Test
 	public void testTextCommand() throws TimeoutException {
 		final IReply reply = 
-				conn.transmit(new TextCommand(
+				this.conn.transmit(new TextCommand(
 						"myUsernameField",
 						"my.user-name"),
 						DEFAULT_TIMEOUT_PERIOD);
@@ -55,7 +55,7 @@ public final class Tests {
 	 @Test
 	 public void testClickCommand() throws TimeoutException {
 		 final IReply reply = 
-				 conn.transmit(new ClickCommand(
+				 this.conn.transmit(new ClickCommand(
 						 "theLoginButton"),
 						 DEFAULT_TIMEOUT_PERIOD);
 		 Assert.assertTrue(reply.isSuccess());
@@ -64,7 +64,7 @@ public final class Tests {
 	 @Test
 	 public void testToastCommand() throws TimeoutException {
 		 final IReply reply = 
-				 conn.transmit(new ToastCommand(
+				 this.conn.transmit(new ToastCommand(
 						 "You didn't enter a password"),
 						 DEFAULT_TIMEOUT_PERIOD);
 		 Assert.assertTrue(reply.isSuccess());
@@ -73,7 +73,7 @@ public final class Tests {
 	 @Test
 	 public void testSleepCommand() throws TimeoutException {
 		 final IReply reply = 
-				 conn.transmit(new SleepCommand(
+				 this.conn.transmit(new SleepCommand(
 						 DEFAULT_SLEEP_PERIOD),
 						 DEFAULT_TIMEOUT_PERIOD);
 		 Assert.assertTrue(reply.isSuccess());
@@ -81,7 +81,7 @@ public final class Tests {
 	 
 	 @After
 	 public void testExit() {
-		 device.stop();
+		 this.device.stop();
 	 }
 	 
 	 private static final class FakeDevice {
@@ -97,44 +97,50 @@ public final class Tests {
 				 this.running = true;
 			 }
 			 
+			 @Override
 			 public void run() {
 				 try {
-					 while(running) {
-						 client = server.accept();
-						 client.getOutputStream().write("OK\n".getBytes());
+					 while(this.running) {
+						 this.client = this.server.accept();
+						 this.client.getOutputStream().write("OK\n".getBytes());
 						 final BufferedReader reader = 
 								 new BufferedReader(
-										 new InputStreamReader(client.getInputStream()));
+										 new InputStreamReader(this.client.getInputStream()));
 						 String line = reader.readLine();
 						 while (line != null) {
 							 if (line.equals("record")) {
-								 client.getOutputStream().write("OK\n".getBytes());
+								 this.client.getOutputStream().write("OK\n".getBytes());
 							 } else if (line.equals("click theLoginButton")) {
-								 client.getOutputStream().write("OK\n".getBytes());
+								 this.client.getOutputStream().write("OK\n".getBytes());
 							 } else if (line.equals("text myUsernameField my.user-name")) {
-								 client.getOutputStream().write("OK\n".getBytes());
+								 this.client.getOutputStream().write("OK\n".getBytes());
 							 } else if (line.equals("toast You didn't enter a password")) {
-								 client.getOutputStream().write("OK\n".getBytes());
+								 this.client.getOutputStream().write("OK\n".getBytes());
 							 } else if (line.equals("sleep 3000")) {
-								 client.getOutputStream().write("OK\n".getBytes());
+								 this.client.getOutputStream().write("OK\n".getBytes());
 							 }
 							 line = reader.readLine();
 						 }
-						 client = null;
+						 this.client = null;
 					 }
 				 } catch (Throwable t) {
+					 throw new RuntimeException(t);
 				 }
 			 }
 			 
 			 public void shutdown() {
-				 running = false;
+				 this.running = false;
 				 try {
 					 this.server.close();
-				 } catch(Throwable t) {}
-				 if (client != null) {
+				 } catch(Throwable t) {
+					 throw new RuntimeException(t);
+				 }
+				 if (this.client != null) {
 					 try {
-						 client.close();
-					 }catch (Throwable t) {}
+						 this.client.close();
+					 }catch (Throwable t) {
+						 throw new RuntimeException(t);
+					 }
 				 }
 			 }
 		 }
@@ -159,15 +165,16 @@ public final class Tests {
 			 boolean r = false;
 			 try {
 				 this.lock.acquire();
-				 if (!isListening) {
-					 serverThread = new Thread(
-							 fakeDeviceProcess = new FakeDeviceProcess(this.server));
+				 if (!this.isListening) {
+					 this.serverThread = new Thread(
+							 this.fakeDeviceProcess = new FakeDeviceProcess(this.server));
 					 r = true;
-					 serverThread.start();
-					 isListening = true;
+					 this.serverThread.start();
+					 this.isListening = true;
 				 }
 				 this.lock.release();
 			 } catch(Throwable t) {
+				 throw new RuntimeException(t);
 			 }
 			 return r;
 		 }
@@ -175,13 +182,14 @@ public final class Tests {
 		 public void stop() {
 			 try {
 				 this.lock.acquire();
-				 if (isListening) {
+				 if (this.isListening) {
 					 this.fakeDeviceProcess.shutdown();
 					 this.serverThread.join();
 					 this.isListening = false;
 				 }
 				 this.lock.release();
 			 } catch(Throwable t) {
+				 throw new RuntimeException(t);
 			 }
 		 }
 	 }
