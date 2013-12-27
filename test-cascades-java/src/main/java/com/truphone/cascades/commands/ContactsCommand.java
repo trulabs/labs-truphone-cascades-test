@@ -3,10 +3,20 @@ package com.truphone.cascades.commands;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Manage the native address book
+ * @author STruscott
+ *
+ */
 public class ContactsCommand extends DefaultCommand {
 
-	final String _payload;
+	private final String _payload;
 	
+	/**
+	 * Supported attributes for contacts
+	 * @author STruscott
+	 *
+	 */
 	public enum Attribute {
 		FORENAME,
 		SURNAME,
@@ -16,6 +26,10 @@ public class ContactsCommand extends DefaultCommand {
 		OTHER,
 		EMAIL;
 		
+		/**
+		 * Convert the attribute to a string
+		 * @return The name of the attribute
+		 */
 		public String asString() {
 			final String v;
 			switch(this) {
