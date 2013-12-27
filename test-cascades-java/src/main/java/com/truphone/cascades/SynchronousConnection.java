@@ -65,7 +65,7 @@ public class SynchronousConnection {
         }
 
         @Override
-        public void connected(final IConnection connection) {
+        public void connected() {
             synchronized (this.lock) {
                 this.connectionOk = true;
                 this.lock.notifyAll();
@@ -94,7 +94,7 @@ public class SynchronousConnection {
         }
 
         @Override
-        public void received(final IConnection connection, final IReply reply) {
+        public void received(final IReply reply) {
             if (reply.isRecording()) {
                 // don't record sleep commands
                 if (!reply.getMessage().startsWith("sleep")) {
