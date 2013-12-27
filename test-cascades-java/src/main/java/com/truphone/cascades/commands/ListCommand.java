@@ -119,25 +119,25 @@ public class ListCommand extends DefaultCommand {
 		 * @param listView_ The listview to check
 		 * @param indexMode The index mode (numeric, name)
 		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
-		 * @param expectedValue The expected value (Susan Boyle)
+		 * @param select_ True if it's a selection and false if a deselection
 		 */
 		public ListSelectCommand(
 				final String listView_,
-				final IndexingMode indexMode,
-				final String indexPath,
-				final boolean select) {
+				final IndexingMode indexMode_,
+				final String indexPath_,
+				final boolean select_) {
 			super("");
 			final StringBuilder builder = new StringBuilder();
 			builder.append("list ");
 			builder.append(listView_);
-			if (select) {
+			if (select_) {
 				builder.append(" select ");
 			} else {
 				builder.append(" unselect ");
 			}
-			builder.append(indexMode.asString());
+			builder.append(indexMode_.asString());
 			builder.append(' ');
-			builder.append(indexPath);
+			builder.append(indexPath_);
 			
 			this._payload = builder.toString();
 		}
@@ -154,22 +154,21 @@ public class ListCommand extends DefaultCommand {
 		/**
 		 * Scroll to an index on a list
 		 * @param listView_ The listview to check
-		 * @param indexMode The index mode (numeric, name)
-		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
-		 * @param expectedValue The expected value (Susan Boyle)
+		 * @param indexMode_ The index mode (numeric, name)
+		 * @param indexPath_ The path (0~1~2, S~Sam Truscott^)
 		 */
 		public ListScrollCommand(
 				final String listView_,
-				final IndexingMode indexMode,
-				final String indexPath) {
+				final IndexingMode indexMode_,
+				final String indexPath_) {
 			super("");
 			final StringBuilder builder = new StringBuilder();
 			builder.append("list ");
 			builder.append(listView_);
 			builder.append(" scroll ");
-			builder.append(indexMode.asString());
+			builder.append(indexMode_.asString());
 			builder.append(' ');
-			builder.append(indexPath);
+			builder.append(indexPath_);
 			
 			this._payload = builder.toString();
 		}
