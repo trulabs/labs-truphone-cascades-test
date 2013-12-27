@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.concurrent.Semaphore;
 
 import org.junit.After;
@@ -124,29 +125,29 @@ public final class Tests {
 				try {
 					while (this.running) {
 						this.client = this.server.accept();
-						this.client.getOutputStream().write(OK_MESSAGE.getBytes());
+						this.client.getOutputStream().write(OK_MESSAGE.getBytes(Charset.defaultCharset()));
 						final BufferedReader reader = new BufferedReader(
 								new InputStreamReader(
-										this.client.getInputStream()));
+										this.client.getInputStream(), Charset.defaultCharset()));
 						String line = reader.readLine();
 						while (line != null) {
 							if ("record".equals(line)) {
 								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes());
+										OK_MESSAGE.getBytes(Charset.defaultCharset()));
 							} else if ("click theLoginButton".equals(line)) {
 								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes());
+										OK_MESSAGE.getBytes(Charset.defaultCharset()));
 							} else if ("text myUsernameField my.user-name"
 									.equals(line)) {
 								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes());
+										OK_MESSAGE.getBytes(Charset.defaultCharset()));
 							} else if ("toast You didn't enter a password"
 									.equals(line)) {
 								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes());
+										OK_MESSAGE.getBytes(Charset.defaultCharset()));
 							} else if ("sleep 3000".equals(line)) {
 								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes());
+										OK_MESSAGE.getBytes(Charset.defaultCharset()));
 							}
 							line = reader.readLine();
 						}

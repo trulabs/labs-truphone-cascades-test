@@ -1,6 +1,7 @@
 package com.truphone.cascades;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -94,7 +95,7 @@ class Connection implements IConnection, IConnectionHandlerListener {
         synchronized (this.listeners) {
             for (final IConnectionListener listener : this.listeners) {
                 try {
-                    listener.connected(this);
+                    listener.connected();
                 } catch (Throwable t) {
                 	LOGGER.log(Level.SEVERE, "connected failed to tell listener", t);
                 }
@@ -105,7 +106,7 @@ class Connection implements IConnection, IConnectionHandlerListener {
     @Override
     public void received(final Channel theChannel, final ChannelBuffer data) {
 
-        final String packet = new String(data.array()).trim();
+        final String packet = new String(data.array(), Charset.defaultCharset()).trim();
         final StringTokenizer messages = new StringTokenizer(packet, "\r\n");
         while (messages.hasMoreElements()) {
             final String message = messages.nextToken();
@@ -120,7 +121,7 @@ class Connection implements IConnection, IConnectionHandlerListener {
             synchronized (this.listeners) {
                 for (final IConnectionListener listener : this.listeners) {
                     try {
-                        listener.received(this, reply);
+                        listener.received(reply);
                     } catch (Throwable t) {
                     	LOGGER.log(Level.SEVERE, "received failed to tell listener", t);
                     }
@@ -136,7 +137,7 @@ class Connection implements IConnection, IConnectionHandlerListener {
         if (this.channel != null) {
             final String payload = command.getPayload();
             final ChannelBuffer buffer = ChannelBuffers.buffer(payload.length());
-            buffer.writeBytes(command.getPayload().getBytes());
+            buffer.writeBytes(command.getPayload().getBytes(Charset.defaultCharset()));
 
             final ChannelFuture future = this.channel.write(buffer);
             try {
