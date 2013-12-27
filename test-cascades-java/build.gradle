@@ -4,6 +4,7 @@ apply plugin: 'eclipse'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'jdepend'
+apply plugin: 'jacoco'
 
 repositories {
     mavenCentral()
