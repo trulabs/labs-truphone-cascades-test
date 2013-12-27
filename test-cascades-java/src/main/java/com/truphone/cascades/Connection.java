@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -16,40 +18,34 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
-import com.truphone.cascades.ConnectionHandler.IConnectionHandlerListener;
 import com.truphone.cascades.commands.ICommand;
 import com.truphone.cascades.replys.FailReply;
 import com.truphone.cascades.replys.IReply;
 import com.truphone.cascades.replys.OkReply;
 import com.truphone.cascades.replys.RecordReply;
 
-class Connection implements IConnectionHandlerListener {
+class Connection implements IConnection, IConnectionHandlerListener {
 
-    private final List<IConnectionListener> _listeners;
-    private final ConnectionHandler         _handler;
-    private final ClientBootstrap           _bootstrap;
-    private final String                    _hostName;
-    private final int                       _hostPort;
-    private Channel                         _channel;
+	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 
-    public interface IConnectionListener {
-        void connected(Connection connection_);
+    private final List<IConnectionListener> listeners;
+    private final ConnectionHandler			handler;
+    private final ClientBootstrap 			bootstrap;
+    private final String                    hostName;
+    private final int                       hostPort;
+    private Channel                         channel;
 
-        void received(Connection connection_, IReply reply_);
-    }
+    public Connection(final String host, final int port) {
+        this.hostName = host;
+        this.hostPort = port;
+        this.listeners = new LinkedList<IConnectionListener>();
+        this.handler = new ConnectionHandler();
+        this.handler.addListener(this);
 
-    public Connection(final String host_, final int port_) {
-        this._channel = null;
-        this._hostName = host_;
-        this._hostPort = port_;
-        this._listeners = new LinkedList<Connection.IConnectionListener>();
-        this._handler = new ConnectionHandler();
-        this._handler.addListener(this);
-
-        this._bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
+        this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
                 Executors.newCachedThreadPool()));
 
-        this._bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+        this.bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
             @Override
             public ChannelPipeline getPipeline() throws Exception {
                 return Channels.pipeline(Connection.this.getHandler());
@@ -58,11 +54,12 @@ class Connection implements IConnectionHandlerListener {
     }
 
     protected ConnectionHandler getHandler() {
-        return this._handler;
+        return this.handler;
     }
 
-    protected ChannelFuture connectNow() {
-        return this._bootstrap.connect(new InetSocketAddress(this._hostName, this._hostPort));
+    @Override
+    public ChannelFuture connectNow() {
+        return this.bootstrap.connect(new InetSocketAddress(this.hostName, this.hostPort));
     }
 
     public void connect() {
@@ -73,85 +70,99 @@ class Connection implements IConnectionHandlerListener {
         future.getChannel().getCloseFuture().awaitUninterruptibly();
 
         // Shut down thread pools to exit.
-        this._bootstrap.releaseExternalResources();
+        this.bootstrap.releaseExternalResources();
     }
 
+    @Override
     public void close() {
-        if (this._channel != null) {
-            if (this._channel.isConnected()) {
-                this._channel.close();
-                this._bootstrap.releaseExternalResources();
-            }
-        }
-    }
-
-    public void addListener(final IConnectionListener listener_) {
-        synchronized (this._listeners) {
-            this._listeners.add(listener_);
+        if (this.channel != null && this.channel.isConnected()) {
+            this.channel.close();
+            this.bootstrap.releaseExternalResources();
         }
     }
 
     @Override
-    public void connected(final Channel theChannel_) {
-        this._channel = theChannel_;
-        synchronized (this._listeners) {
-            for (IConnectionListener listener : this._listeners) {
+    public void addListener(final IConnectionListener listener) {
+        synchronized (this.listeners) {
+            this.listeners.add(listener);
+        }
+    }
+
+    @Override
+    public void connected(final Channel theChannel) {
+        this.channel = theChannel;
+        synchronized (this.listeners) {
+            for (final IConnectionListener listener : this.listeners) {
                 try {
                     listener.connected(this);
-                } catch (Throwable t_) {
-                    // TODO
-                    System.err.println(t_);
+                } catch (Throwable t) {
+                	LOGGER.log(Level.SEVERE, "connected failed to tell listener", t);
                 }
             }
         }
     }
 
     @Override
-    public void received(final Channel theChannel_, final ChannelBuffer data_) {
+    public void received(final Channel theChannel, final ChannelBuffer data) {
 
-        final String packet = new String(data_.array()).trim();
+        final String packet = new String(data.array()).trim();
         final StringTokenizer messages = new StringTokenizer(packet, "\r\n");
         while (messages.hasMoreElements()) {
             final String message = messages.nextToken();
-            final IReply reply;
-            if (message.equals("OK")) {
+            IReply reply;
+            if (message.startsWith("OK")) {
                 reply = new OkReply(message);
             } else if (message.startsWith("ERROR")) {
                 reply = new FailReply(message);
             } else {
                 reply = new RecordReply(message);
             }
-            synchronized (this._listeners) {
-                for (IConnectionListener listener : this._listeners) {
+            synchronized (this.listeners) {
+                for (final IConnectionListener listener : this.listeners) {
                     try {
                         listener.received(this, reply);
-                    } catch (Throwable t_) {
-                        // TODO
-                        System.err.println(t_);
+                    } catch (Throwable t) {
+                    	LOGGER.log(Level.SEVERE, "received failed to tell listener", t);
                     }
                 }
             }
         }
     }
 
-    public boolean write(final ICommand command_) {
+    @Override
+    public boolean write(final ICommand command) throws CascadesException {
         boolean written = false;
 
-        if (this._channel != null) {
-            final String payload = command_.getPayload();
+        if (this.channel != null) {
+            final String payload = command.getPayload();
             final ChannelBuffer buffer = ChannelBuffers.buffer(payload.length());
-            buffer.writeBytes(command_.getPayload().getBytes());
+            buffer.writeBytes(command.getPayload().getBytes());
 
-            final ChannelFuture future = this._channel.write(buffer);
+            final ChannelFuture future = this.channel.write(buffer);
             try {
                 future.await();
                 written = future.isSuccess();
-            } catch (InterruptedException ie_) {
-                /* failed */
-                System.err.println(ie_);
+            } catch (InterruptedException ie) {
+                throw new CascadesException("Failed to write to connection", ie);
             }
         }
 
         return written;
     }
+
+	public List<IConnectionListener> getListeners() {
+		return this.listeners;
+	}
+
+	public String getHostName() {
+		return this.hostName;
+	}
+
+	public int getHostPort() {
+		return this.hostPort;
+	}
+
+	public Channel getChannel() {
+		return this.channel;
+	}
 }

@@ -2,177 +2,195 @@ package com.truphone.cascades.commands;
 
 
 /**
- * Check and control ListViews
+ * Check and control ListViews.
  * @author STruscott
  *
  */
 public class ListCommand extends DefaultCommand {
-	
-	private final String _payload;
-	
+
+	private static final String COMMAND_NAME = "list ";
+	private final String payload;
+
 	/**
-	 * Supported indexing modes
+	 * Supported indexing modes.
 	 * @author STruscott
 	 *
 	 */
 	public enum IndexingMode {
-		INDEX,
-		NAME;
-		
 		/**
-		 * Convert the attribute to a string
+		 * A numeric index, separated by ~'s, i.e. 1~2~3
+		 */
+		INDEX,
+		/**
+		 * A named index, seperated by ~'s, terminated by ^. Key values allowed.
+		 * i.e. Names~S~Name=Sam Truscott^
+		 */
+		NAME;
+
+		/**
+		 * Convert the attribute to a string.
 		 * @return The name of the attribute
 		 */
 		public String asString() {
-			final String v;
+			String enumName;
 			switch(this) {
 			case INDEX:
-				v = "index";
+				enumName = "index";
 				break;
 			case NAME:
-				v = "name";
+				enumName = "name";
 				break;
 			default:
-				v = "unsupported";
+				enumName = "unsupported";
 				break;
 			}
-			return v;
+			return enumName;
 		}
 	}
-	
+
 	/**
-	 * Create a command to check the size of the list
-	 * @param listView_ The list view to check
-	 * @param expectedCount_ The expected count
+	 * Create a command to check the size of the list.
+	 * @param listView The list view to check
+	 * @param expectedCount The expected count
 	 */
-	public ListCommand(final String listView_, final int expectedCount_) {
+	public ListCommand(final String listView, final int expectedCount) {
 		super("");
-		this._payload = "list " + listView_ + " count " + expectedCount_;
+		this.payload = COMMAND_NAME + listView + " count " + expectedCount;
 	}
-	
+
 	/**
-	 * Create a check for an expected value
-	 * @param listView_ The listview to check
+	 * Create a check for an expected value.
+	 * @param listView The listview to check
 	 * @param indexMode The index mode (numeric, name)
 	 * @param indexPath The path (0~1~2, S~Sam Truscott^)
 	 * @param expectedValue The expected value (Susan Boyle)
 	 */
 	public ListCommand(
-			final String listView_,
+			final String listView,
 			final IndexingMode indexMode,
 			final String indexPath,
 			final String expectedValue) {
 		super("");
 		final StringBuilder builder = new StringBuilder();
-		builder.append("list ");
-		builder.append(listView_);
+		builder.append(COMMAND_NAME);
+		builder.append(listView);
 		builder.append(' ');
 		builder.append(indexMode.asString());
 		builder.append(' ');
 		builder.append(indexPath);
 		builder.append(' ');
 		builder.append(expectedValue);
-		
-		this._payload = builder.toString();
+
+		this.payload = builder.toString();
 	}
-	
+
 	/**
-	 * Create a check for an expected value
-	 * @param listView_ The listview to check
+	 * Create a check for an expected value.
+	 * @param listView The listview to check
 	 * @param indexMode The index mode (numeric, name)
 	 * @param indexPath The path (0~1~2, S~Sam Truscott^)
-	 * @param expectedKey_ The expected value (Name)
+	 * @param expectedKey The expected value (Name)
 	 * @param expectedValue The expected value (Susan Boyle^)
 	 */
 	public ListCommand(
-			final String listView_,
-			final IndexingMode indexMode_,
-			final String indexPath_,
-			final String expectedKey_,
-			final String expectedValue_) {
+			final String listView,
+			final IndexingMode indexMode,
+			final String indexPath,
+			final String expectedKey,
+			final String expectedValue) {
 		super("");
 		final StringBuilder builder = new StringBuilder();
-		builder.append("list ");
-		builder.append(listView_);
+		builder.append(COMMAND_NAME);
+		builder.append(listView);
 		builder.append(' ');
-		builder.append(indexMode_.asString());
+		builder.append(indexMode.asString());
 		builder.append(' ');
-		builder.append(indexPath_);
+		builder.append(indexPath);
 		builder.append(' ');
-		builder.append(expectedKey_);
+		builder.append(expectedKey);
 		builder.append('=');
-		builder.append(expectedValue_);
-		
-		this._payload = builder.toString();
+		builder.append(expectedValue);
+
+		this.payload = builder.toString();
 	}
-	
+
 	@Override
-    public String getPayload() {
-        return this._payload;
+    public final String getPayload() {
+        return this.payload;
     }
-	
+
+    /**
+     * Command to perform a select/unselect on a list.
+     * @author STruscott
+     *
+     */
 	public static final class ListSelectCommand extends DefaultCommand {
-		
+
 		private final String _payload;
 		/**
-		 * Select an index on a list
-		 * @param listView_ The listview to check
-		 * @param indexMode_ The index mode (numeric, name)
-		 * @param indexPath_ The path (0~1~2, S~Sam Truscott^)
-		 * @param select_ True if it's a selection and false if a deselection
+		 * Select an index on a list.
+		 * @param listView The listview to check
+		 * @param indexMode The index mode (numeric, name)
+		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
+		 * @param select True if it's a selection and false if a deselection
 		 */
 		public ListSelectCommand(
-				final String listView_,
-				final IndexingMode indexMode_,
-				final String indexPath_,
-				final boolean select_) {
+				final String listView,
+				final IndexingMode indexMode,
+				final String indexPath,
+				final boolean select) {
 			super("");
 			final StringBuilder builder = new StringBuilder();
-			builder.append("list ");
-			builder.append(listView_);
-			if (select_) {
+			builder.append(COMMAND_NAME);
+			builder.append(listView);
+			if (select) {
 				builder.append(" select ");
 			} else {
 				builder.append(" unselect ");
 			}
-			builder.append(indexMode_.asString());
+			builder.append(indexMode.asString());
 			builder.append(' ');
-			builder.append(indexPath_);
-			
+			builder.append(indexPath);
+
 			this._payload = builder.toString();
 		}
-		
+
 		@Override
 	    public String getPayload() {
 	        return this._payload;
 	    }
 	}
-	
+
+	/**
+	 * Command to scroll to an item in a list.
+	 * @author STruscott
+	 *
+	 */
 	public static final class ListScrollCommand extends DefaultCommand {
-		
+
 		private final String _payload;
 		/**
-		 * Scroll to an index on a list
-		 * @param listView_ The listview to check
-		 * @param indexMode_ The index mode (numeric, name)
-		 * @param indexPath_ The path (0~1~2, S~Sam Truscott^)
+		 * Scroll to an index on a list.
+		 * @param listView The listview to check
+		 * @param indexMode The index mode (numeric, name)
+		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
 		 */
 		public ListScrollCommand(
-				final String listView_,
-				final IndexingMode indexMode_,
-				final String indexPath_) {
+				final String listView,
+				final IndexingMode indexMode,
+				final String indexPath) {
 			super("");
 			final StringBuilder builder = new StringBuilder();
-			builder.append("list ");
-			builder.append(listView_);
+			builder.append(COMMAND_NAME);
+			builder.append(listView);
 			builder.append(" scroll ");
-			builder.append(indexMode_.asString());
+			builder.append(indexMode.asString());
 			builder.append(' ');
-			builder.append(indexPath_);
-			
+			builder.append(indexPath);
+
 			this._payload = builder.toString();
 		}
-		
+
 		@Override
 	    public String getPayload() {
 	        return this._payload;

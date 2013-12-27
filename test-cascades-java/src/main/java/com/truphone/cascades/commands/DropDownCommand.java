@@ -9,18 +9,18 @@ package com.truphone.cascades.commands;
 public class DropDownCommand extends DefaultCommand {
 
     /**
-     * @param list_ The list to change
-     * @param index_ The new index for the list
+     * @param list The list to change
+     * @param index The new index for the list
      */
-    public DropDownCommand(final String list_, final int index_) {
-        super("dropdown " + list_ + " " + index_);
+    public DropDownCommand(final String list, final int index) {
+        super("dropdown " + list + " " + index);
     }
 
     /**
-     * @param list_ The list to change
-     * @param optionText_ The new option to select
+     * @param list The list to change
+     * @param optionText The new option to select
      */
-    public DropDownCommand(final String list_, final String optionText_) {
-        super("dropdown " + list_ + " " + optionText_);
+    public DropDownCommand(final String list, final String optionText) {
+        super("dropdown " + list + " " + optionText);
     }
 }

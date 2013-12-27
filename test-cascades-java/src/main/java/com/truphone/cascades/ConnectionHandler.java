@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -15,13 +14,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 
 class ConnectionHandler extends SimpleChannelUpstreamHandler {
 
-    private static final Logger _LOGGER = Logger.getLogger(ConnectionHandler.class.getName());
-
-    public interface IConnectionHandlerListener {
-        void connected(Channel channel_);
-
-        void received(Channel channel_, ChannelBuffer data_);
-    }
+    private static final Logger LOGGER = Logger.getLogger(ConnectionHandler.class.getName());
 
     private final List<IConnectionHandlerListener> _listeners;
 
@@ -29,25 +22,25 @@ class ConnectionHandler extends SimpleChannelUpstreamHandler {
      * Creates a client-side handler.
      */
     public ConnectionHandler() {
-        this._listeners = new LinkedList<ConnectionHandler.IConnectionHandlerListener>();
+    	super();
+        this._listeners = new LinkedList<IConnectionHandlerListener>();
     }
 
-    public void addListener(final IConnectionHandlerListener listener_) {
+    public void addListener(final IConnectionHandlerListener listener) {
         synchronized (this._listeners) {
-            this._listeners.add(listener_);
+            this._listeners.add(listener);
         }
     }
 
     @Override
-    public void channelConnected(final ChannelHandlerContext ctx_, final ChannelStateEvent e_) {
+    public void channelConnected(final ChannelHandlerContext ctx, final ChannelStateEvent event) {
         synchronized (this._listeners) {
             for (final IConnectionHandlerListener listener : this._listeners) {
                 if (listener != null) {
                     try {
-                        listener.connected(e_.getChannel());
-                    } catch (Throwable t_) {
-                        // TODO
-                        System.err.println(t_);
+                        listener.connected(event.getChannel());
+                    } catch (Throwable t) {
+                        LOGGER.log(Level.SEVERE, "channelConnected failed to inform listener", t);
                     }
                 }
             }
@@ -55,16 +48,15 @@ class ConnectionHandler extends SimpleChannelUpstreamHandler {
     }
 
     @Override
-    public void messageReceived(final ChannelHandlerContext ctx_, final MessageEvent e_) {
-        final ChannelBuffer buffer = (ChannelBuffer) e_.getMessage();
+    public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent event) {
+        final ChannelBuffer buffer = (ChannelBuffer) event.getMessage();
         synchronized (this._listeners) {
             for (final IConnectionHandlerListener listener : this._listeners) {
                 if (listener != null) {
                     try {
-                        listener.received(e_.getChannel(), buffer);
-                    } catch (Throwable t_) {
-                        // TODO
-                        System.err.println(t_);
+                        listener.received(event.getChannel(), buffer);
+                    } catch (Throwable t) {
+                    	LOGGER.log(Level.SEVERE, "messageReceived failed to inform listener", t);
                     }
                 }
             }
@@ -72,9 +64,9 @@ class ConnectionHandler extends SimpleChannelUpstreamHandler {
     }
 
     @Override
-    public void exceptionCaught(final ChannelHandlerContext ctx_, final ExceptionEvent e_) {
+    public void exceptionCaught(final ChannelHandlerContext ctx, final ExceptionEvent event) {
         // Close the connection when an exception is raised.
-        _LOGGER.log(Level.WARNING, "Unexpected exception from downstream.", e_.getCause());
-        e_.getChannel().close();
+        LOGGER.log(Level.WARNING, "Unexpected exception from downstream.", event.getCause());
+        event.getChannel().close();
     }
 }

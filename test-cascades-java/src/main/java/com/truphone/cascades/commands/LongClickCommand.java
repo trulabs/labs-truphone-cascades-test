@@ -9,10 +9,10 @@ package com.truphone.cascades.commands;
 public class LongClickCommand extends DefaultCommand {
 
     /**
-     * @param object_ The object to long click
+     * @param object The object to long click
      */
-    public LongClickCommand(final String object_) {
-        super("longClick " + object_);
+    public LongClickCommand(final String object) {
+        super("longClick " + object);
     }
 
 }

@@ -9,9 +9,9 @@ package com.truphone.cascades.commands;
 public class ActionCommand extends DefaultCommand {
 
     /**
-     * @param action_ The action
+     * @param action The action
      */
-    public ActionCommand(final String action_) {
-        super("action " + action_);
+    public ActionCommand(final String action) {
+        super("action " + action);
     }
 }

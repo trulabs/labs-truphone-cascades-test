@@ -1,7 +1,5 @@
 package com.truphone.cascades.commands;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Simulate a tap event.
@@ -11,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TapCommand extends DefaultCommand {
 
-    /**
+	/**
      * @author struscott
      *
      */
@@ -31,23 +29,39 @@ public class TapCommand extends DefaultCommand {
         /**
          *
          */
-        CANCEL
-    }
+        CANCEL;
 
-    private static final Map<TapType, String> _TYPE_LOOKUP = new ConcurrentHashMap<TapCommand.TapType, String>();
-
-    static {
-        _TYPE_LOOKUP.put(TapType.UP, "up");
-        _TYPE_LOOKUP.put(TapType.DOWN, "down");
-        _TYPE_LOOKUP.put(TapType.MOVE, "move");
-        _TYPE_LOOKUP.put(TapType.CANCEL, "cancel");
+        /**
+         * Get the name of the enumeration.
+         * @return String name of the enumeration
+         */
+        public String asString() {
+        	String enumName;
+        	switch (this) {
+        		case UP:
+        			enumName = "up";
+        			break;
+        		case DOWN:
+        			enumName = "down";
+        			break;
+        		case MOVE:
+        			enumName = "move";
+        			break;
+        		case CANCEL:
+        			enumName = "cancel";
+        			break;
+        		default:
+        			enumName = "unsupported";
+        	}
+        	return enumName;
+        }
     }
 
     /**
-     * @param type_ The type of the tap
-     * @param object_ The object to tap
+     * @param type The type of the tap
+     * @param object The object to tap
      */
-    public TapCommand(final TapType type_, final String object_) {
-        super("tap " + _TYPE_LOOKUP.get(type_) + " " + object_);
+    public TapCommand(final TapType type, final String object) {
+        super("tap " + type.asString() + " " + object);
     }
 }

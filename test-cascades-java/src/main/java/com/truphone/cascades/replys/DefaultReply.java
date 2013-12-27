@@ -1,32 +1,32 @@
 package com.truphone.cascades.replys;
 
 abstract class DefaultReply implements IReply {
-    private final boolean _success;
-    private final String  _message;
-    private final boolean _recording;
+    private final boolean success;
+    private final String  message;
+    private final boolean recording;
 
-    protected DefaultReply(final boolean successful_, final String aMessage_, final boolean recording_) {
-        this._success = successful_;
-        this._message = aMessage_;
-        this._recording = recording_;
+    protected DefaultReply(final boolean successful, final String aMessage, final boolean isRecording) {
+        this.success = successful;
+        this.message = aMessage;
+        this.recording = isRecording;
     }
 
-    protected DefaultReply(final boolean successful_, final String aMessage_) {
-        this(successful_, aMessage_, false);
+    protected DefaultReply(final boolean successful, final String aMessage) {
+        this(successful, aMessage, false);
     }
 
     @Override
     public boolean isSuccess() {
-        return this._success;
+        return this.success;
     }
 
     @Override
     public String getMessage() {
-        return this._message;
+        return this.message;
     }
 
     @Override
     public boolean isRecording() {
-        return this._recording;
+        return this.recording;
     }
 }

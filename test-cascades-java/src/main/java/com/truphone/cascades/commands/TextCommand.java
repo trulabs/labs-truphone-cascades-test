@@ -9,10 +9,10 @@ package com.truphone.cascades.commands;
 public class TextCommand extends DefaultCommand {
 
     /**
-     * @param object_ The object to set the text of
-     * @param value_ The new text value
+     * @param object The object to set the text of
+     * @param value The new text value
      */
-    public TextCommand(final String object_, final String value_) {
-        super("text " + object_ + " " + value_);
+    public TextCommand(final String object, final String value) {
+        super("text " + object + " " + value);
     }
 }
