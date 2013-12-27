@@ -36,6 +36,10 @@ class Connection implements IConnection, IConnectionHandlerListener {
     private final int                       hostPort;
     private Channel                         channel;
 
+    static {
+    	LOGGER.setLevel(Level.ALL);
+    }
+
     public Connection(final String host, final int port) {
         this.hostName = host;
         this.hostPort = port;
