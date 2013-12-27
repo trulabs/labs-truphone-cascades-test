@@ -153,7 +153,9 @@ public final class Tests {
 						}
 					}
 				} catch (Throwable t) {
-					Assert.fail(FAIL_MESSAGE + t);
+					if (this.running) {
+						Assert.fail(FAIL_MESSAGE + t);
+					}
 				}
 			}
 

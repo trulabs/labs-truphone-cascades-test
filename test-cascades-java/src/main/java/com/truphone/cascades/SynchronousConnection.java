@@ -24,12 +24,18 @@ import com.truphone.cascades.replys.RecordReply;
  */
 public class SynchronousConnection {
 
+	private static final Logger LOGGER = Logger.getLogger(SynchronousConnection.class.getName());
+
     private static final int MAX_RECENT_RECS = 1;
 
     private final IConnection           connection;
     private final PrivateHandler        handler;
     private final BlockingQueue<IReply> replyQueue;
     private ChannelFuture               connectFuture;
+
+    static {
+    	LOGGER.setLevel(Level.ALL);
+    }
 
     private static final class PrivateHandler implements IConnectionListener {
 
@@ -127,6 +133,7 @@ public class SynchronousConnection {
      * @param port The port
      */
     public SynchronousConnection(final String host, final int port) {
+    	LOGGER.log(Level.FINE, "SynchronousConnection()");
         this.replyQueue = new LinkedBlockingQueue<IReply>();
         this.handler = new PrivateHandler(this.replyQueue);
         this.connection = new Connection(host, port);
@@ -140,6 +147,7 @@ public class SynchronousConnection {
      * @throws TimeoutException Thrown if the connection times out
      */
     public final void connect(final int timeout) throws TimeoutException {
+    	LOGGER.log(Level.FINE, "connect() - starting connection");
         this.connectFuture = this.connection.connectNow();
 
         IReply reply = null;
@@ -152,6 +160,7 @@ public class SynchronousConnection {
             throw new TimeoutException(timeout);
         }
 
+    	LOGGER.log(Level.FINE, "connect() - starting transmit of record command");
         this.transmit(new RecordCommand(), timeout);
     }
 
