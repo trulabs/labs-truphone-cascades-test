@@ -117,8 +117,8 @@ public class ListCommand extends DefaultCommand {
 		/**
 		 * Select an index on a list
 		 * @param listView_ The listview to check
-		 * @param indexMode The index mode (numeric, name)
-		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
+		 * @param indexMode_ The index mode (numeric, name)
+		 * @param indexPath_ The path (0~1~2, S~Sam Truscott^)
 		 * @param select_ True if it's a selection and false if a deselection
 		 */
 		public ListSelectCommand(
