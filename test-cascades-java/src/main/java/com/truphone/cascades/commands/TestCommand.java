@@ -9,12 +9,12 @@ package com.truphone.cascades.commands;
 public class TestCommand extends DefaultCommand {
 
     /**
-     * @param object_ The object to test
-     * @param property_ The property to test
-     * @param value_ The expected value of the property
+     * @param object The object to test
+     * @param property The property to test
+     * @param value The expected value of the property
      */
-    public TestCommand(final String object_, final String property_, final String value_) {
-        super("test " + object_ + " " + property_ + " " + value_);
+    public TestCommand(final String object, final String property, final String value) {
+        super("test " + object + " " + property + " " + value);
     }
 
 }

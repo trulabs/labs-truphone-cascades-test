@@ -9,16 +9,17 @@ package com.truphone.cascades.commands;
 public class ToastCommand extends DefaultCommand {
 
     /**
-     * @param visible_ Test if a toast is visible <code>true</code> or not visible <code>false</code>
+     * @param visible Test if a toast is visible <code>true</code>
+     * or not visible <code>false</code>
      */
-    public ToastCommand(final boolean visible_) {
-        super("toast " + (visible_ ? "true" : "false"));
+    public ToastCommand(final boolean visible) {
+        super("toast " + (visible ? "true" : "false"));
     }
 
     /**
-     * @param text_ Test that a toast is displayed and its value is <code>text_</code>
+     * @param text Test that a toast is displayed and its value is <code>text_</code>
      */
-    public ToastCommand(final String text_) {
-        super("toast " + text_);
+    public ToastCommand(final String text) {
+        super("toast " + text);
     }
 }

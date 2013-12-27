@@ -9,16 +9,16 @@ package com.truphone.cascades.commands;
 public class TabCommand extends DefaultCommand {
 
     /**
-     * @param index_ The index of the tab on the current pane
+     * @param index The index of the tab on the current pane
      */
-    public TabCommand(final int index_) {
-        super("tab " + index_);
+    public TabCommand(final int index) {
+        super("tab " + index);
     }
 
     /**
-     * @param tabName_ The name of the tab on the current pane
+     * @param tabName The name of the tab on the current pane
      */
-    public TabCommand(final String tabName_) {
-        super("tab " + tabName_);
+    public TabCommand(final String tabName) {
+        super("tab " + tabName);
     }
 }

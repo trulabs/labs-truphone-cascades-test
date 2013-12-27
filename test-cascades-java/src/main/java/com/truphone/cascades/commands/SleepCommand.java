@@ -11,11 +11,11 @@ public class SleepCommand extends DefaultCommand {
     private final int _periodInMs;
 
     /**
-     * @param periodInMs_ The period (in milliseconds) to delay
+     * @param periodInMs The period (in milliseconds) to delay
      */
-    public SleepCommand(final int periodInMs_) {
-        super("sleep " + periodInMs_);
-        this._periodInMs = periodInMs_;
+    public SleepCommand(final int periodInMs) {
+        super("sleep " + periodInMs);
+        this._periodInMs = periodInMs;
     }
 
     @Override

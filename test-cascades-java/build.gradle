@@ -1,8 +1,8 @@
 apply plugin: 'java'
-//apply plugin: 'findbugs'
+apply plugin: 'findbugs'
 apply plugin: 'eclipse'
-//apply plugin: 'checkstyle'
-//apply plugin: 'pmd'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
 apply plugin: 'jdepend'
 
 repositories {

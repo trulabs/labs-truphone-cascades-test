@@ -45,26 +45,26 @@ public class TouchCommand extends DefaultCommand {
         private final int _localY;
 
         /**
-     * @param screenX_ The position of the touch relative to the screen (x)
-     * @param screenY_ The position of the touch relative to the screen (y)
-     * @param windowX_ The position of the touch relative to the window (x)
-     * @param windowY_ The position of the touch relative to the window (y)
-     * @param localX_ The position of the touch relative to the object (x)
-     * @param localY_ The position of the touch relative to the object (y)
+     * @param screenX The position of the touch relative to the screen (x)
+     * @param screenY The position of the touch relative to the screen (y)
+     * @param windowX The position of the touch relative to the window (x)
+     * @param windowY The position of the touch relative to the window (y)
+     * @param localX The position of the touch relative to the object (x)
+     * @param localY The position of the touch relative to the object (y)
          */
         public TouchLocation(
-                final int screenX_,
-                final int screenY_,
-                final int windowX_,
-                final int windowY_,
-                final int localX_,
-                final int localY_) {
-            this._screenX = screenX_;
-            this._screenY = screenY_;
-            this._windowX = windowX_;
-            this._windowY = windowY_;
-            this._localX = localX_;
-            this._localY = localY_;
+                final int screenX,
+                final int screenY,
+                final int windowX,
+                final int windowY,
+                final int localX,
+                final int localY) {
+            this._screenX = screenX;
+            this._screenY = screenY;
+            this._windowX = windowX;
+            this._windowY = windowY;
+            this._localX = localX;
+            this._localY = localY;
         }
 
         protected final int getScreenX() {
@@ -93,18 +93,18 @@ public class TouchCommand extends DefaultCommand {
     }
 
     /**
-     * @param location_ The location of the touch
-     * @param type_ The type of touch
-     * @param receiverObject_ The receiving object
-     * @param targetObject_ The target object
+     * @param location The location of the touch
+     * @param type The type of touch
+     * @param receiverObject The receiving object
+     * @param targetObject The target object
      */
     public TouchCommand(
-            final TouchLocation location_,
-            final Type type_,
-            final String receiverObject_,
-            final String targetObject_) {
-        super("touch " + location_.getScreenX() + " " + location_.getScreenY() + " "
-            + location_.getWindowX() + " " + location_.getWindowY() + " " + location_.getLocalX() + " "
-            + location_.getLocalY() + " " + type_.ordinal() + " " + receiverObject_ + " " + targetObject_);
+            final TouchLocation location,
+            final Type type,
+            final String receiverObject,
+            final String targetObject) {
+        super("touch " + location.getScreenX() + " " + location.getScreenY() + " "
+            + location.getWindowX() + " " + location.getWindowY() + " " + location.getLocalX() + " "
+            + location.getLocalY() + " " + type.ordinal() + " " + receiverObject + " " + targetObject);
     }
 }

@@ -8,9 +8,9 @@ package com.truphone.cascades.replys;
  */
 public class RecordReply extends DefaultReply {
     /**
-     * @param recording_ The recorded command
+     * @param recording The recorded command
      */
-    public RecordReply(final String recording_) {
-        super(true, recording_, true);
+    public RecordReply(final String recording) {
+        super(true, recording, true);
     }
 }

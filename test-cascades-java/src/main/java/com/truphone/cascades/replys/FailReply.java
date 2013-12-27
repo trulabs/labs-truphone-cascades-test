@@ -8,9 +8,9 @@ package com.truphone.cascades.replys;
  */
 public class FailReply extends DefaultReply {
     /**
-     * @param message_ The message received from the library
+     * @param message The message received from the library
      */
-    public FailReply(final String message_) {
-        super(false, message_);
+    public FailReply(final String message) {
+        super(false, message);
     }
 }

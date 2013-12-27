@@ -8,9 +8,9 @@ package com.truphone.cascades.replys;
  */
 public class OkReply extends DefaultReply {
     /**
-     * @param message_ The ok message received from the server
+     * @param message The ok message received from the server
      */
-    public OkReply(final String message_) {
-        super(true, message_);
+    public OkReply(final String message) {
+        super(true, message);
     }
 }

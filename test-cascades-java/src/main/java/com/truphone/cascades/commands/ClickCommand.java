@@ -9,9 +9,9 @@ package com.truphone.cascades.commands;
 public class ClickCommand extends DefaultCommand {
 
     /**
-     * @param object_ The click command
+     * @param object The click command
      */
-    public ClickCommand(final String object_) {
-        super("click " + object_);
+    public ClickCommand(final String object) {
+        super("click " + object);
     }
 }
