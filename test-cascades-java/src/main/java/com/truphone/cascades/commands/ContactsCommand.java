@@ -92,11 +92,12 @@ public class ContactsCommand extends DefaultCommand {
 		super("");
 		final StringBuilder builder = new StringBuilder("contacts create ");
 		for (final Map.Entry<Attribute, String> entry : attributes.entrySet()) {
-			builder.append(entry.getKey());
+			builder.append(entry.getKey().asString());
 			builder.append('=');
 			builder.append(entry.getValue());
 			builder.append(',');
 		}
+		builder.append("\r\n");
 		this._payload = builder.toString();
 	}
 
@@ -115,6 +116,7 @@ public class ContactsCommand extends DefaultCommand {
 			builder.append(item.asString());
 			builder.append(',');
 		}
+		builder.append("\r\n");
 		this._payload = builder.toString();
 	}
 
@@ -130,11 +132,12 @@ public class ContactsCommand extends DefaultCommand {
 		builder.append(name);
 		builder.append(' ');
 		for (final Map.Entry<Attribute, String> entry : attributes.entrySet()) {
-			builder.append(entry.getKey());
+			builder.append(entry.getKey().asString());
 			builder.append('=');
 			builder.append(entry.getValue());
 			builder.append(',');
 		}
+		builder.append("\r\n");
 		this._payload = builder.toString();
 	}
 
@@ -145,7 +148,7 @@ public class ContactsCommand extends DefaultCommand {
 	 */
 	public ContactsCommand(final String name) {
 		super("");
-		this._payload = "contacts delete " + name;
+		this._payload = "contacts delete " + name + "\r\n";
 	}
 
 	@Override
