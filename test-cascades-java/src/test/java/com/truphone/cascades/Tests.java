@@ -378,6 +378,7 @@ public final class Tests {
 							this.fakeDeviceProcess = new FakeDeviceProcess(
 									this.server));
 					listenOk = true;
+					this.serverThread.setDaemon(true);
 					this.serverThread.start();
 					this.isListening = true;
 				}
