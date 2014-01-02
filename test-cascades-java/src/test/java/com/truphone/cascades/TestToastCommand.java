@@ -25,6 +25,8 @@ public final class TestToastCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("toast You didn't enter a password".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};

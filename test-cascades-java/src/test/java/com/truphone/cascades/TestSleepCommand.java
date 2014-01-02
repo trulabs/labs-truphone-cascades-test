@@ -28,6 +28,8 @@ public final class TestSleepCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("sleep 3000".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};

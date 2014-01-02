@@ -27,6 +27,8 @@ public final class TestTextCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("text myUsernameField my.user-name".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};
