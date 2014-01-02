@@ -9,12 +9,17 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.truphone.cascades.commands.ActionCommand;
 import com.truphone.cascades.commands.ClickCommand;
+import com.truphone.cascades.commands.ContactsCommand;
+import com.truphone.cascades.commands.DropDownCommand;
 import com.truphone.cascades.commands.SleepCommand;
 import com.truphone.cascades.commands.TextCommand;
 import com.truphone.cascades.commands.ToastCommand;
@@ -54,23 +59,22 @@ public final class Tests {
 	}
 
 	/**
-	 * Test the text command.
-	 *
-	 * @throws TimeoutException Thrown if the command times out.
+	 * Tests the action command.
+	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testTextCommand() throws TimeoutException {
+	public void testActionCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("text myUsernameField my.user-name".equals(message)) {
+				if ("action someAction".equals(message)) {
 					replyStream.println(OK_MESSAGE);
 				}
 			}
 		};
 		device.getProcess().addListener(response);
-		final IReply reply = conn.transmit(new TextCommand(
-				"myUsernameField", "my.user-name"), DEFAULT_TIMEOUT);
+		final IReply reply = conn.transmit(new ActionCommand(
+				"someAction"), DEFAULT_TIMEOUT);
 		device.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
@@ -98,24 +102,117 @@ public final class Tests {
 	}
 
 	/**
-	 * Test the toast command.
+	 * Test the Contacts (Add) command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testToastCommand() throws TimeoutException {
+	public void testContactsAddCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("toast You didn't enter a password".equals(message)) {
+				if ("contacts create forename=Some,surname=Person,mobile=+44123,".equals(message)) {
 					replyStream.println(OK_MESSAGE);
 				}
 			}
 		};
 		device.getProcess().addListener(response);
-		final IReply reply = conn.transmit(new ToastCommand(
-				"You didn't enter a password"), DEFAULT_TIMEOUT);
+		final SortedMap<ContactsCommand.Attribute, String> data = new TreeMap<ContactsCommand.Attribute, String>();
+		data.put(ContactsCommand.Attribute.FORENAME, "Some");
+		data.put(ContactsCommand.Attribute.SURNAME, "Person");
+		data.put(ContactsCommand.Attribute.MOBILE, "+44123");
+		final IReply reply = conn.transmit(new ContactsCommand(data), DEFAULT_TIMEOUT);
 		device.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the Contacts (Modify-Remove) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testContactsModifyRemoveCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("contacts modify Some Person forename,surname,mobile,".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final List<ContactsCommand.Attribute> data = new LinkedList<ContactsCommand.Attribute>();
+		data.add(ContactsCommand.Attribute.FORENAME);
+		data.add(ContactsCommand.Attribute.SURNAME);
+		data.add(ContactsCommand.Attribute.MOBILE);
+		final IReply reply = conn.transmit(new ContactsCommand("Some Person", data), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the Contacts (Modify-Edit) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testContactsModifyEditCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("contacts modify Some Person forename=Somee,surname=Personn,mobile=+441234,".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final SortedMap<ContactsCommand.Attribute, String> data = new TreeMap<ContactsCommand.Attribute, String>();
+		data.put(ContactsCommand.Attribute.FORENAME, "Somee");
+		data.put(ContactsCommand.Attribute.SURNAME, "Personn");
+		data.put(ContactsCommand.Attribute.MOBILE, "+441234");
+		final IReply reply = conn.transmit(new ContactsCommand("Some Person", data), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the Contacts (Delete) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testContactsDeleteCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("contacts delete Some Person".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply = conn.transmit(new ContactsCommand("Some Person"), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the drop down command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testDropDownCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("dropdown myList 10".equals(message) || "dropdown myList List option 4".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply1 = conn.transmit(new DropDownCommand("myList", 10), DEFAULT_TIMEOUT);
+		Assert.assertTrue(reply1.isSuccess());
+		final IReply reply2 = conn.transmit(new DropDownCommand("myList", "List option 4"), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
+		Assert.assertTrue(reply2.isSuccess());
 	}
 
 	/**
@@ -135,6 +232,49 @@ public final class Tests {
 		device.getProcess().addListener(response);
 		final IReply reply = conn.transmit(new SleepCommand(
 				DEFAULT_SLEEP), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the text command.
+	 *
+	 * @throws TimeoutException Thrown if the command times out.
+	 */
+	@Test
+	public void testTextCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("text myUsernameField my.user-name".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply = conn.transmit(new TextCommand(
+				"myUsernameField", "my.user-name"), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the toast command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testToastCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("toast You didn't enter a password".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply = conn.transmit(new ToastCommand(
+				"You didn't enter a password"), DEFAULT_TIMEOUT);
 		device.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
