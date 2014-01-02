@@ -21,6 +21,6 @@ public class KeyCommand extends DefaultCommand {
             final boolean ctrl,
             final boolean alt,
             final boolean shift) {
-        super("key " + code + " " + pressed + " " + alt + " " + shift + " " + ctrl);
+        super("key " + code + " " + (pressed ? 1 : 0) + " " + (alt ? 1 : 0) + " " + (shift ? 1 : 0) + " " + (ctrl ? 1 : 0));
     }
 }
