@@ -3,14 +3,15 @@ package com.truphone.cascades;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.truphone.cascades.commands.ClickCommand;
@@ -24,24 +25,29 @@ import com.truphone.cascades.replys.IReply;
  */
 public final class Tests {
 
-	private FakeDevice device;
-	private static final String OK_MESSAGE = "OK\n";
+	private static FakeDevice device;
+	private static final String OK_MESSAGE = "OK";
 	private static final String FAIL_MESSAGE = "Unexpected exception - ";
 	private static final int DEFAULT_TEST_PORT = 15000;
 	private static final int DEFAULT_TIMEOUT = 1000;
+	private static final int STARTUP_TIMEOUT = 10000;
 	private static final int DEFAULT_SLEEP = 3000;
-	private SynchronousConnection conn;
+	private static SynchronousConnection conn;
 
-	/**
-	 * Initialisation to perform prior to tests.
-	 */
-	@Before
-	public void testInit() {
-		this.device = new FakeDevice(DEFAULT_TEST_PORT);
-		this.device.listen();
-		this.conn = new SynchronousConnection("localhost", DEFAULT_TEST_PORT);
+	static {
+		device = new FakeDevice(DEFAULT_TEST_PORT);
+		device.listen();
+		device.getProcess().addListener(new FakeDeviceListener() {
+			@Override
+			public void messageReceived(final String message, final PrintStream replyStream) {
+				if ("record".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		});
+		conn = new SynchronousConnection("localhost", DEFAULT_TEST_PORT);
 		try {
-			this.conn.connect(DEFAULT_TIMEOUT);
+			conn.connect(STARTUP_TIMEOUT);
 		} catch (TimeoutException exception) {
 			Assert.fail(exception.getLocalizedMessage());
 		}
@@ -54,8 +60,18 @@ public final class Tests {
 	 */
 	@Test
 	public void testTextCommand() throws TimeoutException {
-		final IReply reply = this.conn.transmit(new TextCommand(
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("text myUsernameField my.user-name".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply = conn.transmit(new TextCommand(
 				"myUsernameField", "my.user-name"), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
 
@@ -66,8 +82,18 @@ public final class Tests {
 	 */
 	@Test
 	public void testClickCommand() throws TimeoutException {
-		final IReply reply = this.conn.transmit(new ClickCommand(
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("click theLoginButton".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply = conn.transmit(new ClickCommand(
 				"theLoginButton"), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
 
@@ -77,8 +103,18 @@ public final class Tests {
 	 */
 	@Test
 	public void testToastCommand() throws TimeoutException {
-		final IReply reply = this.conn.transmit(new ToastCommand(
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("toast You didn't enter a password".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply = conn.transmit(new ToastCommand(
 				"You didn't enter a password"), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
 
@@ -88,20 +124,26 @@ public final class Tests {
 	 */
 	@Test
 	public void testSleepCommand() throws TimeoutException {
-		final IReply reply = this.conn.transmit(new SleepCommand(
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("sleep 3000".equals(message)) {
+					replyStream.println(OK_MESSAGE);
+				}
+			}
+		};
+		device.getProcess().addListener(response);
+		final IReply reply = conn.transmit(new SleepCommand(
 				DEFAULT_SLEEP), DEFAULT_TIMEOUT);
+		device.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
 
-	/**
-	 * Steps to execute after the tests.
-	 */
-	@After
-	public void testExit() {
-		this.device.stop();
+	protected interface FakeDeviceListener {
+		void messageReceived(final String message, final PrintStream replyStream);
 	}
 
-	private static final class FakeDevice {
+	protected static final class FakeDevice {
 
 		private final ServerSocket server;
 		private final Semaphore lock;
@@ -109,15 +151,25 @@ public final class Tests {
 		private FakeDeviceProcess fakeDeviceProcess;
 		private Thread serverThread;
 
-		private static final class FakeDeviceProcess implements Runnable {
+		protected static final class FakeDeviceProcess implements Runnable {
 
 			private final ServerSocket server;
 			private Socket client;
 			private boolean running;
+			private final List<FakeDeviceListener> listeners;
 
 			public FakeDeviceProcess(final ServerSocket socket) {
+				this.listeners = new LinkedList<FakeDeviceListener>();
 				this.server = socket;
 				this.running = true;
+			}
+
+			public void addListener(final FakeDeviceListener listener) {
+				this.listeners.add(listener);
+			}
+
+			public void removeListener(final FakeDeviceListener listener) {
+				this.listeners.remove(listener);
 			}
 
 			@Override
@@ -130,24 +182,14 @@ public final class Tests {
 								new InputStreamReader(
 										this.client.getInputStream(), Charset.defaultCharset()));
 						String line = reader.readLine();
+						final PrintStream replyStream = new PrintStream(this.client.getOutputStream(), false, Charset.defaultCharset().name());
 						while (line != null) {
-							if ("record".equals(line)) {
-								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes(Charset.defaultCharset()));
-							} else if ("click theLoginButton".equals(line)) {
-								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes(Charset.defaultCharset()));
-							} else if ("text myUsernameField my.user-name"
-									.equals(line)) {
-								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes(Charset.defaultCharset()));
-							} else if ("toast You didn't enter a password"
-									.equals(line)) {
-								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes(Charset.defaultCharset()));
-							} else if ("sleep 3000".equals(line)) {
-								this.client.getOutputStream().write(
-										OK_MESSAGE.getBytes(Charset.defaultCharset()));
+							for (final FakeDeviceListener listener : this.listeners) {
+								try {
+									listener.messageReceived(line, replyStream);
+								} catch (Throwable t) {
+									Assert.fail(FAIL_MESSAGE + t);
+								}
 							}
 							line = reader.readLine();
 						}
@@ -204,6 +246,10 @@ public final class Tests {
 				Assert.fail(FAIL_MESSAGE + t);
 			}
 			return listenOk;
+		}
+
+		public FakeDeviceProcess getProcess() {
+			return this.fakeDeviceProcess;
 		}
 
 		public void stop() {
