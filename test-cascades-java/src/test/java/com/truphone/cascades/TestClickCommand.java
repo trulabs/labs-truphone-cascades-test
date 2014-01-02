@@ -27,6 +27,8 @@ public final class TestClickCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("click theLoginButton".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};

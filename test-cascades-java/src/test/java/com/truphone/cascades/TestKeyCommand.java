@@ -26,6 +26,8 @@ public final class TestKeyCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("key 65 1 1 1 1".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};

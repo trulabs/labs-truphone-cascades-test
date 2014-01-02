@@ -30,6 +30,8 @@ public final class TestContactsCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("contacts create forename=Some,surname=Person,mobile=+44123,".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};

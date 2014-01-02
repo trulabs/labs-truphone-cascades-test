@@ -26,6 +26,8 @@ public final class TestDropDownCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("dropdown myList 10".equals(message) || "dropdown myList List option 4".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};

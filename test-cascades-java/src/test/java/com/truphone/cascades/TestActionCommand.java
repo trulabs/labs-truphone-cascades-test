@@ -26,6 +26,8 @@ public final class TestActionCommand {
 			public void messageReceived(String message, PrintStream replyStream) {
 				if ("action someAction".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
 				}
 			}
 		};

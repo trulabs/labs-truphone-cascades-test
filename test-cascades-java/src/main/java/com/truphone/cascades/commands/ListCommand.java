@@ -55,7 +55,7 @@ public class ListCommand extends DefaultCommand {
 	 */
 	public ListCommand(final String listView, final int expectedCount) {
 		super("");
-		this.payload = COMMAND_NAME + listView + " count " + expectedCount;
+		this.payload = COMMAND_NAME + listView + " count " + expectedCount + "\r\n";
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class ListCommand extends DefaultCommand {
 		builder.append(indexPath);
 		builder.append(' ');
 		builder.append(expectedValue);
-
+		builder.append("\r\n");
 		this.payload = builder.toString();
 	}
 
@@ -110,7 +110,7 @@ public class ListCommand extends DefaultCommand {
 		builder.append(expectedKey);
 		builder.append('=');
 		builder.append(expectedValue);
-
+		builder.append("\r\n");
 		this.payload = builder.toString();
 	}
 
@@ -151,7 +151,7 @@ public class ListCommand extends DefaultCommand {
 			builder.append(indexMode.asString());
 			builder.append(' ');
 			builder.append(indexPath);
-
+			builder.append("\r\n");
 			this._payload = builder.toString();
 		}
 
@@ -187,7 +187,7 @@ public class ListCommand extends DefaultCommand {
 			builder.append(indexMode.asString());
 			builder.append(' ');
 			builder.append(indexPath);
-
+			builder.append("\r\n");
 			this._payload = builder.toString();
 		}
 
