@@ -174,6 +174,15 @@ class Connection implements IConnection, IConnectionHandlerListener {
 		return this.hostPort;
 	}
 
+	@Override
+	public boolean isConnected() {
+		boolean connected = false;
+		if (this.channel != null) {
+			connected = this.channel.isConnected();
+		}
+		return connected;
+	}
+
 	public Channel getChannel() {
 		return this.channel;
 	}
