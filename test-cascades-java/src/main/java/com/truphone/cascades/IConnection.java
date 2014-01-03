@@ -23,6 +23,12 @@ public interface IConnection {
 	void removeListener(final IConnectionListener listener);
 
 	/**
+	 * Is the connection connected to the server?
+	 * @return True if connected.
+	 */
+	boolean isConnected();
+
+	/**
 	 * Connect to the server.
 	 * @return A future for the connection
 	 */

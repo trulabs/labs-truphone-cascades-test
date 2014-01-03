@@ -172,8 +172,10 @@ public class SynchronousConnection {
      * Close the connection.
      */
     public final void close() {
-        this.connection.close();
-        this.waitForDisconnect();
+    	if (this.connection.isConnected()) {
+    		this.connection.close();
+    		this.waitForDisconnect();
+    	}
     }
 
     /**
@@ -214,6 +216,14 @@ public class SynchronousConnection {
         }
 
         return reply;
+    }
+
+    /**
+     * Is the connection connected to the server?
+     * @return True if it's connected to the server
+     */
+    public final boolean isConnected() {
+    	return this.connection.isConnected();
     }
 
     /**
