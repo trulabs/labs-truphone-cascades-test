@@ -16,7 +16,7 @@ import com.truphone.cascades.replys.IReply;
  */
 public final class TestPageCommand {
 	/**
-	 * Test the key command.
+	 * Test the Page command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test

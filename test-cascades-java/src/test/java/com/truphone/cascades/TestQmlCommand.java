@@ -16,7 +16,7 @@ import com.truphone.cascades.replys.IReply;
  */
 public final class TestQmlCommand {
 	/**
-	 * Test the key command.
+	 * Test the QML command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test

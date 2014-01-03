@@ -16,7 +16,7 @@ import com.truphone.cascades.replys.IReply;
  */
 public final class TestLongClickCommand {
 	/**
-	 * Test the key command.
+	 * Test the Long click command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
