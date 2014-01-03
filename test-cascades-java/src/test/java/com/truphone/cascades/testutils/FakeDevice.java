@@ -33,8 +33,12 @@ public final class FakeDevice {
 	private boolean isListening;
 	private FakeDeviceProcess fakeDeviceProcess;
 	private Thread serverThread;
+	private static int fakeDeviceNo;
 
-	private static final int DEFAULT_TEST_PORT = 15000;
+	/**
+	 * The port that the fake device uses.
+	 */
+	public static final int DEFAULT_TEST_PORT = 15000;
 	/**
 	 * The default timeout (in milliseconds) to wait for a reply.
 	 */
@@ -89,14 +93,16 @@ public final class FakeDevice {
 	public static final class FakeDeviceProcess implements Runnable {
 
 		private final ServerSocket server;
-		private Socket client;
 		private boolean running;
 		private final List<FakeDeviceListener> listeners;
+		private final String serverName;
+		private int clientId;
 
-		protected FakeDeviceProcess(final ServerSocket socket) {
+		protected FakeDeviceProcess(final ServerSocket socket, final String name) {
 			this.listeners = new LinkedList<FakeDeviceListener>();
 			this.server = socket;
 			this.running = true;
+			this.serverName = name;
 		}
 
 		/**
@@ -104,7 +110,9 @@ public final class FakeDevice {
 		 * @param listener The listener to add.
 		 */
 		public void addListener(final FakeDeviceListener listener) {
-			this.listeners.add(listener);
+			synchronized (this.listeners) {
+				this.listeners.add(listener);
+			}
 		}
 
 		/**
@@ -112,14 +120,21 @@ public final class FakeDevice {
 		 * @param listener The listener to remove.
 		 */
 		public void removeListener(final FakeDeviceListener listener) {
-			this.listeners.remove(listener);
+			synchronized (this.listeners) {
+				this.listeners.remove(listener);
+			}
 		}
 
-		@Override
-		public void run() {
-			try {
-				while (this.running) {
-					this.client = this.server.accept();
+		private final class FakeDeviceClient implements Runnable {
+			private final Socket client;
+
+			public FakeDeviceClient(final Socket aClient) {
+				this.client = aClient;
+			}
+
+			@Override
+			public void run() {
+				try {
 					this.client.getOutputStream().write(OK_MESSAGE.getBytes(Charset.defaultCharset()));
 					final BufferedReader reader = new BufferedReader(
 							new InputStreamReader(
@@ -127,15 +142,44 @@ public final class FakeDevice {
 					String line = reader.readLine();
 					final PrintStream replyStream = new PrintStream(this.client.getOutputStream(), false, Charset.defaultCharset().name());
 					while (line != null) {
-						for (final FakeDeviceListener listener : this.listeners) {
-							try {
-								listener.messageReceived(line, replyStream);
-							} catch (Throwable t) {
-								Assert.fail(FAIL_MESSAGE + t);
+						final List<FakeDeviceListener> theListeners = FakeDeviceProcess.this.getListeners();
+						synchronized (theListeners) {
+							for (final FakeDeviceListener listener : theListeners) {
+								try {
+									listener.messageReceived(line, replyStream);
+								} catch (Throwable t) {
+									Assert.fail(FAIL_MESSAGE + t);
+								}
 							}
 						}
 						line = reader.readLine();
 					}
+					this.client.close();
+				} catch (Throwable t) {
+					if (FakeDeviceProcess.this.isRunning()) {
+						Assert.fail(FAIL_MESSAGE + t);
+					}
+				}
+			}
+		}
+
+		protected List<FakeDeviceListener> getListeners() {
+			return this.listeners;
+		}
+
+		protected boolean isRunning() {
+			return this.running;
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (this.running) {
+					final FakeDeviceClient client = new FakeDeviceClient(this.server.accept());
+					final Thread clientThread = new Thread(client);
+					clientThread.setName(this.serverName + " client " + (this.clientId++));
+					clientThread.setDaemon(true);
+					clientThread.start();
 				}
 			} catch (Throwable t) {
 				if (this.running) {
@@ -150,13 +194,6 @@ public final class FakeDevice {
 				this.server.close();
 			} catch (Throwable t) {
 				Assert.fail(FAIL_MESSAGE + t);
-			}
-			if (this.client != null) {
-				try {
-					this.client.close();
-				} catch (Throwable t) {
-					Assert.fail(FAIL_MESSAGE + t);
-				}
 			}
 		}
 	}
@@ -185,10 +222,12 @@ public final class FakeDevice {
 		try {
 			this.lock.acquire();
 			if (!this.isListening) {
+				final String name = "FakeDevice " + (fakeDeviceNo++);
 				this.serverThread = new Thread(
 						this.fakeDeviceProcess = new FakeDeviceProcess(
-								this.server));
+								this.server, name));
 				listenOk = true;
+				this.serverThread.setName(name);
 				this.serverThread.setDaemon(true);
 				this.serverThread.start();
 				this.isListening = true;
