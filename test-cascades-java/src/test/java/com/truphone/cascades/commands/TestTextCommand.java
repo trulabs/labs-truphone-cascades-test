@@ -1,31 +1,32 @@
-package com.truphone.cascades;
+package com.truphone.cascades.commands;
 
 import java.io.PrintStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.truphone.cascades.FakeDevice.FakeDeviceListener;
-import com.truphone.cascades.commands.ClickCommand;
+import com.truphone.cascades.TimeoutException;
 import com.truphone.cascades.replys.IReply;
+import com.truphone.cascades.testutils.FakeDevice;
+import com.truphone.cascades.testutils.FakeDevice.FakeDeviceListener;
 
 /**
  * Test class.
  * @author STruscott
  *
  */
-public final class TestClickCommand {
+public final class TestTextCommand {
 	/**
-	 * Test the click command.
+	 * Test the text command.
 	 *
-	 * @throws TimeoutException Thrown if the command times out
+	 * @throws TimeoutException Thrown if the command times out.
 	 */
 	@Test
-	public void testClickCommand() throws TimeoutException {
+	public void testTextCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("click theLoginButton".equals(message)) {
+				if ("text myUsernameField my.user-name".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
 				} else {
 					Assert.fail(message);
@@ -33,8 +34,8 @@ public final class TestClickCommand {
 			}
 		};
 		FakeDevice.DEVICE.getProcess().addListener(response);
-		final IReply reply = FakeDevice.CONN.transmit(new ClickCommand(
-				"theLoginButton"), FakeDevice.DEFAULT_TIMEOUT);
+		final IReply reply = FakeDevice.CONN.transmit(new TextCommand(
+				"myUsernameField", "my.user-name"), FakeDevice.DEFAULT_TIMEOUT);
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}

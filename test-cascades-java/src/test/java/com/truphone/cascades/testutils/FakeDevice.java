@@ -1,4 +1,4 @@
-package com.truphone.cascades;
+package com.truphone.cascades.testutils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,9 +13,20 @@ import java.util.concurrent.Semaphore;
 
 import org.junit.Assert;
 
-final class FakeDevice {
+import com.truphone.cascades.SynchronousConnection;
+import com.truphone.cascades.TimeoutException;
 
-	protected static final String OK_MESSAGE = "OK";
+/**
+ * Fake device for testing.
+ * @author STruscott
+ *
+ */
+public final class FakeDevice {
+
+	/**
+	 * The default OK/Success message.
+	 */
+	public static final String OK_MESSAGE = "OK";
 	private static final String FAIL_MESSAGE = "Unexpected exception - ";
 	private final ServerSocket server;
 	private final Semaphore lock;
@@ -24,10 +35,19 @@ final class FakeDevice {
 	private Thread serverThread;
 
 	private static final int DEFAULT_TEST_PORT = 15000;
-	protected static final int DEFAULT_TIMEOUT = 1000;
+	/**
+	 * The default timeout (in milliseconds) to wait for a reply.
+	 */
+	public static final int DEFAULT_TIMEOUT = 1000;
 	private static final int STARTUP_TIMEOUT = 10000;
-	protected static final SynchronousConnection CONN;
-	protected static final FakeDevice DEVICE = new FakeDevice(DEFAULT_TEST_PORT);
+	/**
+	 * The test connection to use.
+	 */
+	public static final SynchronousConnection CONN;
+	/**
+	 * The fake device instance to use.
+	 */
+	public static final FakeDevice DEVICE = new FakeDevice(DEFAULT_TEST_PORT);
 
 	static {
 		DEVICE.listen();
@@ -47,27 +67,50 @@ final class FakeDevice {
 		}
 	}
 
-	protected interface FakeDeviceListener {
+	/**
+	 * Interface for an event handler from the fake device.
+	 * @author STruscott
+	 *
+	 */
+	public interface FakeDeviceListener {
+		/**
+		 * Event that occurs when a new message is received.
+		 * @param message The message that's received.
+		 * @param replyStream The stream you can use to reply to the command.
+		 */
 		void messageReceived(final String message, final PrintStream replyStream);
 	}
 
-	protected static final class FakeDeviceProcess implements Runnable {
+	/**
+	 * The processor for incoming packets.
+	 * @author STruscott
+	 *
+	 */
+	public static final class FakeDeviceProcess implements Runnable {
 
 		private final ServerSocket server;
 		private Socket client;
 		private boolean running;
 		private final List<FakeDeviceListener> listeners;
 
-		public FakeDeviceProcess(final ServerSocket socket) {
+		protected FakeDeviceProcess(final ServerSocket socket) {
 			this.listeners = new LinkedList<FakeDeviceListener>();
 			this.server = socket;
 			this.running = true;
 		}
 
+		/**
+		 * Add a new packet listener.
+		 * @param listener The listener to add.
+		 */
 		public void addListener(final FakeDeviceListener listener) {
 			this.listeners.add(listener);
 		}
 
+		/**
+		 * Remove a packet listener.
+		 * @param listener The listener to remove.
+		 */
 		public void removeListener(final FakeDeviceListener listener) {
 			this.listeners.remove(listener);
 		}
@@ -101,7 +144,7 @@ final class FakeDevice {
 			}
 		}
 
-		public void shutdown() {
+		protected void shutdown() {
 			this.running = false;
 			try {
 				this.server.close();
@@ -118,7 +161,11 @@ final class FakeDevice {
 		}
 	}
 
-	public FakeDevice(final int port) {
+	/**
+	 * Create a new fake device.
+	 * @param port The port to use
+	 */
+	protected FakeDevice(final int port) {
 		this.lock = new Semaphore(1);
 		this.isListening = false;
 		try {
@@ -129,7 +176,11 @@ final class FakeDevice {
 		}
 	}
 
-	public boolean listen() {
+	/**
+	 * Listen for incoming connections.
+	 * @return True if the listen works
+	 */
+	protected boolean listen() {
 		boolean listenOk = false;
 		try {
 			this.lock.acquire();
@@ -149,11 +200,15 @@ final class FakeDevice {
 		return listenOk;
 	}
 
+	/**
+	 * Get access to the FakeDevice processor that listens for incoming packets.
+	 * @return The processor.
+	 */
 	public FakeDeviceProcess getProcess() {
 		return this.fakeDeviceProcess;
 	}
 
-	public void stop() {
+	protected void stop() {
 		try {
 			this.lock.acquire();
 			if (this.isListening) {

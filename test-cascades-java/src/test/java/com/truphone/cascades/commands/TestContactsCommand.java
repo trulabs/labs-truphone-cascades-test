@@ -1,4 +1,4 @@
-package com.truphone.cascades;
+package com.truphone.cascades.commands;
 
 import java.io.PrintStream;
 import java.util.LinkedList;
@@ -9,9 +9,10 @@ import java.util.TreeMap;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.truphone.cascades.FakeDevice.FakeDeviceListener;
-import com.truphone.cascades.commands.ContactsCommand;
+import com.truphone.cascades.TimeoutException;
 import com.truphone.cascades.replys.IReply;
+import com.truphone.cascades.testutils.FakeDevice;
+import com.truphone.cascades.testutils.FakeDevice.FakeDeviceListener;
 
 /**
  * Test class.

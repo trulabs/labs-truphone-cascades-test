@@ -1,15 +1,16 @@
-package com.truphone.cascades;
+package com.truphone.cascades.commands;
 
 import java.io.PrintStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.truphone.cascades.FakeDevice.FakeDeviceListener;
-import com.truphone.cascades.commands.TouchCommand;
+import com.truphone.cascades.TimeoutException;
 import com.truphone.cascades.commands.TouchCommand.TouchLocation;
 import com.truphone.cascades.commands.TouchCommand.Type;
 import com.truphone.cascades.replys.IReply;
+import com.truphone.cascades.testutils.FakeDevice;
+import com.truphone.cascades.testutils.FakeDevice.FakeDeviceListener;
 
 /**
  * Test class.
