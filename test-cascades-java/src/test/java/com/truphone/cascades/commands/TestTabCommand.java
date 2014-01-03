@@ -1,31 +1,31 @@
-package com.truphone.cascades;
+package com.truphone.cascades.commands;
 
 import java.io.PrintStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.truphone.cascades.FakeDevice.FakeDeviceListener;
-import com.truphone.cascades.commands.ToggleCommand;
+import com.truphone.cascades.TimeoutException;
 import com.truphone.cascades.replys.IReply;
+import com.truphone.cascades.testutils.FakeDevice;
+import com.truphone.cascades.testutils.FakeDevice.FakeDeviceListener;
 
 /**
  * Test class.
  * @author STruscott
  *
  */
-public final class TestToggleCommand {
-
+public final class TestTabCommand {
 	/**
-	 * Test the Toggle command.
+	 * Test the Tab command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testToggleOnCommand() throws TimeoutException {
+	public void testTabIndexCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("toggle myButton true".equals(message)) {
+				if ("tab 5".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
 				} else {
 					Assert.fail(message);
@@ -33,21 +33,21 @@ public final class TestToggleCommand {
 			}
 		};
 		FakeDevice.DEVICE.getProcess().addListener(response);
-		final IReply reply = FakeDevice.CONN.transmit(new ToggleCommand("myButton", true), FakeDevice.DEFAULT_TIMEOUT);
+		final IReply reply = FakeDevice.CONN.transmit(new TabCommand(5), FakeDevice.DEFAULT_TIMEOUT);
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
 
 	/**
-	 * Test the Toggle command.
+	 * Test the Tab command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testToggleOffCommand() throws TimeoutException {
+	public void testTabNameCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("toggle myButton false".equals(message)) {
+				if ("tab someTab".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
 				} else {
 					Assert.fail(message);
@@ -55,7 +55,7 @@ public final class TestToggleCommand {
 			}
 		};
 		FakeDevice.DEVICE.getProcess().addListener(response);
-		final IReply reply = FakeDevice.CONN.transmit(new ToggleCommand("myButton", false), FakeDevice.DEFAULT_TIMEOUT);
+		final IReply reply = FakeDevice.CONN.transmit(new TabCommand("someTab"), FakeDevice.DEFAULT_TIMEOUT);
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}

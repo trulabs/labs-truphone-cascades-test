@@ -1,29 +1,32 @@
-package com.truphone.cascades;
+package com.truphone.cascades.commands;
 
 import java.io.PrintStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.truphone.cascades.FakeDevice.FakeDeviceListener;
-import com.truphone.cascades.commands.ToastCommand;
+import com.truphone.cascades.TimeoutException;
 import com.truphone.cascades.replys.IReply;
+import com.truphone.cascades.testutils.FakeDevice;
+import com.truphone.cascades.testutils.FakeDevice.FakeDeviceListener;
+
 /**
  * Test class.
  * @author STruscott
  *
  */
-public final class TestToastCommand {
+public final class TestSpyCommand {
+
 	/**
-	 * Test the toast command.
+	 * Test the spy command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testToastCommand() throws TimeoutException {
+	public void testSpyCreateCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("toast You didn't enter a password".equals(message)) {
+				if ("spy create spyName objectName signalName".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
 				} else {
 					Assert.fail(message);
@@ -31,22 +34,21 @@ public final class TestToastCommand {
 			}
 		};
 		FakeDevice.DEVICE.getProcess().addListener(response);
-		final IReply reply = FakeDevice.CONN.transmit(new ToastCommand(
-				"You didn't enter a password"), FakeDevice.DEFAULT_TIMEOUT);
+		final IReply reply = FakeDevice.CONN.transmit(new SpyCommand("spyName", "objectName", "signalName"), FakeDevice.DEFAULT_TIMEOUT);
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
 
 	/**
-	 * Test the toast command.
+	 * Test the spy command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testToastOnCommand() throws TimeoutException {
+	public void testSpyCountCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("toast true".equals(message)) {
+				if ("spy count spyName 2".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
 				} else {
 					Assert.fail(message);
@@ -54,21 +56,21 @@ public final class TestToastCommand {
 			}
 		};
 		FakeDevice.DEVICE.getProcess().addListener(response);
-		final IReply reply = FakeDevice.CONN.transmit(new ToastCommand(true), FakeDevice.DEFAULT_TIMEOUT);
+		final IReply reply = FakeDevice.CONN.transmit(new SpyCommand("spyName", 2), FakeDevice.DEFAULT_TIMEOUT);
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
 
 	/**
-	 * Test the toast command.
+	 * Test the spy command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testToastHiddenCommand() throws TimeoutException {
+	public void testSpyKillCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
-				if ("toast false".equals(message)) {
+				if ("spy kill spyName".equals(message)) {
 					replyStream.println(FakeDevice.OK_MESSAGE);
 				} else {
 					Assert.fail(message);
@@ -76,7 +78,7 @@ public final class TestToastCommand {
 			}
 		};
 		FakeDevice.DEVICE.getProcess().addListener(response);
-		final IReply reply = FakeDevice.CONN.transmit(new ToastCommand(false), FakeDevice.DEFAULT_TIMEOUT);
+		final IReply reply = FakeDevice.CONN.transmit(new SpyCommand("spyName"), FakeDevice.DEFAULT_TIMEOUT);
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
