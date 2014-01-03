@@ -60,7 +60,7 @@ Version History
 - v1.0.1 - First foss release
 - v1.0.0 - Internal release
 
-prerequisites
+Prerequisites
 =============
 - Qt4 (sdk) & make
 - BlackBerry NDK 10.1.0.1020+
