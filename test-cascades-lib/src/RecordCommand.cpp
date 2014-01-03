@@ -658,9 +658,9 @@ namespace cascades
 
     RecordCommand::StopRecordingCommand::StopRecordingCommand(
             class Connection * const s,
-            QObject * parent)
-        : Command(parent)
-        , client(s)
+            QObject * parent) :
+        Command(parent),
+        client(s)
     {
     }
 

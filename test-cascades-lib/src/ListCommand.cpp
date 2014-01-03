@@ -539,13 +539,16 @@ namespace cascades
     void ListCommand::showHelp()
     {
         this->client->write("> list <list> count <expectedSize>\r\n");
-        this->client->write("> list <list> index <index> <expected value> - check string values\r\n");
+        this->client->write("> list <list> index <index> <expected value> - " \
+                            "check string values\r\n");
         this->client->write("e.g. list someList index 0~1~2 /etc/files/file\r\n");
-        this->client->write("> list <list> index <index> <key>=<expected value> - check QVarientMap values\r\n");
+        this->client->write("> list <list> index <index> <key>=<expected value>" \
+                            " - check QVarientMap values\r\n");
         this->client->write("e.g. list someList 0~1~2 filename=/etc/files/file\r\n");
         this->client->write("> list <list> name <name> <expected value> - check string values\r\n");
         this->client->write("e.g. list someList /~etc~files^ /etc/files/file\r\n");
-        this->client->write("> list <list> name <name> <key>=<expected value> - check QVarientMap values\r\n");
+        this->client->write("> list <list> name <name> <key>=<expected value>"
+                            " - check QVarientMap values\r\n");
         this->client->write("e.g. list someList /~etc~files^ filename=/etc/files/file\r\n");
         this->client->write("> list <list> select index <index> - select an index\r\n");
         this->client->write("> list <list> select name <name> - select a named index\r\n");
@@ -554,7 +557,8 @@ namespace cascades
         this->client->write("> list <list> scroll index <index> - scroll to an index\r\n");
         this->client->write("> list <list> scroll name <name> - scroll to a named index\r\n");
         this->client->write("> list <list> key index <index> - list the keys in Map for index\r\n");
-        this->client->write("> list <list> key name <name> - list the keys in Map for named index\r\n");
+        this->client->write("> list <list> key name <name> - list the keys in Map " \
+                            "for named index\r\n");
         this->client->write("e.g. list contacts scroll name J~Name=John Smith^\r\n");
         this->client->write("e.g. list contacts select index 0~1\r\n");
         this->client->write("> list <list> clear\r\n");
