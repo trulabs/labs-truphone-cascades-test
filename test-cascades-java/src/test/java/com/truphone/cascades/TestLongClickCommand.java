@@ -20,7 +20,7 @@ public final class TestLongClickCommand {
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testKeyCommand() throws TimeoutException {
+	public void testLongClickCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
