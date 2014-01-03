@@ -77,7 +77,7 @@ namespace cascades
         Q_FOREACH(QObject * object, parent->children())
         {
             found = QMetaObject::invokeMethod(object, "longClicked");
-            if (!found)
+            if (not found)
             {
                 found = clickOnChildren(object);
                 if (found)
