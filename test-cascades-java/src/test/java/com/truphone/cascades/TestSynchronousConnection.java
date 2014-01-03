@@ -85,7 +85,7 @@ public final class TestSynchronousConnection {
 
 		FakeDevice.DEVICE.getProcess().addListener(listener);
 
-		final SynchronousConnection conn = new SynchronousConnection("1.2.3.4", 65093);
+		final SynchronousConnection conn = new SynchronousConnection("aReallyLongAndInvalidHostName", 65093);
 		try {
 			conn.connect(ERR_CONNECT_TIMEOUT);
 		} catch (TimeoutException te) {
