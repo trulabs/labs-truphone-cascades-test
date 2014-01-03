@@ -1,6 +1,10 @@
 labs-truphone-cascades-test
 ===========================
 
+Framework that provides introspective automation API for 
+BlackBerry 10 devices (including simulators) over a network 
+connection.
+
 overview
 ========
 this framework offers the ability to test bb10 applications
@@ -45,6 +49,16 @@ license
 =======
 
 BSD 3-Clause / new / simplified (see LICENSE)
+
+version history
+===============
+- v1.0.6 - more java unit tests, bug fixes.
+- v1.0.5 - page & list support
+- v1.0.4 - c++ include paths fixes
+- v1.0.3 - java unit tests
+- v1.0.2 - makefile support for devices and mingw/windows help
+- v1.0.1 - first foss release
+- v1.0.0 - internal release
 
 prerequisites
 =============
