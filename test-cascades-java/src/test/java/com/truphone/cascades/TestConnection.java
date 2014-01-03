@@ -32,10 +32,9 @@ public final class TestConnection {
 
 	/**
 	 * Tests the action command.
-	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testConnection() throws TimeoutException {
+	public void testConnection() {
 
 		final Semaphore messageSema = new Semaphore(0);
 		final Semaphore connectSema = new Semaphore(0);
