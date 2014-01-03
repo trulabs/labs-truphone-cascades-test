@@ -20,7 +20,7 @@ public final class TestPopCommand {
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
-	public void testKeyCommand() throws TimeoutException {
+	public void testPopCommand() throws TimeoutException {
 		final FakeDeviceListener response = new FakeDeviceListener() {
 			@Override
 			public void messageReceived(String message, PrintStream replyStream) {
