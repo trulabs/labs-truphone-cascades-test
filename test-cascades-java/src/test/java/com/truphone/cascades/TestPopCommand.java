@@ -16,7 +16,7 @@ import com.truphone.cascades.replys.IReply;
  */
 public final class TestPopCommand {
 	/**
-	 * Test the key command.
+	 * Test the Pop command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
