@@ -17,6 +17,12 @@ public interface IConnection {
 	void addListener(final IConnectionListener listener);
 
 	/**
+	 * Remove a connection listener.
+	 * @param listener The connection listener to remove
+	 */
+	void removeListener(final IConnectionListener listener);
+
+	/**
 	 * Connect to the server.
 	 * @return A future for the connection
 	 */

@@ -47,8 +47,8 @@ class Connection implements IConnection, IConnectionHandlerListener {
         this.handler = new ConnectionHandler();
         this.handler.addListener(this);
 
-        this.bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
-                Executors.newCachedThreadPool()));
+        this.bootstrap = new ClientBootstrap(
+        		new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool()));
 
         this.bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
             @Override
@@ -91,6 +91,13 @@ class Connection implements IConnection, IConnectionHandlerListener {
         synchronized (this.listeners) {
             this.listeners.add(listener);
         }
+    }
+
+    @Override
+    public void removeListener(final IConnectionListener listener) {
+    	synchronized (this.listeners) {
+    		this.listeners.remove(listener);
+    	}
     }
 
     @Override

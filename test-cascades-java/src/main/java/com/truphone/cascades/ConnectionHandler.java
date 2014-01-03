@@ -16,26 +16,26 @@ class ConnectionHandler extends SimpleChannelUpstreamHandler {
 
     private static final Logger LOGGER = Logger.getLogger(ConnectionHandler.class.getName());
 
-    private final List<IConnectionHandlerListener> _listeners;
+    private final List<IConnectionHandlerListener> listeners;
 
     /**
      * Creates a client-side handler.
      */
     public ConnectionHandler() {
     	super();
-        this._listeners = new LinkedList<IConnectionHandlerListener>();
+        this.listeners = new LinkedList<IConnectionHandlerListener>();
     }
 
     public void addListener(final IConnectionHandlerListener listener) {
-        synchronized (this._listeners) {
-            this._listeners.add(listener);
+        synchronized (this.listeners) {
+            this.listeners.add(listener);
         }
     }
 
     @Override
     public void channelConnected(final ChannelHandlerContext ctx, final ChannelStateEvent event) {
-        synchronized (this._listeners) {
-            for (final IConnectionHandlerListener listener : this._listeners) {
+        synchronized (this.listeners) {
+            for (final IConnectionHandlerListener listener : this.listeners) {
                 if (listener != null) {
                     try {
                         listener.connected(event.getChannel());
@@ -50,8 +50,8 @@ class ConnectionHandler extends SimpleChannelUpstreamHandler {
     @Override
     public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent event) {
         final ChannelBuffer buffer = (ChannelBuffer) event.getMessage();
-        synchronized (this._listeners) {
-            for (final IConnectionHandlerListener listener : this._listeners) {
+        synchronized (this.listeners) {
+            for (final IConnectionHandlerListener listener : this.listeners) {
                 if (listener != null) {
                     try {
                         listener.received(event.getChannel(), buffer);
