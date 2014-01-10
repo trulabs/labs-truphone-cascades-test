@@ -113,4 +113,46 @@ public final class TestContactsCommand {
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
+
+	/**
+	 * Test the Contacts (RemoveAll) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testContactsRemoveAllYesCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("contacts removeAll yesImSure".equals(message)) {
+					replyStream.println(FakeDevice.OK_MESSAGE);
+				}
+			}
+		};
+		FakeDevice.DEVICE.getProcess().addListener(response);
+		final IReply reply = FakeDevice.CONN.transmit(
+				new ContactsCommand(ContactsCommand.AreYouSure.SURE_GO), FakeDevice.DEFAULT_TIMEOUT);
+		FakeDevice.DEVICE.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the Contacts (RemoveAll) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testContactsRemoveAllNoCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("contacts removeAll notSure".equals(message)) {
+					replyStream.println(FakeDevice.OK_MESSAGE);
+				}
+			}
+		};
+		FakeDevice.DEVICE.getProcess().addListener(response);
+		final IReply reply = FakeDevice.CONN.transmit(
+				new ContactsCommand(ContactsCommand.AreYouSure.NOT_SURE), FakeDevice.DEFAULT_TIMEOUT);
+		FakeDevice.DEVICE.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
 }

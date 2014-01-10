@@ -13,6 +13,41 @@ public class ContactsCommand extends DefaultCommand {
 	private final String _payload;
 
 	/**
+	 * Enumeration for confirmation of destructive contacts commands.
+	 * @author STruscott
+	 *
+	 */
+	public enum AreYouSure {
+		/**
+		 * Don't run the destructive command.
+		 */
+		NOT_SURE,
+		/**
+		 * Run the destructive command.
+		 */
+		SURE_GO;
+
+		/**
+		 * Convert the confirmation to a string.
+		 * @return The name of the confirmation
+		 */
+		public String asString() {
+			String enumName;
+			switch (this) {
+			case SURE_GO:
+				enumName = "yesImSure";
+				break;
+			case NOT_SURE:
+				/* fall-through */
+			default:
+				enumName = "notSure";
+				break;
+			}
+			return enumName;
+		}
+	}
+
+	/**
 	 * Supported attributes for contacts.
 	 * @author STruscott
 	 *
@@ -149,6 +184,15 @@ public class ContactsCommand extends DefaultCommand {
 	public ContactsCommand(final String name) {
 		super("");
 		this._payload = "contacts delete " + name + "\r\n";
+	}
+
+	/**
+	 * Remove all contacts from the address book.
+	 * @param sure Set appropriately.
+	 */
+	public ContactsCommand(final AreYouSure sure) {
+		super("");
+		this._payload = "contacts removeAll " + sure.asString() + "\r\n";
 	}
 
 	@Override
