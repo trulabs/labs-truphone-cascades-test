@@ -129,7 +129,7 @@ public class ListCommand extends DefaultCommand {
 		private final String _payload;
 		/**
 		 * Select an index on a list.
-		 * @param listView The listview to check
+		 * @param listView The listview
 		 * @param indexMode The index mode (numeric, name)
 		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
 		 * @param select True if it's a selection and false if a deselection
@@ -171,7 +171,7 @@ public class ListCommand extends DefaultCommand {
 		private final String _payload;
 		/**
 		 * Scroll to an index on a list.
-		 * @param listView The listview to check
+		 * @param listView The listview
 		 * @param indexMode The index mode (numeric, name)
 		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
 		 */
@@ -184,6 +184,42 @@ public class ListCommand extends DefaultCommand {
 			builder.append(COMMAND_NAME);
 			builder.append(listView);
 			builder.append(" scroll ");
+			builder.append(indexMode.asString());
+			builder.append(' ');
+			builder.append(indexPath);
+			builder.append("\r\n");
+			this._payload = builder.toString();
+		}
+
+		@Override
+	    public String getPayload() {
+	        return this._payload;
+	    }
+	}
+
+	/**
+	 * Command to tap on an item in a list.
+	 * @author STruscott
+	 *
+	 */
+	public static final class ListTapCommand extends DefaultCommand {
+
+		private final String _payload;
+		/**
+		 * Tap on an index on a list.
+		 * @param listView The listview
+		 * @param indexMode The index mode (numeric, name)
+		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
+		 */
+		public ListTapCommand(
+				final String listView,
+				final IndexingMode indexMode,
+				final String indexPath) {
+			super("");
+			final StringBuilder builder = new StringBuilder();
+			builder.append(COMMAND_NAME);
+			builder.append(listView);
+			builder.append(" tap ");
 			builder.append(indexMode.asString());
 			builder.append(' ');
 			builder.append(indexPath);
