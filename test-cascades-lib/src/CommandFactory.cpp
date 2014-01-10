@@ -28,6 +28,7 @@
 #include "PageCommand.h"
 #include "ExitCommand.h"
 #include "ListCommand.h"
+#include "SegmentCommand.h"
 
 using truphone::test::cascades::Command;
 using truphone::test::cascades::ClickCommand;
@@ -52,6 +53,7 @@ using truphone::test::cascades::ContactsCommand;
 using truphone::test::cascades::PageCommand;
 using truphone::test::cascades::ExitCommand;
 using truphone::test::cascades::ListCommand;
+using truphone::test::cascades::SegmentCommand;
 
 namespace truphone
 {
@@ -159,6 +161,7 @@ namespace cascades
         INSERT(PageCommand::getCmd(), new CommandFactoryPrivate(&PageCommand::create));
         INSERT(ExitCommand::getCmd(), new CommandFactoryPrivate(&ExitCommand::create));
         INSERT(ListCommand::getCmd(), new CommandFactoryPrivate(&ListCommand::create));
+        INSERT(SegmentCommand::getCmd(), new CommandFactoryPrivate(&SegmentCommand::create));
     }
 
     Command * CommandFactory::getCommand(
