@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QTimer>
 #include <QSemaphore>
+#include <QStack>
 #include "Buffer.h"
 
 namespace truphone
@@ -176,11 +177,33 @@ namespace cli
             /*!
              * \brief input_file Input data
              */
-            QFile * const inputFile;
+            QFile * const rootFile;
             /*!
              * \brief output_file Output data
              */
             QFile * const outputFile;
+
+            /*!
+             * \brief currentFile The current file we're reading from
+             */
+            QFile * currentFile;
+
+            /*!
+             * \brief inputFiles Stack of input files
+             */
+            QStack<QFile*> * const inputFiles;
+
+            /*!
+             * \brief readNextLine Read the next line from the file.
+             * If there's no file, try the file stack
+             *
+             * \param line A pointer to the next line
+             *
+             * \return The number of bytes read
+             *
+             * @since test-cascades 1.0.7
+             */
+            qint64 readNextLine(const Buffer * const line);
 
             /*!
              * \brief stripNl Strip the new lines from a buffer
@@ -196,20 +219,20 @@ namespace cli
              *
              * @since test-cascades 1.0.0
              */
-            virtual void startRecording();
+            void startRecording();
             /*!
              * \brief waitForCommandToRecord Wait for a response
              *
              * @since test-cascades 1.0.0
              */
-            virtual void waitForCommandToRecord();
+            void waitForCommandToRecord();
             /*!
              * \brief transmitNextCommand Reads the next command from the disk
              * and transmits it
              *
              * @since test-cascades 1.0.0
              */
-            virtual void transmitNextCommand();
+            void transmitNextCommand();
             /*!
              * \brief unexpectedTransition Record an unexpected state machine transition
              *
@@ -217,13 +240,13 @@ namespace cli
              *
              * @since test-cascades 1.0.0
              */
-            virtual void unexpectedTransition(const event_t event);
+            void unexpectedTransition(const event_t event);
             /*!
              * \brief shutdown Shutdown everything
              *
              * @since test-cascades 1.0.0
              */
-            virtual void shutdown(const int exitCode = 0);
+            void shutdown(const int exitCode = 0);
             /*!
              * \brief postEventToStateMachine Post an event to the
              * classes state machine
@@ -232,26 +255,26 @@ namespace cli
              *
              * @since test-cascades 1.0.0
              */
-            virtual void postEventToStateMachine(const event_t event);
+            void postEventToStateMachine(const event_t event);
         private slots:
             /*!
              * \brief disconnected Slot for disconnection
              *
              * @since test-cascades 1.0.0
              */
-            virtual void disconnected(void);
+            void disconnected(void);
             /*!
              * \brief connectedOk Slot for connection to the target
              *
              * @since test-cascades 1.0.0
              */
-            virtual void connectedOk(void);
+            void connectedOk(void);
             /*!
              * \brief dataReady Slot for data being received from the target
              *
              * @since test-cascades 1.0.0
              */
-            virtual void dataReady(void);
+            void dataReady(void);
     };
 }  // namespace cli
 }  // namespace cascades

@@ -3,7 +3,11 @@
  */
 #include "include/cli.h"
 #include <QCoreApplication>
+#if defined(QT_DEBUG)
 #include <QDebug>
+#endif
+#include <QFileInfo>
+#include <QDir>
 
 namespace truphone
 {
@@ -43,9 +47,12 @@ const char * HarnessCli::EVENT_NAMES[] =
           stateMachine(WAITING_FOR_SERVER),
           recordingMode(isRecord),
           stream(new QTcpSocket(this)),
-          inputFile(inFile),
-          outputFile(outFile)
+          rootFile(inFile),
+          outputFile(outFile),
+          currentFile(rootFile),
+          inputFiles(new QStack<QFile*>())
     {
+        inputFiles->push_back(rootFile);
         if (this->stream)
         {
             bool ok;
@@ -82,6 +89,10 @@ const char * HarnessCli::EVENT_NAMES[] =
                 this->stream->close();
             }
         }
+        if (this->inputFiles)
+        {
+            delete this->inputFiles;
+        }
     }
 
     void HarnessCli::connectedOk(void)
@@ -96,6 +107,37 @@ const char * HarnessCli::EVENT_NAMES[] =
                 this->stream->close();
             }
         }
+    }
+
+    qint64 HarnessCli::readNextLine(const Buffer * const line)
+    {
+        qint64 bytesRead = this->currentFile->readLine(line->data(),
+                                                     line->length());
+        if (bytesRead <= 0)
+        {
+#if defined(QT_DEBUG)
+        qDebug() << "readNextLine checking for another file on stack";
+#endif
+            if (not this->inputFiles->isEmpty())
+            {
+                this->inputFiles->pop();
+                if (not this->inputFiles->isEmpty())
+                {
+                    currentFile = this->inputFiles->front();
+                    bytesRead = this->currentFile->readLine(line->data(),
+                                                            line->length());
+#if defined(QT_DEBUG)
+                    qDebug() << "readNextLine read" << bytesRead <<
+                            "from" << this->currentFile->fileName();
+                }
+#endif
+            }
+        }
+
+#if defined(QT_DEBUG)
+        qDebug() << "readNextLine read" << bytesRead << "bytes";
+#endif
+        return bytesRead;
     }
 
     void HarnessCli::postEventToStateMachine(const event_t event)
@@ -208,11 +250,11 @@ const char * HarnessCli::EVENT_NAMES[] =
     void HarnessCli::shutdown(const int exitCode)
     {
         this->stateMachine.setState(DISCONNECTED);
-        if (this->inputFile)
+        if (this->rootFile)
         {
             if (not this->recordingMode)
             {
-                const qint64 bytesAvailable = this->inputFile->bytesAvailable();
+                const qint64 bytesAvailable = this->rootFile->bytesAvailable();
                 if (bytesAvailable > 0)
                 {
                     this->outputFile->write("\t<command>\r\n");
@@ -251,12 +293,8 @@ const char * HarnessCli::EVENT_NAMES[] =
         const Buffer outputBuffer;
         this->stateMachine.setState(WAITING_FOR_REPLY);
 
-        qint64 bytesRead = this->inputFile->readLine(outputBuffer.data(),
-                                                     outputBuffer.length());
+        qint64 bytesRead = this->readNextLine(&outputBuffer);
 
-#if defined(QT_DEBUG)
-        qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
-#endif
         if (bytesRead <= 0)
         {
             this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -270,11 +308,36 @@ const char * HarnessCli::EVENT_NAMES[] =
                 if (raw[0] == '#')
                 {
                     qDebug() << "CC" << QString(raw).trimmed();
-                    bytesRead = this->inputFile->readLine(outputBuffer.data(),
-                                                          outputBuffer.length());
-#if defined(QT_DEBUG)
-                    qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
-#endif
+                    bytesRead = readNextLine(&outputBuffer);
+                    if (bytesRead <= 0)
+                    {
+                        this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+                    }
+                }
+                else if (strncmp(raw, "exec ", 5) == 0)
+                {
+
+                }
+                else if (strncmp(raw, "call ", 5) == 0)
+                {
+                    QString filename(raw + 5);
+                    filename = filename.trimmed();
+                    QFile * const newFile = new QFile(filename, this);
+                    if (not newFile->open(QIODevice::ReadOnly))
+                    {
+                        const QFileInfo info(*this->rootFile);
+                        newFile->setFileName(
+                                    info.path() +
+                                    QDir::separator() +
+                                    newFile->fileName());
+                        if (not newFile->open(QIODevice::ReadOnly))
+                        {
+                            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+                        }
+                    }
+                    this->inputFiles->push_back(newFile);
+                    this->currentFile = newFile;
+                    bytesRead = readNextLine(&outputBuffer);
                     if (bytesRead <= 0)
                     {
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -283,11 +346,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                 else if (strcmp(raw, "\r\n") == 0 or strcmp(raw, "\n") == 0)
                 {
                     qDebug() << "";
-                    bytesRead = this->inputFile->readLine(outputBuffer.data(),
-                                                          outputBuffer.length());
-#if defined(QT_DEBUG)
-                    qDebug() << "transmitNextCommand read" << bytesRead << "bytes";
-#endif
+                    bytesRead = readNextLine(&outputBuffer);
                     if (bytesRead <= 0)
                     {
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
@@ -395,8 +454,8 @@ const char * HarnessCli::EVENT_NAMES[] =
                     break;
                 }
                 case WAITING_FOR_RECORDED_COMMAND:
-                    this->inputFile->write(inputBuffer.cdata());
-                    this->inputFile->flush();
+                    this->currentFile->write(inputBuffer.cdata());
+                    this->currentFile->flush();
 
                     this->postEventToStateMachine(RECEIVED_RECORD_COMMAND);
                     break;
