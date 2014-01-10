@@ -480,9 +480,9 @@ namespace cascades
                     if (not ret)
                     {
                         this->client->write("ERROR: Value is {");
-                        this->client->write(check.toUtf8().constData());
-                        this->client->write("} expected {");
                         this->client->write(element.toString().toUtf8().constData());
+                        this->client->write("} expected {");
+                        this->client->write(check.toUtf8().constData());
                         this->client->write("}\r\n");
                     }
                 }
