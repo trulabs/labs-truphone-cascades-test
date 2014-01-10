@@ -45,7 +45,8 @@ SOURCES += \
     src/ContactsCommand.cpp \
     src/PageCommand.cpp \
     src/ExitCommand.cpp \
-    src/ListCommand.cpp
+    src/ListCommand.cpp \
+    src/SegmentCommand.cpp
 
 HEADERS +=\
     include/CascadesTest.h \
@@ -83,7 +84,8 @@ HEADERS +=\
     include/ContactsCommand.h \
     include/PageCommand.h \
     include/ExitCommand.h \
-    include/ListCommand.h
+    include/ListCommand.h \
+    include/SegmentCommand.h
 
 unix:!symbian {
     maemo5 {
