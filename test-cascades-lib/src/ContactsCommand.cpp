@@ -125,10 +125,10 @@ namespace cascades
         this->connection->write("You can 'create' and 'delete' contacts\n");
         this->connection->write("You can also modify existing contacts\n");
         this->connection->write("The format is as such:\n");
-        this->connection->write("contacts create forename=x, mobile=y, email=z, home=oops\n");
-        this->connection->write("contacts modify x, mobile=90210, email=me@email.com, home\n");
-        this->connection->write("contacts delete x\n");
-        this->connection->write("contacts removeAll yesImSure\n");
+        this->connection->write("> contacts create forename=x, mobile=y, email=z, home=oops\n");
+        this->connection->write("> contacts modify x, mobile=90210, email=me@email.com, home\n");
+        this->connection->write("> contacts delete x\n");
+        this->connection->write("> contacts removeAll yesImSure\n");
         this->connection->write("(Empty modify variables unset the variable)\n");
     }
 
