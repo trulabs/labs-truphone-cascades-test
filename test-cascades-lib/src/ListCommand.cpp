@@ -135,6 +135,10 @@ namespace cascades
                 {
                     ret = showKeysOnPath(arguments, listView);
                 }
+                else if (command == "tap")
+                {
+                    ret = tapPath(arguments, listView);
+                }
                 else
                 {
                     this->client->write("ERROR: Unknown list command\r\n");
@@ -202,7 +206,7 @@ namespace cascades
         }
         else
         {
-            this->client->write("ERROR: list select command needs more parameters\r\n");
+            this->client->write("ERROR: list scroll command needs more parameters\r\n");
         }
         return ret;
     }
@@ -271,7 +275,7 @@ namespace cascades
         }
         else
         {
-            this->client->write("ERROR: list select command needs more parameters\r\n");
+            this->client->write("ERROR: list keys command needs more parameters\r\n");
         }
         return ret;
     }
@@ -533,6 +537,64 @@ namespace cascades
             }
         }
 
+        return ret;
+    }
+
+    bool ListCommand::tapPath(
+            QStringList * const arguments,
+            bb::cascades::ListView * const listView)
+    {
+        bool ret = false;
+        if (arguments->size() > 1)
+        {
+            bool indexPathOk = true;
+            QVariantList indexPath;
+            const QString selectType = arguments->first();
+            arguments->removeFirst();
+            if (selectType == "index")
+            {
+                if (not findElementByIndex(arguments->first(), indexPath))
+                {
+                    this->client->write("ERROR: Failed to convert index to indexPath\n");
+                    indexPathOk = false;
+                }
+                arguments->removeFirst();
+            }
+            else if (selectType == "name")
+            {
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
+                if (not findElementByName(listView, namedIndex, indexPath))
+                {
+                    this->client->write("ERROR: Failed to convert named index to indexPath\n");
+                    indexPathOk = false;
+                }
+            }
+            else
+            {
+                indexPathOk = false;
+                this->client->write("ERROR: Invalid lookup method, use index or name\r\n");
+            }
+            if (indexPathOk)
+            {
+                QVariant element = listView->dataModel()->data(indexPath);
+                if (not element.isNull() and element.isValid())
+                {
+                    // emit triggered;
+                    ret = QMetaObject::invokeMethod(
+                                listView,
+                                "triggered",
+                                Q_ARG(QVariantList, indexPath));
+                }
+                else
+                {
+                    this->client->write("ERROR: Tried to tap invalid item\r\n");
+                }
+            }
+        }
+        else
+        {
+            this->client->write("ERROR: list tap command needs more parameters\r\n");
+        }
         return ret;
     }
 
