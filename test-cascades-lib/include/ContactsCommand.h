@@ -144,6 +144,16 @@ namespace cascades
                 bb::pim::contacts::ContactBuilder* const builder,
                 const bb::pim::contacts::AttributeKind::Type kind,
                 const bb::pim::contacts::AttributeSubKind::Type subKind);
+
+        /*!
+         * \brief removeAllContacts Remove all contacts from the
+         * native address book.
+         *
+         * \return True if all contacts were removed ok
+         *
+         * @since test-cascades 1.0.7
+         */
+        bool removeAllContacts();
     private:
         /*!
          * \brief CMD_NAME The name of this command

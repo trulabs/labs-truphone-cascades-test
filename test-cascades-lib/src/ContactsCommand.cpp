@@ -23,6 +23,7 @@ using bb::pim::contacts::ContactAttributeBuilder;
 using bb::pim::contacts::AttributeKind;
 using bb::pim::contacts::AttributeSubKind;
 using bb::pim::contacts::ContactSearchFilters;
+using bb::pim::contacts::ContactListFilters;
 using bb::pim::contacts::ContactAttribute;
 
 namespace truphone
@@ -89,6 +90,17 @@ namespace cascades
                 {
                     ret = modifyContact(connection, args);
                 }
+                else if (subCommand == "removeAll")
+                {
+                    if (args->size() && args->first() == "yesImSure")
+                    {
+                        ret = removeAllContacts();
+                    }
+                    else
+                    {
+                        connection->write("ERROR: Please suffix with yesImSure\n");
+                    }
+                }
                 else
                 {
                     connection->write("ERROR: Unknown subcommand\n");
@@ -96,12 +108,12 @@ namespace cascades
             }
             else
             {
-                connection->write("The subcommand seems to be empty\n");
+                connection->write("ERROR: The subcommand seems to be empty\n");
             }
         }
         else
         {
-            connection->write("You need to specify at least the subcommand\n");
+            connection->write("ERROR: You need to specify at least the subcommand\n");
         }
 
         return ret;
@@ -114,9 +126,10 @@ namespace cascades
         this->connection->write("You can also modify existing contacts\n");
         this->connection->write("The format is as such:\n");
         this->connection->write("contacts create forename=x, mobile=y, email=z, home=oops\n");
-        this->connection->write("contact modify x, mobile=90210, email=me@email.com, home\n");
+        this->connection->write("contacts modify x, mobile=90210, email=me@email.com, home\n");
         this->connection->write("contacts delete x\n");
-        this->connection->write("Empty modify variables unset the variable\n");
+        this->connection->write("contacts removeAll yesImSure\n");
+        this->connection->write("(Empty modify variables unset the variable)\n");
     }
 
     bool ContactsCommand::createContact(
@@ -489,6 +502,17 @@ namespace cascades
         }
 
         return ret;
+    }
+
+    bool ContactsCommand::removeAllContacts()
+    {
+        ContactListFilters emptyFilter;
+        QList<Contact> contacts = contactService->contacts(emptyFilter);
+        Q_FOREACH(Contact contact, contacts)
+        {
+            contactService->deleteContact(contact.id());
+        }
+        return true;
     }
 }  // namespace cascades
 }  // namespace test
