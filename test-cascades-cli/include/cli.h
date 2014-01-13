@@ -4,13 +4,7 @@
 #ifndef CLI_H_
 #define CLI_H_
 
-#include <QThread>
-#include <QTcpSocket>
 #include <QFile>
-#include <QTimer>
-#include <QSemaphore>
-#include <QStack>
-#include "Buffer.h"
 
 namespace truphone
 {
@@ -20,6 +14,10 @@ namespace cascades
 {
 namespace cli
 {
+    /*!
+     * Internal data
+     */
+    class HarnessCliPrviate;
     /*!
      * \brief The HarnessCli class is responsible for
      * processing script files and recording the results to
@@ -59,293 +57,30 @@ namespace cli
         protected:
         private:
             /*!
-             * \brief STATE_NAMES The string names of all the states
+             * \brief privateData Private data for the CLI class.
              */
-            static const char * STATE_NAMES[];
-            /*!
-             * \brief EVENT_NAMES The string names of all the events
-             */
-            static const char * EVENT_NAMES[];
-            /*!
-             * \brief SETTING_RETRY The name of the retry settings value
-             */
-            static const QString SETTING_RETRY;
-            /*!
-             * \brief SETTING_RETRY_DEFAULT Default setting for retries
-             */
-            static const QVariant SETTING_RETRY_DEFAULT;
-            /*!
-             * \brief SETTING_RETRY_INTERVAL Name of the retry internval setting
-             */
-            static const QString SETTING_RETRY_INTERVAL;
-            /*!
-             * \brief SETTING_RETRY_INTERVAL_DEFAULT Default value for interval
-             */
-            static const QVariant SETTING_RETRY_INTERVAL_DEFAULT;
-            /*!
-             * \brief SETTING_RETRY_MAX_TIME Name of the max retry time
-             */
-            static const QString SETTING_RETRY_MAX_INTERVALS;
-            /*!
-             * \brief SETTING_RETRY_MAX_TIME_DEFAULT Default max retry time
-             */
-            static const QVariant SETTING_RETRY_MAX_INTERVALS_DEFAULT;
-
-            /*!
-             * The states the CLI can be in
-             */
-            typedef enum state
-            {
-                /*!
-                 * Waiting for the initial message
-                 * from the server
-                 */
-                WAITING_FOR_SERVER,
-                /*!
-                 * Waiting for a replay to a playback command
-                 */
-                WAITING_FOR_REPLY,
-                /*!
-                 * Waiting for a message to say recording started
-                 */
-                WAITING_FOR_RECORDING_START,
-                /*!
-                 * Waiting for an incoming recording command
-                 */
-                WAITING_FOR_RECORDED_COMMAND,
-                /*!
-                 * The disconnected state
-                 */
-                DISCONNECTED
-            } state_t;
-
-            /*!
-             * state machine events
-             */
-            typedef enum event
-            {
-                /*!
-                 * The initial hello from the server was received
-                 */
-                RECEIVED_INITIAL_MESSAGE,
-                /*!
-                 * Transmitted a command to the server
-                 */
-                RECEIVED_COMMAND_REPLY,
-                /*!
-                 * Recorded a command
-                 */
-                RECEIVED_RECORD_COMMAND,
-                /*!
-                 * Run out of commands to playback
-                 */
-                NO_MORE_COMMANDS_TO_PLAY,
-                /*!
-                 * Disconnected
-                 */
-                DISCONNECT,
-                /*!
-                 * There was an error in the script
-                 */
-                ERROR
-            } event_t;
-
-            /*!
-             * The state machine
-             */
-            typedef struct stateMachine
-            {
-            public:
-                stateMachine(const state_t initial)
-                    : initialState(initial),
-                      currentState(initialState)
-                {
-#if defined (QT_DEBUG)
-                    qDebug() << "## Initialising state machine to "
-                             << STATE_NAMES[currentState];
-#endif  // QT_DEBUG
-                }
-                inline state_t state()
-                {
-                    return this->currentState;
-                }
-                inline void setState(const state_t state)
-                {
-#if defined (QT_DEBUG)
-                    qDebug() << "## State changing from "
-                             << STATE_NAMES[currentState]
-                             << " to "
-                             << STATE_NAMES[state];
-#endif  // QT_DEBUG
-                    this->currentState = state;
-                }
-
-            private:
-                const state_t initialState;
-                state_t currentState;
-            } stateMachine_t;
-
-            /*!
-             * \brief stateMachine The state machine for the cli
-             */
-            stateMachine_t stateMachine;
-
-            /*!
-             * \brief recordingMode @c True if this client is a recording client
-             */
-            const bool recordingMode;
-            /*!
-             * \brief stream The TCP socket connection to the target
-             */
-            QTcpSocket * const stream;
-            /*!
-             * \brief input_file Input data
-             */
-            QFile * const rootFile;
-            /*!
-             * \brief output_file Output data
-             */
-            QFile * const outputFile;
-
-            /*!
-             * \brief currentFile The current file we're reading from
-             */
-            QFile * currentFile;
-
-            /*!
-             * \brief inputFiles Stack of input files
-             */
-            QStack<QFile*> * const inputFiles;
-
-            /*!
-             * \brief settings Settings for configuring the CLI.
-             */
-            QMap<QString, QVariant> * const settings;
-            /*!
-             * \brief lastCommandWritten A copy of the last command written out
-             */
-            Buffer lastCommandWritten;
-            /*!
-             * \brief retryTimer Timer for retries
-             */
-            QTimer * const retryTimer;
-            /*!
-             * \brief maxRetries The maximum number of retries to do
-             */
-            uint maxRetries;
-            /*!
-             * \brief retryCount The current number of retries
-             */
-            uint retryCount;
-
-            /*!
-             * \brief readNextLine Read the next line from the file.
-             * If there's no file, try the file stack
-             *
-             * \param line A pointer to the next line
-             *
-             * \return The number of bytes read
-             *
-             * @since test-cascades 1.0.7
-             */
-            qint64 readNextLine(const Buffer * const line);
-
-            /*!
-             * \brief stripNl Strip the new lines from a buffer
-             *
-             * \param buffer The buffer to strip
-             * \param max_len The maximum length of the buffer
-             *
-             * @since test-cascades 1.0.0
-             */
-            static void stripNl(char * const buffer, const size_t max_len);
-            /*!
-             * \brief startRecording Send the recording command to the server
-             *
-             * @since test-cascades 1.0.0
-             */
-            void startRecording();
-            /*!
-             * \brief waitForCommandToRecord Wait for a response
-             *
-             * @since test-cascades 1.0.0
-             */
-            void waitForCommandToRecord();
-            /*!
-             * \brief transmitNextCommand Reads the next command from the disk
-             * and transmits it
-             *
-             * @since test-cascades 1.0.0
-             */
-            void transmitNextCommand();
-            /*!
-             * \brief unexpectedTransition Record an unexpected state machine transition
-             *
-             * \param event The event that was unexpected
-             *
-             * @since test-cascades 1.0.0
-             */
-            void unexpectedTransition(const event_t event);
-            /*!
-             * \brief shutdown Shutdown everything
-             *
-             * @since test-cascades 1.0.0
-             */
-            void shutdown(const int exitCode = 0);
-            /*!
-             * \brief postEventToStateMachine Post an event to the
-             * classes state machine
-             *
-             * \param event The event to post
-             *
-             * @since test-cascades 1.0.0
-             */
-            void postEventToStateMachine(const event_t event);
-            /*!
-             * \brief processSetting Process a setting string from the script
-             *
-             * \param setting The setting string to process.
-             *
-             * @since test-cascades 1.0.9
-             */
-            void processSetting(const char * const setting);
-            /*!
-             * \brief getSetting Get a setting
-             *
-             * \param key The setting to lookup
-             * \param defaultValue The value to use if the setting value isn't known
-             *
-             * \return The value for the specified setting or the default value
-             *
-             * @since test-cascades 1.0.9
-             */
-            QVariant getSetting(const QString& key, const QVariant defaultValue);
-        private slots:
-            /*!
-             * \brief disconnected Slot for disconnection
-             *
-             * @since test-cascades 1.0.0
-             */
-            void disconnected(void);
-            /*!
-             * \brief connectedOk Slot for connection to the target
-             *
-             * @since test-cascades 1.0.0
-             */
-            void connectedOk(void);
-            /*!
-             * \brief dataReady Slot for data being received from the target
-             *
-             * @since test-cascades 1.0.0
-             */
-            void dataReady(void);
-            /*!
-             * \brief retryTimeoutExpired Slot for the retry timeout expiring.
-             * Means that we've not got a good response and need to try again.
-             *
-             * @since test-cascades 1.0.9
-             */
-            void retryTimeoutExpired(void);
+            HarnessCliPrviate * const pData;
+    private slots:
+    private slots:
+        /*!
+         * \brief disconnected Slot for disconnection
+         *
+         * @since test-cascades 1.0.0
+         */
+        void disconnected(void);
+        /*!
+         * \brief dataReady Slot for data being received from the target
+         *
+         * @since test-cascades 1.0.0
+         */
+        void dataReady(void);
+        /*!
+         * \brief retryTimeoutExpired Slot for the retry timeout expiring.
+         * Means that we've not got a good response and need to try again.
+         *
+         * @since test-cascades 1.0.9
+         */
+        void retryTimeoutExpired(void);
     };
 }  // namespace cli
 }  // namespace cascades
