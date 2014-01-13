@@ -52,6 +52,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 Version History
 ===============
+- v1.0.9 - CLI has settings, CLI retry
 - v1.0.8 - Fix release builds
 - v1.0.7 - SegmentControl, List tap, cli call, fixes
 - v1.0.6 - More java unit tests, bug fixes.
@@ -217,7 +218,11 @@ The CLI is a single binary which takes 3 parameters
 The XML output file will be the same as the input file but suffixed
 with .xml.
 
-The CLI supports an additional command, call.
+The CLI can be configured to perform a limited number of retries if commands
+or tests fail. This is particularly handy if you're dealing with networks
+that may perform unreliably and where you can't rely on sleep commands.
+
+The CLI supports two additional commands, call cli-setting.
 
 'call' lets you call other scripts so that you can create a hierarcy or
 common set of scripts to build up larger functional tests from smaller,
@@ -241,12 +246,44 @@ call example
 
 If the call command is sent to the device, it will return an error.
 
+cli-setting
+-----------
+
+    # Enable retries
+    cli-setting retry 1
+    # Set retry period to every second
+    cli-setting retry-interval 1000
+    # Give the application 60 seconds to retry
+    cli-setting retry-max-intervals 60
+
+If the cli-setting command is sent to the device, it will return an error.
+
+Retries
+-------
+
+If we execute a script where a test fails we'll see the following:
+
+    CC "# test that we're on the correct page"
+    << page thePage
+    >> ERROR: Couldn't find a page
+    RT page thePage
+    >> ERROR: Couldn't find a page
+    RT page thePage
+    >> ERROR: Couldn't find a page
+    RT page thePage
+    >> ERROR: Couldn't find a page
+    RT page thePage
+    >> OK
+
+Record mode
+-----------
+
 With the optional record mode all events that occur are streamed back
 to the CLI and recorded to the script file. You can then modify the
 script file with your own changes/tests etc and re-execute it
 for a test-driven environment.
 
-You can also press CTRL+SHIFT and click on an object and the recorder
+You can also press CTRL+SHIFT (simulator only) and click on an object and the recorder
 will generate test commands for all the object's properties (such
 as the text value of a textfield).
 
