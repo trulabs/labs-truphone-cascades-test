@@ -656,10 +656,9 @@ namespace cli
                 else
                 {
                     lastCommandWritten.clean();
-                    strncpy_s(lastCommandWritten.data(),
-                              lastCommandWritten.length(),
-                              outputBuffer.cdata(),
-                              bytesRead);
+                    strncpy(lastCommandWritten.data(),
+                            outputBuffer.cdata(),
+                            bytesRead);
                     this->stream->write(outputBuffer.cdata(), bytesRead);
                     this->outputFile->write("\t<command request sent=\"");
                     stripNl(outputBuffer.data(), outputBuffer.length());
