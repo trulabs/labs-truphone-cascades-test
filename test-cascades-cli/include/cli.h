@@ -194,6 +194,11 @@ namespace cli
             QStack<QFile*> * const inputFiles;
 
             /*!
+             * \brief settings Settings for configuring the CLI.
+             */
+            QMap<QString, QVariant> * const settings;
+
+            /*!
              * \brief readNextLine Read the next line from the file.
              * If there's no file, try the file stack
              *
@@ -256,6 +261,25 @@ namespace cli
              * @since test-cascades 1.0.0
              */
             void postEventToStateMachine(const event_t event);
+            /*!
+             * \brief processSetting Process a setting string from the script
+             *
+             * \param setting The setting string to process.
+             *
+             * @since test-cascades 1.0.9
+             */
+            void processSetting(const char * const setting);
+            /*!
+             * \brief getSetting Get a setting
+             *
+             * \param key The setting to lookup
+             * \param defaultValue The value to use if the setting value isn't known
+             *
+             * \return The value for the specified setting or the default value
+             *
+             * @since test-cascades 1.0.9
+             */
+            QVariant getSetting(const QString& key, const QVariant defaultValue);
         private slots:
             /*!
              * \brief disconnected Slot for disconnection
