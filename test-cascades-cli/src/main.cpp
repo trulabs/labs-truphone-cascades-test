@@ -12,13 +12,13 @@ int main(int argc, char *argv[])
 
     if (argc < 4)
     {
-        qFatal("test-cascades-cli <host> <port> <test-file> --record");
-        qFatal("----------------------------------------------------");
-        qFatal("test-cascades-cli is the command line interface to the target");
-        qFatal("You need to specify the host & port to connect to and a test file");
-        qFatal("Optionally you can append '--record' in which case the script will");
-        qFatal("be over-written with the events that occur & are transmitted from");
-        qFatal("the application.");
+        qWarning("test-cascades-cli <host> <port> <test-file> --record");
+        qWarning("----------------------------------------------------");
+        qWarning("test-cascades-cli is the command line interface to the target");
+        qWarning("You need to specify the host & port to connect to and a test file");
+        qWarning("Optionally you can append '--record' in which case the script will");
+        qWarning("be over-written with the events that occur & are transmitted from");
+        qWarning("the application.");
         return -1;
     }
 

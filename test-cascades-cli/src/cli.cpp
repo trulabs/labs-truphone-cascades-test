@@ -6,12 +6,12 @@
 #if defined(QT_DEBUG)
 #include <QDebug>
 #endif
+#include <string>
 #include <QFileInfo>
 #include <QDir>
 #include <QTimer>
 #include <QSemaphore>
 #include <QStack>
-#include "Buffer.h"
 #include <QTcpSocket>
 
 namespace truphone
@@ -196,7 +196,7 @@ namespace cli
         /*!
          * \brief lastCommandWritten A copy of the last command written out
          */
-        Buffer lastCommandWritten;
+        QString lastCommandWritten;
         /*!
          * \brief retryTimer Timer for retries
          */
@@ -220,17 +220,8 @@ namespace cli
          *
          * @since test-cascades 1.0.7
          */
-        qint64 readNextLine(const Buffer * const line);
+        QString readNextLine(void);
 
-        /*!
-         * \brief stripNl Strip the new lines from a buffer
-         *
-         * \param buffer The buffer to strip
-         * \param max_len The maximum length of the buffer
-         *
-         * @since test-cascades 1.0.0
-         */
-        static void stripNl(char * const buffer, const size_t max_len);
         /*!
          * \brief startRecording Send the recording command to the server
          *
@@ -280,7 +271,7 @@ namespace cli
          *
          * @since test-cascades 1.0.9
          */
-        void processSetting(const char * const setting);
+        void processSetting(const QString& setting);
         /*!
          * \brief getSetting Get a setting
          *
@@ -417,12 +408,10 @@ namespace cli
         }
     }
 
-    qint64 HarnessCliPrviate::readNextLine(const Buffer * const line)
+    QString HarnessCliPrviate::readNextLine(void)
     {
-        qint64 bytesRead = this->currentFile->readLine(
-                    line->data(),
-                    line->length());
-        if (bytesRead <= 0)
+        QString line = QString(this->currentFile->readLine(1024));
+        if (line.isNull() || line.isEmpty())
         {
 #if defined(QT_DEBUG)
         qDebug() << "readNextLine checking for another file on stack";
@@ -433,20 +422,21 @@ namespace cli
                 if (not this->inputFiles->isEmpty())
                 {
                     currentFile = this->inputFiles->front();
-                    bytesRead = this->currentFile->readLine(line->data(),
-                                                            line->length());
+                    line = QString(this->currentFile->readLine(1024));
 #if defined(QT_DEBUG)
-                    qDebug() << "readNextLine read" << bytesRead <<
+                    qDebug() << "readNextLine read" << line.length() <<
                             "from" << this->currentFile->fileName();
 #endif  // QT_DEBUG
                 }
             }
         }
-
+        else
+        {
 #if defined(QT_DEBUG)
-        qDebug() << "readNextLine read" << bytesRead << "bytes";
+            qDebug() << "readNextLine read" << line.length() << "bytes";
 #endif  // QT_DEBUG
-        return bytesRead;
+        }
+        return line;
     }
 
     void HarnessCliPrviate::postEventToStateMachine(const event_t event)
@@ -599,36 +589,31 @@ namespace cli
 
     void HarnessCliPrviate::transmitNextCommand()
     {
-        const Buffer outputBuffer;
         this->stateMachine.setState(WAITING_FOR_REPLY);
 
-        qint64 bytesRead;
         if (this->retryTimer->isActive())
         {
-            this->stream->write(this->lastCommandWritten.cdata(),
-                                this->lastCommandWritten.strlen());
+            this->stream->write(this->lastCommandWritten.toUtf8());
             this->outputFile->write("\t<retry count=\"");
             this->outputFile->write(QString::number(this->retryCount).toUtf8().constData());
             this->outputFile->write("\" command=\"");
-            stripNl(this->lastCommandWritten.data(), this->lastCommandWritten.length());
-            qDebug() << "RT" << this->lastCommandWritten.cdata();
-            this->outputFile->write(this->lastCommandWritten.cdata());
+            qDebug() << "RT" << this->lastCommandWritten;
+            this->outputFile->write(this->lastCommandWritten.toUtf8());
             this->outputFile->write("\"/>\r\n");
         }
         else
         {
             bool waitingForReply = false;
-            while ((bytesRead=this->readNextLine(&outputBuffer)) > 0)
+            QString nextLine = this->readNextLine();
+            while (not nextLine.isNull() && not nextLine.isEmpty())
             {
-                const char * const raw = outputBuffer.cdata();
-                if (raw[0] == '#')
+                if (nextLine.startsWith('#'))
                 {
-                    qDebug() << "CC" << QString(raw).trimmed();
+                    qDebug() << "CC" << nextLine.trimmed();
                 }
-                else if (strncmp(raw, "call ", 5) == 0)
+                else if (nextLine.startsWith("call "))
                 {
-                    QString filename(raw + 5);
-                    filename = filename.trimmed();
+                    QString filename = nextLine.mid(5).trimmed();
                     QFile * const newFile = new QFile(filename, this);
                     if (not newFile->open(QIODevice::ReadOnly))
                     {
@@ -645,28 +630,28 @@ namespace cli
                     this->inputFiles->push_back(newFile);
                     this->currentFile = newFile;
                 }
-                else if (strncmp(raw, "cli-setting ", 12) == 0)
+                else if (nextLine.startsWith("cli-setting "))
                 {
-                    processSetting(raw);
+                    processSetting(nextLine);
                 }
-                else if (strcmp(raw, "\r\n") == 0 or strcmp(raw, "\n") == 0)
+                else if (nextLine.trimmed().isEmpty())
                 {
                     qDebug() << "";
                 }
                 else
                 {
-                    lastCommandWritten.clean();
-                    strncpy(lastCommandWritten.data(),
-                            outputBuffer.cdata(),
-                            bytesRead);
-                    this->stream->write(outputBuffer.cdata(), bytesRead);
+                    this->lastCommandWritten = nextLine;
+                    this->stream->write(nextLine.toUtf8());
                     this->outputFile->write("\t<command request sent=\"");
-                    stripNl(outputBuffer.data(), outputBuffer.length());
-                    qDebug() << "<<" << outputBuffer.cdata();
-                    this->outputFile->write(outputBuffer.cdata());
+                    qDebug() << "<<" << nextLine.trimmed();
+                    this->outputFile->write(nextLine.trimmed().toUtf8());
                     this->outputFile->write("\"/>\r\n");
                     waitingForReply = true;
                     break;
+                }
+                if (not waitingForReply)
+                {
+                    nextLine = this->readNextLine();
                 }
             }
             if (not waitingForReply)
@@ -686,21 +671,9 @@ namespace cli
         this->postEventToStateMachine(HarnessCliPrviate::DISCONNECT);
     }
 
-    void HarnessCliPrviate::stripNl(char * const buffer, const size_t max_len)
+    void HarnessCliPrviate::processSetting(const QString& setting)
     {
-        const size_t slen = strnlen(buffer, max_len);
-        for (size_t i = 0 ; i < slen ; i++)
-        {
-            if (buffer[i] == '\r' or buffer[i] == '\n')
-            {
-                buffer[i] = '\0';
-            }
-        }
-    }
-
-    void HarnessCliPrviate::processSetting(const char * const setting)
-    {
-        const QStringList tokens(QString(setting).trimmed().split(" "));
+        const QStringList tokens(setting.trimmed().split(" "));
         if (tokens.size() == 3
                 and tokens.at(0) == "cli-setting")
         {
@@ -745,25 +718,23 @@ namespace cli
         {
             while (this->stream->bytesAvailable())
             {
-                const Buffer inputBuffer;
-                this->stream->readLine(inputBuffer.data(),
-                                       inputBuffer.length());
+                QString data = this->stream->readLine(1024);
                 // don't strip the new lines from a recording buffer
                 // as the buffer may be too big for the tcp frames
                 // and get truncated into multiple packets and we'll
                 // get truncated lines in the script file
                 if (not this->recordingMode)
                 {
-                    stripNl(inputBuffer.data(), inputBuffer.length());
+                    data = data.trimmed();
                 }
-                qDebug() << ">>" <<  inputBuffer.cdata();
+                qDebug() << ">>" <<  data;
                 switch (this->stateMachine.state())
                 {
                 case WAITING_FOR_SERVER:
                     if (not this->recordingMode)
                     {
                         this->outputFile->write("\t<welcome message=\"");
-                        this->outputFile->write(inputBuffer.cdata());
+                        this->outputFile->write(data.toUtf8());
                         this->outputFile->write("\"/>\r\n");
                     }
                     this->postEventToStateMachine(RECEIVED_INITIAL_MESSAGE);
@@ -775,13 +746,13 @@ namespace cli
 
                 case WAITING_FOR_REPLY:
                 {
-                    const bool ok = strncmp(inputBuffer.cdata(), "OK", 2) == 0;
+                    const bool ok = data.startsWith("OK");
                     bool confirmedFailed = true;
                     if (ok)
                     {
                         // thats fine
                         this->outputFile->write("\t<pass recv=\"");
-                        this->outputFile->write(inputBuffer.cdata());
+                        this->outputFile->write(data.toUtf8());
                         this->outputFile->write("\"/>\r\n");
                     }
                     else
@@ -836,7 +807,7 @@ namespace cli
                         if (confirmedFailed)
                         {
                             this->outputFile->write("\t<fail recv=\"");
-                            this->outputFile->write(inputBuffer.cdata());
+                            this->outputFile->write(data.toUtf8());
                             this->outputFile->write("\"/>\r\n");
                         }
                     }
@@ -856,7 +827,7 @@ namespace cli
                     break;
                 }
                 case WAITING_FOR_RECORDED_COMMAND:
-                    this->currentFile->write(inputBuffer.cdata());
+                    this->currentFile->write(data.toUtf8());
                     this->currentFile->flush();
 
                     this->postEventToStateMachine(RECEIVED_RECORD_COMMAND);
