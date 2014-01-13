@@ -18,6 +18,13 @@ namespace cascades
 namespace cli
 {
 
+const QString HarnessCli::SETTING_RETRY("retry");
+const QVariant HarnessCli::SETTING_RETRY_DEFAULT(0);
+const QString HarnessCli::SETTING_RETRY_INTERVAL("retry-interval");
+const QVariant HarnessCli::SETTING_RETRY_INTERVAL_DEFAULT(1000);
+const QString HarnessCli::SETTING_RETRY_MAX_INTERVALS("retry-max-intervals");
+const QVariant HarnessCli::SETTING_RETRY_MAX_INTERVALS_DEFAULT(30);
+
 const char * HarnessCli::STATE_NAMES[] =
 {
     "Waiting for Server",
@@ -51,8 +58,10 @@ const char * HarnessCli::EVENT_NAMES[] =
           outputFile(outFile),
           currentFile(rootFile),
           inputFiles(new QStack<QFile*>()),
-          settings(new QMap<QString, QVariant>())
+          settings(new QMap<QString, QVariant>()),
+          retryTimer(new QTimer(this))
     {
+        connect(retryTimer, SIGNAL(timeout()), SLOT(retryTimeoutExpired()));
         inputFiles->push_back(rootFile);
         if (this->stream)
         {
@@ -300,57 +309,74 @@ const char * HarnessCli::EVENT_NAMES[] =
 
         bool waitingForReply = false;
         qint64 bytesRead;
-        while ((bytesRead=this->readNextLine(&outputBuffer)) > 0)
+        if (this->retryTimer->isActive())
         {
-            const char * const raw = outputBuffer.cdata();
-            if (raw[0] == '#')
+            this->stream->write(this->lastCommandWritten.cdata(),
+                                this->lastCommandWritten.strlen());
+            this->outputFile->write("\t<retry command=\"");
+            stripNl(this->lastCommandWritten.data(), this->lastCommandWritten.length());
+            qDebug() << "RT" << this->lastCommandWritten.cdata();
+            this->outputFile->write(this->lastCommandWritten.cdata());
+            this->outputFile->write("\"/>\r\n");
+        }
+        else
+        {
+            while ((bytesRead=this->readNextLine(&outputBuffer)) > 0)
             {
-                qDebug() << "CC" << QString(raw).trimmed();
-            }
-            else if (strncmp(raw, "call ", 5) == 0)
-            {
-                QString filename(raw + 5);
-                filename = filename.trimmed();
-                QFile * const newFile = new QFile(filename, this);
-                if (not newFile->open(QIODevice::ReadOnly))
+                const char * const raw = outputBuffer.cdata();
+                if (raw[0] == '#')
                 {
-                    const QFileInfo info(*this->rootFile);
-                    newFile->setFileName(
-                                info.path() +
-                                QDir::separator() +
-                                newFile->fileName());
+                    qDebug() << "CC" << QString(raw).trimmed();
+                }
+                else if (strncmp(raw, "call ", 5) == 0)
+                {
+                    QString filename(raw + 5);
+                    filename = filename.trimmed();
+                    QFile * const newFile = new QFile(filename, this);
                     if (not newFile->open(QIODevice::ReadOnly))
                     {
-                        this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+                        const QFileInfo info(*this->rootFile);
+                        newFile->setFileName(
+                                    info.path() +
+                                    QDir::separator() +
+                                    newFile->fileName());
+                        if (not newFile->open(QIODevice::ReadOnly))
+                        {
+                            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+                        }
                     }
+                    this->inputFiles->push_back(newFile);
+                    this->currentFile = newFile;
                 }
-                this->inputFiles->push_back(newFile);
-                this->currentFile = newFile;
+                else if (strncmp(raw, "cli-setting ", 12) == 0)
+                {
+                    processSetting(raw);
+                }
+                else if (strcmp(raw, "\r\n") == 0 or strcmp(raw, "\n") == 0)
+                {
+                    qDebug() << "";
+                }
+                else
+                {
+                    lastCommandWritten.clean();
+                    strncpy_s(lastCommandWritten.data(),
+                              lastCommandWritten.length(),
+                              outputBuffer.cdata(),
+                              bytesRead);
+                    this->stream->write(outputBuffer.cdata(), bytesRead);
+                    this->outputFile->write("\t<command request sent=\"");
+                    stripNl(outputBuffer.data(), outputBuffer.length());
+                    qDebug() << "<<" << outputBuffer.cdata();
+                    this->outputFile->write(outputBuffer.cdata());
+                    this->outputFile->write("\"/>\r\n");
+                    waitingForReply = true;
+                    break;
+                }
             }
-            else if (strncmp(raw, "cli-setting ", 12) == 0)
+            if (not waitingForReply)
             {
-                processSetting(raw);
+                this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
             }
-            else if (strcmp(raw, "\r\n") == 0 or strcmp(raw, "\n") == 0)
-            {
-                qDebug() << "";
-            }
-            else
-            {
-                this->stream->write(outputBuffer.cdata(), bytesRead);
-                this->outputFile->write("\t<command>\r\n");
-                this->outputFile->write("\t\t<request sent=\"");
-                stripNl(outputBuffer.data(), outputBuffer.length());
-                qDebug() << "<<" << outputBuffer.cdata();
-                this->outputFile->write(outputBuffer.cdata());
-                this->outputFile->write("\"/>\r\n");
-                waitingForReply = true;
-                break;
-            }
-        }
-        if (not waitingForReply)
-        {
-            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
         }
     }
 
@@ -377,13 +403,22 @@ const char * HarnessCli::EVENT_NAMES[] =
         if (tokens.size() == 3
                 and tokens.at(0) == "cli-setting")
         {
+#if defined(QT_DEBUG)
+            qDebug() << "# CLI Setting: " << tokens.at(1) << "=" << tokens.at(2);
+#endif  // QT_DEBUG
             this->settings->insert(tokens.at(1), tokens.at(2));
         }
     }
 
-    QVariant HarnessCli::getSetting(const QString& key, const QVariant defaultValue)
+    QVariant HarnessCli::getSetting(const QString& key,
+                                    const QVariant defaultValue)
     {
         return this->settings->value(key, defaultValue);
+    }
+
+    void HarnessCli::retryTimeoutExpired(void)
+    {
+        this->transmitNextCommand();
     }
 
     void HarnessCli::dataReady(void)
@@ -423,28 +458,81 @@ const char * HarnessCli::EVENT_NAMES[] =
                 case WAITING_FOR_REPLY:
                 {
                     const bool ok = strncmp(inputBuffer.cdata(), "OK", 2) == 0;
+                    bool confirmedFailed = true;
                     if (ok)
                     {
                         // thats fine
-                        this->outputFile->write("\t\t<pass recv=\"");
+                        this->outputFile->write("\t<pass recv=\"");
                         this->outputFile->write(inputBuffer.cdata());
                         this->outputFile->write("\"/>\r\n");
                     }
                     else
                     {
-                        this->outputFile->write("\t\t<fail recv=\"");
-                        this->outputFile->write(inputBuffer.cdata());
-                        this->outputFile->write("\"/>\r\n");
+                        if (this->getSetting(SETTING_RETRY,
+                                             SETTING_RETRY_DEFAULT).toInt())
+                        {
+#if defined(QT_DEBUG)
+                            qDebug() << "Command failed, retries enabled...";
+#endif  // QT_DEBUG
+                            if (retryTimer->isActive())
+                            {
+#if defined(QT_DEBUG)
+                                qDebug() << "Timer already active";
+#endif  // QT_DEBUG
+                                if (this->retryCount == this->maxRetries)
+                                {
+#if defined(QT_DEBUG)
+                                    qDebug() << "Maximum number of retries";
+#endif  // QT_DEBUG
+                                    this->retryTimer->stop();
+                                }
+                                else
+                                {
+                                    this->retryCount++;
+#if defined(QT_DEBUG)
+                                    qDebug() << "Retry count increased to" << this->retryCount << "/" << this->maxRetries;
+#endif  // QT_DEBUG
+                                    confirmedFailed = false;
+                                }
+                            }
+                            else
+                            {
+                                this->retryTimer->setInterval(
+                                            this->getSetting(
+                                                SETTING_RETRY_INTERVAL,
+                                                SETTING_RETRY_INTERVAL_DEFAULT).toInt());
+#if defined(QT_DEBUG)
+                                qDebug() << "First time, starting up retry timer with interval" \
+                                         << this->retryTimer->interval();
+#endif  // QT_DEBUG
+                                this->maxRetries = this->getSetting(
+                                            SETTING_RETRY_MAX_INTERVALS,
+                                            SETTING_RETRY_MAX_INTERVALS_DEFAULT).toInt();
+                                this->retryCount = 0;
+                                this->retryTimer->setSingleShot(false);
+                                this->retryTimer->start();
+                                confirmedFailed = false;
+                            }
+                        }
+                        if (confirmedFailed)
+                        {
+                            this->outputFile->write("\t<fail recv=\"");
+                            this->outputFile->write(inputBuffer.cdata());
+                            this->outputFile->write("\"/>\r\n");
+                        }
                     }
-                    this->outputFile->write("\t</command>\r\n");
 
-                    if (ok)
+                    if (ok or confirmedFailed)
                     {
-                        this->postEventToStateMachine(RECEIVED_COMMAND_REPLY);
-                    }
-                    else
-                    {
-                        this->postEventToStateMachine(ERROR);
+                        this->retryTimer->stop();
+                        if (ok)
+                        {
+                            this->postEventToStateMachine(RECEIVED_COMMAND_REPLY);
+                        }
+                        else
+                        {
+                            this->postEventToStateMachine(ERROR);
+                        }
                     }
                     break;
                 }
