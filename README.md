@@ -92,7 +92,7 @@ Or you can just use make
 	5. sudo -E make install-cli		# Install CLI into /usr/bin (linux only)
 
 Building on Windows (mingw)
-===========================
+---------------------------
 On windows you may need (depending if you have other make systems present) to
 tell the Makefile which make binary to use, for example, I needed to do the following:
 
@@ -104,7 +104,7 @@ You should only need to do that for the host - once you've sourced bbdnk
 then you won't need to.
 
 Building cont.
-==============
+--------------
 
 Other options are
 	
