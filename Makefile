@@ -41,7 +41,7 @@ clean-lib:
 	rm -rf test-cascades-lib/lib
 
 clean-java:
-	make -C test-cascades-java clean
+	$(MAKE) -C test-cascades-java clean
 
 clean-doc:
 	rm -rf doc
@@ -66,7 +66,7 @@ build-lib:
 	$(MAKE) -C test-cascades-lib/lib/Device-Release
 
 build-java:
-	make -C test-cascades-java
+	$(MAKE) -C test-cascades-java
 
 uninstall-cli:
 	rm /usr/bin/test-cascades-cli
@@ -80,4 +80,4 @@ install-cli:
 	@cp test-cascades-cli/bin/Release/test-cascades-cli /usr/bin
 
 install-java:
-	make -C test-cascades-java install
+	$(MAKE) -C test-cascades-java install

@@ -21,6 +21,7 @@
 /test-cascades-lib/Simulator*
 /test-cascades-sys/Simulator*
 /test-cascades-sys/*.user
+/build-*
 /cppcheck.cli.xml
 /cppcheck.lib.xml
 /cpplint.cli.xml

@@ -13,7 +13,6 @@ QT       += network
 TARGET = test-cascades-cli
 CONFIG   += console
 CONFIG   -= app_bundle
-DEFINES += BUFFER_ON_HOST
 
 INCLUDEPATH += include \
     ../test-cascades-lib/include
@@ -22,9 +21,7 @@ TEMPLATE = app
 
 
 SOURCES += src/main.cpp \
-    src/cli.cpp \
-    ../test-cascades-lib/src/Buffer.cpp
+    src/cli.cpp
 
 HEADERS += \
-    include/cli.h \
-    ../test-cascades-lib/include/Buffer.h
+    include/cli.h

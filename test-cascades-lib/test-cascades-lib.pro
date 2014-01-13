@@ -20,7 +20,6 @@ DEFINES += TESTCASCADESLIB_LIBRARY
 SOURCES += \
     src/CascadesHarness.cpp \
     src/Connection.cpp \
-    src/Buffer.cpp \
     src/Utils.cpp \
     src/ClickCommand.cpp \
     src/CommandFactory.cpp \
@@ -68,7 +67,6 @@ HEADERS +=\
     include/RecordCommandKeyHandler.h \
     include/ActionCommand.h \
     include/QmlCommand.h \
-    include/Buffer.h \
     include/ToastCommand.h \
     include/PopCommand.h \
     include/RecordCommandActionHandler.h \
