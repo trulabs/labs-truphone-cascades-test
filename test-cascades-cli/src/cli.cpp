@@ -129,8 +129,8 @@ const char * HarnessCli::EVENT_NAMES[] =
 #if defined(QT_DEBUG)
                     qDebug() << "readNextLine read" << bytesRead <<
                             "from" << this->currentFile->fileName();
-                }
 #endif  // QT_DEBUG
+                }
             }
         }
 
