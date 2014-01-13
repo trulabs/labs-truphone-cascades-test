@@ -42,7 +42,8 @@ namespace cascades
         if (arguments->size() == 3)
         {
             SegmentedControl * const obj =
-                    Application::instance()->scene()->findChild<SegmentedControl*>(arguments->first());
+                    Application::instance()->scene()->findChild<SegmentedControl*>
+                        (arguments->first());
             arguments->removeFirst();
             if (obj)
             {
@@ -79,7 +80,7 @@ namespace cascades
                             }
                         }
                     }
-                    if (!ret)
+                    if (not ret)
                     {
                         this->client->write("ERROR: Couldn't find the option\r\n");
                     }
