@@ -706,9 +706,16 @@ namespace cli
                 and tokens.at(0) == "cli-setting")
         {
 #if defined(QT_DEBUG)
-            qDebug() << "# CLI Setting: " << tokens.at(1) << "=" << tokens.at(2);
+            qDebug() << "# CLI Setting set: " << tokens.at(1) << "=" << tokens.at(2);
 #endif  // QT_DEBUG
             this->settings->insert(tokens.at(1), tokens.at(2));
+        }
+        else if (tokens.size() == 2 and tokens.at(0) == "cli-setting")
+        {
+#if defined(QT_DEBUG)
+            qDebug() << "# CLI Setting delete: " << tokens.at(1) << "=" << tokens.at(2);
+#endif  // QT_DEBUG
+            this->settings->remove(tokens.at(1));
         }
     }
 
