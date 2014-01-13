@@ -117,7 +117,7 @@ const char * HarnessCli::EVENT_NAMES[] =
         {
 #if defined(QT_DEBUG)
         qDebug() << "readNextLine checking for another file on stack";
-#endif
+#endif  // QT_DEBUG
             if (not this->inputFiles->isEmpty())
             {
                 this->inputFiles->pop();
@@ -130,13 +130,13 @@ const char * HarnessCli::EVENT_NAMES[] =
                     qDebug() << "readNextLine read" << bytesRead <<
                             "from" << this->currentFile->fileName();
                 }
-#endif
+#endif  // QT_DEBUG
             }
         }
 
 #if defined(QT_DEBUG)
         qDebug() << "readNextLine read" << bytesRead << "bytes";
-#endif
+#endif  // QT_DEBUG
         return bytesRead;
     }
 
@@ -314,10 +314,6 @@ const char * HarnessCli::EVENT_NAMES[] =
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
                     }
                 }
-                else if (strncmp(raw, "exec ", 5) == 0)
-                {
-
-                }
                 else if (strncmp(raw, "call ", 5) == 0)
                 {
                     QString filename(raw + 5);
@@ -356,7 +352,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                 {
 #if defined(QT_DEBUG)
                     qDebug() << "transmitNextCommand writing" << bytesRead << "bytes";
-#endif
+#endif  // QT_DEBUG
                     this->stream->write(outputBuffer.cdata(), bytesRead);
                     this->outputFile->write("\t<command>\r\n");
                     this->outputFile->write("\t\t<request sent=\"");
