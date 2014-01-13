@@ -602,7 +602,6 @@ namespace cli
         const Buffer outputBuffer;
         this->stateMachine.setState(WAITING_FOR_REPLY);
 
-        bool waitingForReply = false;
         qint64 bytesRead;
         if (this->retryTimer->isActive())
         {
@@ -618,6 +617,7 @@ namespace cli
         }
         else
         {
+            bool waitingForReply = false;
             while ((bytesRead=this->readNextLine(&outputBuffer)) > 0)
             {
                 const char * const raw = outputBuffer.cdata();
@@ -808,7 +808,8 @@ namespace cli
                                 {
                                     this->retryCount++;
 #if defined(QT_DEBUG)
-                                    qDebug() << "Retry count increased to" << this->retryCount << "/" << this->maxRetries;
+                                    qDebug() << "Retry count increased to" << \
+                                                this->retryCount << "/" << this->maxRetries;
 #endif  // QT_DEBUG
                                     confirmedFailed = false;
                                 }
