@@ -52,6 +52,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 Version History
 ===============
+- v1.0.8 - Fix release builds
 - v1.0.7 - SegmentControl, List tap, cli call, fixes
 - v1.0.6 - More java unit tests, bug fixes.
 - v1.0.5 - Page & list support
