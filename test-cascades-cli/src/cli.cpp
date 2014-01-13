@@ -8,6 +8,11 @@
 #endif
 #include <QFileInfo>
 #include <QDir>
+#include <QTimer>
+#include <QSemaphore>
+#include <QStack>
+#include "Buffer.h"
+#include <QTcpSocket>
 
 namespace truphone
 {
@@ -17,39 +22,328 @@ namespace cascades
 {
 namespace cli
 {
+    class HarnessCliPrviate : public QObject
+    {
+    public:
+        HarnessCliPrviate(bool isRecord,
+                          QFile * const inFile,
+                          QFile * const outFile,
+                          QObject * const parent);
 
-const QString HarnessCli::SETTING_RETRY("retry");
-const QVariant HarnessCli::SETTING_RETRY_DEFAULT(0);
-const QString HarnessCli::SETTING_RETRY_INTERVAL("retry-interval");
-const QVariant HarnessCli::SETTING_RETRY_INTERVAL_DEFAULT(1000);
-const QString HarnessCli::SETTING_RETRY_MAX_INTERVALS("retry-max-intervals");
-const QVariant HarnessCli::SETTING_RETRY_MAX_INTERVALS_DEFAULT(30);
+        /*!
+         * \brief STATE_NAMES The string names of all the states
+         */
+        static const char * STATE_NAMES[];
+        /*!
+         * \brief EVENT_NAMES The string names of all the events
+         */
+        static const char * EVENT_NAMES[];
+        /*!
+         * \brief SETTING_RETRY The name of the retry settings value
+         */
+        static const QString SETTING_RETRY;
+        /*!
+         * \brief SETTING_RETRY_DEFAULT Default setting for retries
+         */
+        static const QVariant SETTING_RETRY_DEFAULT;
+        /*!
+         * \brief SETTING_RETRY_INTERVAL Name of the retry internval setting
+         */
+        static const QString SETTING_RETRY_INTERVAL;
+        /*!
+         * \brief SETTING_RETRY_INTERVAL_DEFAULT Default value for interval
+         */
+        static const QVariant SETTING_RETRY_INTERVAL_DEFAULT;
+        /*!
+         * \brief SETTING_RETRY_MAX_TIME Name of the max retry time
+         */
+        static const QString SETTING_RETRY_MAX_INTERVALS;
+        /*!
+         * \brief SETTING_RETRY_MAX_TIME_DEFAULT Default max retry time
+         */
+        static const QVariant SETTING_RETRY_MAX_INTERVALS_DEFAULT;
 
-const char * HarnessCli::STATE_NAMES[] =
-{
-    "Waiting for Server",
-    "Waiting for Reply",
-    "Waiting for Recording to start",
-    "Waiting for a Recorded Command",
-    "Disconnected"
-};
+        /*!
+         * The states the CLI can be in
+         */
+        typedef enum state
+        {
+            /*!
+             * Waiting for the initial message
+             * from the server
+             */
+            WAITING_FOR_SERVER,
+            /*!
+             * Waiting for a replay to a playback command
+             */
+            WAITING_FOR_REPLY,
+            /*!
+             * Waiting for a message to say recording started
+             */
+            WAITING_FOR_RECORDING_START,
+            /*!
+             * Waiting for an incoming recording command
+             */
+            WAITING_FOR_RECORDED_COMMAND,
+            /*!
+             * The disconnected state
+             */
+            DISCONNECTED
+        } state_t;
 
-const char * HarnessCli::EVENT_NAMES[] =
-{
-    "Received Initial Message",
-    "Received Command Reply",
-    "Received Record Command",
-    "No more commands to play",
-    "Disconnected",
-    "Error"
-};
+        /*!
+         * state machine events
+         */
+        typedef enum event
+        {
+            /*!
+             * The initial hello from the server was received
+             */
+            RECEIVED_INITIAL_MESSAGE,
+            /*!
+             * Transmitted a command to the server
+             */
+            RECEIVED_COMMAND_REPLY,
+            /*!
+             * Recorded a command
+             */
+            RECEIVED_RECORD_COMMAND,
+            /*!
+             * Run out of commands to playback
+             */
+            NO_MORE_COMMANDS_TO_PLAY,
+            /*!
+             * Disconnected
+             */
+            DISCONNECT,
+            /*!
+             * There was an error in the script
+             */
+            ERROR
+        } event_t;
 
-    HarnessCli::HarnessCli(QString host,
-                           quint16 port,
-                           bool isRecord,
-                           QFile * const inFile,
-                           QFile * const outFile,
-                           QObject * parent)
+        /*!
+         * The state machine
+         */
+        typedef struct stateMachine
+        {
+        public:
+            stateMachine(const state_t initial)
+                : initialState(initial),
+                  currentState(initialState)
+            {
+    #if defined (QT_DEBUG)
+                qDebug() << "## Initialising state machine to "
+                         << STATE_NAMES[currentState];
+    #endif  // QT_DEBUG
+            }
+            inline state_t state()
+            {
+                return this->currentState;
+            }
+            inline void setState(const state_t state)
+            {
+    #if defined (QT_DEBUG)
+                qDebug() << "## State changing from "
+                         << STATE_NAMES[currentState]
+                         << " to "
+                         << STATE_NAMES[state];
+    #endif  // QT_DEBUG
+                this->currentState = state;
+            }
+
+        private:
+            const state_t initialState;
+            state_t currentState;
+        } stateMachine_t;
+
+        /*!
+         * \brief stateMachine The state machine for the cli
+         */
+        stateMachine_t stateMachine;
+
+        /*!
+         * \brief recordingMode @c True if this client is a recording client
+         */
+        const bool recordingMode;
+        /*!
+         * \brief stream The TCP socket connection to the target
+         */
+        QTcpSocket * const stream;
+        /*!
+         * \brief input_file Input data
+         */
+        QFile * const rootFile;
+        /*!
+         * \brief output_file Output data
+         */
+        QFile * const outputFile;
+
+        /*!
+         * \brief currentFile The current file we're reading from
+         */
+        QFile * currentFile;
+
+        /*!
+         * \brief inputFiles Stack of input files
+         */
+        QStack<QFile*> * const inputFiles;
+
+        /*!
+         * \brief settings Settings for configuring the CLI.
+         */
+        QMap<QString, QVariant> * const settings;
+        /*!
+         * \brief lastCommandWritten A copy of the last command written out
+         */
+        Buffer lastCommandWritten;
+        /*!
+         * \brief retryTimer Timer for retries
+         */
+        QTimer * const retryTimer;
+        /*!
+         * \brief maxRetries The maximum number of retries to do
+         */
+        uint maxRetries;
+        /*!
+         * \brief retryCount The current number of retries
+         */
+        uint retryCount;
+
+        /*!
+         * \brief readNextLine Read the next line from the file.
+         * If there's no file, try the file stack
+         *
+         * \param line A pointer to the next line
+         *
+         * \return The number of bytes read
+         *
+         * @since test-cascades 1.0.7
+         */
+        qint64 readNextLine(const Buffer * const line);
+
+        /*!
+         * \brief stripNl Strip the new lines from a buffer
+         *
+         * \param buffer The buffer to strip
+         * \param max_len The maximum length of the buffer
+         *
+         * @since test-cascades 1.0.0
+         */
+        static void stripNl(char * const buffer, const size_t max_len);
+        /*!
+         * \brief startRecording Send the recording command to the server
+         *
+         * @since test-cascades 1.0.0
+         */
+        void startRecording();
+        /*!
+         * \brief waitForCommandToRecord Wait for a response
+         *
+         * @since test-cascades 1.0.0
+         */
+        void waitForCommandToRecord();
+        /*!
+         * \brief transmitNextCommand Reads the next command from the disk
+         * and transmits it
+         *
+         * @since test-cascades 1.0.0
+         */
+        void transmitNextCommand();
+        /*!
+         * \brief unexpectedTransition Record an unexpected state machine transition
+         *
+         * \param event The event that was unexpected
+         *
+         * @since test-cascades 1.0.0
+         */
+        void unexpectedTransition(const event_t event);
+        /*!
+         * \brief shutdown Shutdown everything
+         *
+         * @since test-cascades 1.0.0
+         */
+        void shutdown(const int exitCode = 0);
+        /*!
+         * \brief postEventToStateMachine Post an event to the
+         * classes state machine
+         *
+         * \param event The event to post
+         *
+         * @since test-cascades 1.0.0
+         */
+        void postEventToStateMachine(const event_t event);
+        /*!
+         * \brief processSetting Process a setting string from the script
+         *
+         * \param setting The setting string to process.
+         *
+         * @since test-cascades 1.0.9
+         */
+        void processSetting(const char * const setting);
+        /*!
+         * \brief getSetting Get a setting
+         *
+         * \param key The setting to lookup
+         * \param defaultValue The value to use if the setting value isn't known
+         *
+         * \return The value for the specified setting or the default value
+         *
+         * @since test-cascades 1.0.9
+         */
+        QVariant getSetting(const QString& key, const QVariant defaultValue);
+        /*!
+         * \brief disconnected Slot for disconnection
+         *
+         * @since test-cascades 1.0.0
+         */
+        void disconnected(void);
+        /*!
+         * \brief dataReady Slot for data being received from the target
+         *
+         * @since test-cascades 1.0.0
+         */
+        void dataReady(void);
+        /*!
+         * \brief retryTimeoutExpired Slot for the retry timeout expiring.
+         * Means that we've not got a good response and need to try again.
+         *
+         * @since test-cascades 1.0.9
+         */
+        void retryTimeoutExpired(void);
+    };
+
+    const QString HarnessCliPrviate::SETTING_RETRY("retry");
+    const QVariant HarnessCliPrviate::SETTING_RETRY_DEFAULT(0);
+    const QString HarnessCliPrviate::SETTING_RETRY_INTERVAL("retry-interval");
+    const QVariant HarnessCliPrviate::SETTING_RETRY_INTERVAL_DEFAULT(1000);
+    const QString HarnessCliPrviate::SETTING_RETRY_MAX_INTERVALS("retry-max-intervals");
+    const QVariant HarnessCliPrviate::SETTING_RETRY_MAX_INTERVALS_DEFAULT(30);
+
+    const char * HarnessCliPrviate::STATE_NAMES[] =
+    {
+        "Waiting for Server",
+        "Waiting for Reply",
+        "Waiting for Recording to start",
+        "Waiting for a Recorded Command",
+        "Disconnected"
+    };
+
+    const char * HarnessCliPrviate::EVENT_NAMES[] =
+    {
+        "Received Initial Message",
+        "Received Command Reply",
+        "Received Record Command",
+        "No more commands to play",
+        "Disconnected",
+        "Error"
+    };
+
+    HarnessCliPrviate::HarnessCliPrviate(
+            bool isRecord,
+            QFile * const inFile,
+            QFile * const outFile,
+            QObject * const parent)
         : QObject(parent),
           stateMachine(WAITING_FOR_SERVER),
           recordingMode(isRecord),
@@ -61,29 +355,43 @@ const char * HarnessCli::EVENT_NAMES[] =
           settings(new QMap<QString, QVariant>()),
           retryTimer(new QTimer(this))
     {
-        connect(retryTimer, SIGNAL(timeout()), SLOT(retryTimeoutExpired()));
         inputFiles->push_back(rootFile);
-        if (this->stream)
+    }
+
+    HarnessCli::HarnessCli(QString host,
+                           quint16 port,
+                           bool isRecord,
+                           QFile * const inFile,
+                           QFile * const outFile,
+                           QObject * parent)
+        : QObject(parent),
+          pData(new HarnessCliPrviate(isRecord, inFile, outFile, this))
+    {
+        connect(pData->retryTimer, SIGNAL(timeout()), SLOT(retryTimeoutExpired()));
+        if (this->pData->stream)
         {
             bool ok;
 
-            ok = connect(this->stream,
-                         SIGNAL(connected()),
-                         SLOT(connectedOk()));
+            ok = connect(this->pData->stream,
+                         SIGNAL(disconnected()),
+                         this,
+                         SLOT(disconnected()));
             if (ok)
             {
-                ok = connect(this->stream,
-                             SIGNAL(disconnected()),
-                             SLOT(disconnected()));
+                const bool ok = connect(
+                            this->pData->stream,
+                            SIGNAL(readyRead()),
+                            this,
+                            SLOT(dataReady()));
                 if (ok)
                 {
-                    this->stream->connectToHost(host, port);
+                    this->pData->stream->connectToHost(host, port);
 
-                    if (not this->recordingMode)
+                    if (not this->pData->recordingMode)
                     {
-                        this->outputFile->write(
+                        this->pData->outputFile->write(
                                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
-                        this->outputFile->write("<results>\r\n");
+                        this->pData->outputFile->write("<results>\r\n");
                     }
                 }
             }
@@ -92,41 +400,28 @@ const char * HarnessCli::EVENT_NAMES[] =
 
     HarnessCli::~HarnessCli()
     {
-        if (this->stream)
+        if (this->pData->stream)
         {
-            if (this->stream->isOpen())
+            if (this->pData->stream->isOpen())
             {
-                this->stream->close();
+                this->pData->stream->close();
             }
         }
-        if (this->inputFiles)
+        if (this->pData->inputFiles)
         {
-            delete this->inputFiles;
+            delete this->pData->inputFiles;
         }
-        if (this->settings)
+        if (this->pData->settings)
         {
-            delete this->settings;
+            delete this->pData->settings;
         }
     }
 
-    void HarnessCli::connectedOk(void)
+    qint64 HarnessCliPrviate::readNextLine(const Buffer * const line)
     {
-        if (this->stream)
-        {
-            const bool ok = connect(this->stream,
-                         SIGNAL(readyRead()),
-                         SLOT(dataReady()));
-            if (not ok)
-            {
-                this->stream->close();
-            }
-        }
-    }
-
-    qint64 HarnessCli::readNextLine(const Buffer * const line)
-    {
-        qint64 bytesRead = this->currentFile->readLine(line->data(),
-                                                     line->length());
+        qint64 bytesRead = this->currentFile->readLine(
+                    line->data(),
+                    line->length());
         if (bytesRead <= 0)
         {
 #if defined(QT_DEBUG)
@@ -154,7 +449,7 @@ const char * HarnessCli::EVENT_NAMES[] =
         return bytesRead;
     }
 
-    void HarnessCli::postEventToStateMachine(const event_t event)
+    void HarnessCliPrviate::postEventToStateMachine(const event_t event)
     {
 #if defined(QT_DEBUG)
         qDebug() << "------------------------------------";
@@ -253,7 +548,7 @@ const char * HarnessCli::EVENT_NAMES[] =
 #endif  // QT_DEBUG
     }
 
-    void HarnessCli::unexpectedTransition(const event_t event)
+    void HarnessCliPrviate::unexpectedTransition(const event_t event)
     {
         qDebug() << "Unexpected state transition, State: "  \
                  << STATE_NAMES[this->stateMachine.state()] \
@@ -261,7 +556,7 @@ const char * HarnessCli::EVENT_NAMES[] =
                  << EVENT_NAMES[event];
     }
 
-    void HarnessCli::shutdown(const int exitCode)
+    void HarnessCliPrviate::shutdown(const int exitCode)
     {
         this->stateMachine.setState(DISCONNECTED);
         if (this->rootFile)
@@ -291,18 +586,18 @@ const char * HarnessCli::EVENT_NAMES[] =
         QCoreApplication::exit(exitCode);
     }
 
-    void HarnessCli::startRecording()
+    void HarnessCliPrviate::startRecording()
     {
         this->stateMachine.setState(WAITING_FOR_RECORDING_START);
         this->stream->write("record\r\n");
     }
 
-    void HarnessCli::waitForCommandToRecord()
+    void HarnessCliPrviate::waitForCommandToRecord()
     {
         this->stateMachine.setState(WAITING_FOR_RECORDED_COMMAND);
     }
 
-    void HarnessCli::transmitNextCommand()
+    void HarnessCliPrviate::transmitNextCommand()
     {
         const Buffer outputBuffer;
         this->stateMachine.setState(WAITING_FOR_REPLY);
@@ -313,7 +608,9 @@ const char * HarnessCli::EVENT_NAMES[] =
         {
             this->stream->write(this->lastCommandWritten.cdata(),
                                 this->lastCommandWritten.strlen());
-            this->outputFile->write("\t<retry command=\"");
+            this->outputFile->write("\t<retry count=\"");
+            this->outputFile->write(QString::number(this->retryCount).toUtf8().constData());
+            this->outputFile->write("\" command=\"");
             stripNl(this->lastCommandWritten.data(), this->lastCommandWritten.length());
             qDebug() << "RT" << this->lastCommandWritten.cdata();
             this->outputFile->write(this->lastCommandWritten.cdata());
@@ -382,10 +679,15 @@ const char * HarnessCli::EVENT_NAMES[] =
 
     void HarnessCli::disconnected(void)
     {
-        this->postEventToStateMachine(DISCONNECT);
+        this->pData->disconnected();
     }
 
-    void HarnessCli::stripNl(char * const buffer, const size_t max_len)
+    void HarnessCliPrviate::disconnected(void)
+    {
+        this->postEventToStateMachine(HarnessCliPrviate::DISCONNECT);
+    }
+
+    void HarnessCliPrviate::stripNl(char * const buffer, const size_t max_len)
     {
         const size_t slen = strnlen(buffer, max_len);
         for (size_t i = 0 ; i < slen ; i++)
@@ -397,7 +699,7 @@ const char * HarnessCli::EVENT_NAMES[] =
         }
     }
 
-    void HarnessCli::processSetting(const char * const setting)
+    void HarnessCliPrviate::processSetting(const char * const setting)
     {
         const QStringList tokens(QString(setting).trimmed().split(" "));
         if (tokens.size() == 3
@@ -410,7 +712,7 @@ const char * HarnessCli::EVENT_NAMES[] =
         }
     }
 
-    QVariant HarnessCli::getSetting(const QString& key,
+    QVariant HarnessCliPrviate::getSetting(const QString& key,
                                     const QVariant defaultValue)
     {
         return this->settings->value(key, defaultValue);
@@ -418,10 +720,20 @@ const char * HarnessCli::EVENT_NAMES[] =
 
     void HarnessCli::retryTimeoutExpired(void)
     {
+        this->pData->retryTimeoutExpired();
+    }
+
+    void HarnessCliPrviate::retryTimeoutExpired(void)
+    {
         this->transmitNextCommand();
     }
 
     void HarnessCli::dataReady(void)
+    {
+        this->pData->dataReady();
+    }
+
+    void HarnessCliPrviate::dataReady(void)
     {
         if (this->stream)
         {
