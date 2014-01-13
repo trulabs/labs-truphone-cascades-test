@@ -189,7 +189,7 @@ Here is a list:
 * click
 * longClick
 * tap (up/down/move/cancel)
-* list (select, scroll, check)
+* list (select, scroll, check, tap)
 * tab
 * sleep
 * text
@@ -236,9 +236,12 @@ call example
     call gotoTab1.txt
         ...
         tab 1
-        call tab1Checks1
-        call tab1Checks2
-        call tab1Checks3
+        call tab1Checks1.txt
+            ...
+            test object text hello
+            ...
+        call tab1Checks2.txt
+        call tab1Checks3.txt
         ...
     call doSomeStuff.txt
     call checkSettings.txt
@@ -255,6 +258,12 @@ cli-setting
     cli-setting retry-interval 1000
     # Give the application 60 seconds to retry
     cli-setting retry-max-intervals 60
+
+You can remove settings and leave them at their default value by not
+specifying a value, i.e.
+
+    # Disable retries
+    cli-setting retry
 
 If the cli-setting command is sent to the device, it will return an error.
 
