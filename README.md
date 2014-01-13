@@ -52,6 +52,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 Version History
 ===============
+- v1.0.7 - SegmentControl, List tap, cli call, fixes
 - v1.0.6 - More java unit tests, bug fixes.
 - v1.0.5 - Page & list support
 - v1.0.4 - C++ include paths fixes
@@ -214,6 +215,30 @@ The CLI is a single binary which takes 3 parameters
 
 The XML output file will be the same as the input file but suffixed
 with .xml.
+
+The CLI supports an additional command, call.
+
+'call' lets you call other scripts so that you can create a hierarcy or
+common set of scripts to build up larger functional tests from smaller,
+more manageable, scripts.
+
+call example
+------------
+
+    call login.txt
+    call checkFirstPage.txt
+    call gotoTab1.txt
+        ...
+        tab 1
+        call tab1Checks1
+        call tab1Checks2
+        call tab1Checks3
+        ...
+    call doSomeStuff.txt
+    call checkSettings.txt
+    call doLogout.txt
+
+If the call command is sent to the device, it will return an error.
 
 With the optional record mode all events that occur are streamed back
 to the CLI and recorded to the script file. You can then modify the

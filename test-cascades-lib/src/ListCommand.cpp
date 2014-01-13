@@ -584,6 +584,10 @@ namespace cascades
                                 listView,
                                 "triggered",
                                 Q_ARG(QVariantList, indexPath));
+                    if (not ret)
+                    {
+                        this->client->write("ERROR: Failed to run triggered on object\r\n");
+                    }
                 }
                 else
                 {
