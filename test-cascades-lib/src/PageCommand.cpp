@@ -107,11 +107,6 @@ namespace cascades
                                            callLevel + 1,
                                            maxCallLevel);
                 }
-                else
-                {
-                    this->client->write("ERROR: Application root must be a " \
-                                        "Nav Pane or a Tabbed Pane\r\n");
-                }
             }
         }
         else
