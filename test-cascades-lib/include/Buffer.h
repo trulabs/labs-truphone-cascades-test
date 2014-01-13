@@ -86,9 +86,9 @@ namespace cascades
             inline size_t strlen() const
             {
 #if defined (BUFFER_ON_HOST)
-                return strnlen(this->data(), this->length());
+                return strnlen(this->cdata(), this->length());
 #else
-                return std::strnlen(this->data(), this->length());
+                return std::strnlen(this->cdata(), this->length());
 #endif /* BUFFER_ON_HOST */
             }
             /*!

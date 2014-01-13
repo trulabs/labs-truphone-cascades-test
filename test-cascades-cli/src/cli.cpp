@@ -50,7 +50,8 @@ const char * HarnessCli::EVENT_NAMES[] =
           rootFile(inFile),
           outputFile(outFile),
           currentFile(rootFile),
-          inputFiles(new QStack<QFile*>())
+          inputFiles(new QStack<QFile*>()),
+          settings(new QMap<QString, QVariant>())
     {
         inputFiles->push_back(rootFile);
         if (this->stream)
@@ -92,6 +93,10 @@ const char * HarnessCli::EVENT_NAMES[] =
         if (this->inputFiles)
         {
             delete this->inputFiles;
+        }
+        if (this->settings)
+        {
+            delete this->settings;
         }
     }
 
@@ -293,80 +298,59 @@ const char * HarnessCli::EVENT_NAMES[] =
         const Buffer outputBuffer;
         this->stateMachine.setState(WAITING_FOR_REPLY);
 
-        qint64 bytesRead = this->readNextLine(&outputBuffer);
-
-        if (bytesRead <= 0)
+        bool waitingForReply = false;
+        qint64 bytesRead;
+        while ((bytesRead=this->readNextLine(&outputBuffer)) > 0)
         {
-            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
-        }
-
-        while (bytesRead > 0)
-        {
-            if (bytesRead > 0)
+            const char * const raw = outputBuffer.cdata();
+            if (raw[0] == '#')
             {
-                const char * const raw = outputBuffer.cdata();
-                if (raw[0] == '#')
+                qDebug() << "CC" << QString(raw).trimmed();
+            }
+            else if (strncmp(raw, "call ", 5) == 0)
+            {
+                QString filename(raw + 5);
+                filename = filename.trimmed();
+                QFile * const newFile = new QFile(filename, this);
+                if (not newFile->open(QIODevice::ReadOnly))
                 {
-                    qDebug() << "CC" << QString(raw).trimmed();
-                    bytesRead = readNextLine(&outputBuffer);
-                    if (bytesRead <= 0)
-                    {
-                        this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
-                    }
-                }
-                else if (strncmp(raw, "call ", 5) == 0)
-                {
-                    QString filename(raw + 5);
-                    filename = filename.trimmed();
-                    QFile * const newFile = new QFile(filename, this);
+                    const QFileInfo info(*this->rootFile);
+                    newFile->setFileName(
+                                info.path() +
+                                QDir::separator() +
+                                newFile->fileName());
                     if (not newFile->open(QIODevice::ReadOnly))
                     {
-                        const QFileInfo info(*this->rootFile);
-                        newFile->setFileName(
-                                    info.path() +
-                                    QDir::separator() +
-                                    newFile->fileName());
-                        if (not newFile->open(QIODevice::ReadOnly))
-                        {
-                            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
-                        }
-                    }
-                    this->inputFiles->push_back(newFile);
-                    this->currentFile = newFile;
-                    bytesRead = readNextLine(&outputBuffer);
-                    if (bytesRead <= 0)
-                    {
                         this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
                     }
                 }
-                else if (strcmp(raw, "\r\n") == 0 or strcmp(raw, "\n") == 0)
-                {
-                    qDebug() << "";
-                    bytesRead = readNextLine(&outputBuffer);
-                    if (bytesRead <= 0)
-                    {
-                        this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
-                    }
-                }
-                else
-                {
-#if defined(QT_DEBUG)
-                    qDebug() << "transmitNextCommand writing" << bytesRead << "bytes";
-#endif  // QT_DEBUG
-                    this->stream->write(outputBuffer.cdata(), bytesRead);
-                    this->outputFile->write("\t<command>\r\n");
-                    this->outputFile->write("\t\t<request sent=\"");
-                    stripNl(outputBuffer.data(), outputBuffer.length());
-                    qDebug() << "<<" << outputBuffer.cdata();
-                    this->outputFile->write(outputBuffer.cdata());
-                    this->outputFile->write("\"/>\r\n");
-                    break;
-                }
+                this->inputFiles->push_back(newFile);
+                this->currentFile = newFile;
+            }
+            else if (strncmp(raw, "cli-setting ", 12) == 0)
+            {
+                processSetting(raw);
+            }
+            else if (strcmp(raw, "\r\n") == 0 or strcmp(raw, "\n") == 0)
+            {
+                qDebug() << "";
             }
             else
             {
-                this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
+                this->stream->write(outputBuffer.cdata(), bytesRead);
+                this->outputFile->write("\t<command>\r\n");
+                this->outputFile->write("\t\t<request sent=\"");
+                stripNl(outputBuffer.data(), outputBuffer.length());
+                qDebug() << "<<" << outputBuffer.cdata();
+                this->outputFile->write(outputBuffer.cdata());
+                this->outputFile->write("\"/>\r\n");
+                waitingForReply = true;
+                break;
             }
+        }
+        if (not waitingForReply)
+        {
+            this->postEventToStateMachine(NO_MORE_COMMANDS_TO_PLAY);
         }
     }
 
@@ -385,6 +369,21 @@ const char * HarnessCli::EVENT_NAMES[] =
                 buffer[i] = '\0';
             }
         }
+    }
+
+    void HarnessCli::processSetting(const char * const setting)
+    {
+        const QStringList tokens(QString(setting).trimmed().split(" "));
+        if (tokens.size() == 3
+                and tokens.at(0) == "cli-setting")
+        {
+            this->settings->insert(tokens.at(1), tokens.at(2));
+        }
+    }
+
+    QVariant HarnessCli::getSetting(const QString& key, const QVariant defaultValue)
+    {
+        return this->settings->value(key, defaultValue);
     }
 
     void HarnessCli::dataReady(void)
