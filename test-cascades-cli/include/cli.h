@@ -66,6 +66,30 @@ namespace cli
              * \brief EVENT_NAMES The string names of all the events
              */
             static const char * EVENT_NAMES[];
+            /*!
+             * \brief SETTING_RETRY The name of the retry settings value
+             */
+            static const QString SETTING_RETRY;
+            /*!
+             * \brief SETTING_RETRY_DEFAULT Default setting for retries
+             */
+            static const QVariant SETTING_RETRY_DEFAULT;
+            /*!
+             * \brief SETTING_RETRY_INTERVAL Name of the retry internval setting
+             */
+            static const QString SETTING_RETRY_INTERVAL;
+            /*!
+             * \brief SETTING_RETRY_INTERVAL_DEFAULT Default value for interval
+             */
+            static const QVariant SETTING_RETRY_INTERVAL_DEFAULT;
+            /*!
+             * \brief SETTING_RETRY_MAX_TIME Name of the max retry time
+             */
+            static const QString SETTING_RETRY_MAX_INTERVALS;
+            /*!
+             * \brief SETTING_RETRY_MAX_TIME_DEFAULT Default max retry time
+             */
+            static const QVariant SETTING_RETRY_MAX_INTERVALS_DEFAULT;
 
             /*!
              * The states the CLI can be in
@@ -197,6 +221,22 @@ namespace cli
              * \brief settings Settings for configuring the CLI.
              */
             QMap<QString, QVariant> * const settings;
+            /*!
+             * \brief lastCommandWritten A copy of the last command written out
+             */
+            Buffer lastCommandWritten;
+            /*!
+             * \brief retryTimer Timer for retries
+             */
+            QTimer * const retryTimer;
+            /*!
+             * \brief maxRetries The maximum number of retries to do
+             */
+            uint maxRetries;
+            /*!
+             * \brief retryCount The current number of retries
+             */
+            uint retryCount;
 
             /*!
              * \brief readNextLine Read the next line from the file.
@@ -299,6 +339,13 @@ namespace cli
              * @since test-cascades 1.0.0
              */
             void dataReady(void);
+            /*!
+             * \brief retryTimeoutExpired Slot for the retry timeout expiring.
+             * Means that we've not got a good response and need to try again.
+             *
+             * @since test-cascades 1.0.9
+             */
+            void retryTimeoutExpired(void);
     };
 }  // namespace cli
 }  // namespace cascades
