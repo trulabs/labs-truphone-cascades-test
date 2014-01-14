@@ -47,7 +47,7 @@ namespace cascades
         bool ret = false;
 
         float sx = NAN, sy = NAN, wx = NAN, wy = NAN, lx = NAN, ly = NAN;
-        int touchType = -1, processed;
+        int touchType = -1, processed = 0;
         QString targetBuffer;
         QString receiverBuffer;
 
@@ -57,22 +57,22 @@ namespace cascades
             switch(param)
             {
             case 0:
-                sx = QString(arguments->first()).toInt(&ok);
+                sx = QString(arguments->first()).toFloat(&ok);
                 break;
             case 1:
-                sy = QString(arguments->first()).toInt(&ok);
+                sy = QString(arguments->first()).toFloat(&ok);
                 break;
             case 2:
-                wx = QString(arguments->first()).toInt(&ok);
+                wx = QString(arguments->first()).toFloat(&ok);
                 break;
             case 3:
-                wy = QString(arguments->first()).toInt(&ok);
+                wy = QString(arguments->first()).toFloat(&ok);
                 break;
             case 4:
-                lx = QString(arguments->first()).toInt(&ok);
+                lx = QString(arguments->first()).toFloat(&ok);
                 break;
             case 5:
-                ly = QString(arguments->first()).toInt(&ok);
+                ly = QString(arguments->first()).toFloat(&ok);
                 break;
             case 6:
                 receiverBuffer = arguments->first();
