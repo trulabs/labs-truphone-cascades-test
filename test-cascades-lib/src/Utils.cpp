@@ -48,7 +48,7 @@ namespace cascades
             {
                 list.append(QString(tmp));
                 // ensure tokens are added
-                // TODO(struscott): Q: why are spaces a special case?
+                // Q: why are spaces a special case?
                 // we can use isDelim (which they are)
                 // so actually this is always true.
                 //
