@@ -36,7 +36,7 @@ namespace cascades
     bool KeyCommand::executeCommand(QStringList * const arguments)
     {
         bool ret = false;
-        int theKey = 0, isPressed = 0, isAlt = 0, isShift = 0, isCtrl = 0, processed;
+        int theKey = 0, isPressed = 0, isAlt = 0, isShift = 0, isCtrl = 0, processed = 0;
         QString target;
 
         for (int param = 0 ; param < 6 ; param++)
