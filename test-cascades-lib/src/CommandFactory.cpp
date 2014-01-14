@@ -62,12 +62,12 @@ namespace test
 namespace cascades
 {
     /*!
-     * \brief The CommandFactoryPrivate class is a wrapper around
+     * \brief The CommandFactoryEntry class is a wrapper around
      * command creation
      *
      * @since test-cascades 1.0.0
      */
-    class CommandFactoryPrivate
+    class CommandFactoryEntry
     {
     public:
         /*!
@@ -88,7 +88,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        explicit CommandFactoryPrivate(createCommand * const cc)
+        explicit CommandFactoryEntry(createCommand * const cc)
             : commandCreate(cc)
         {
         }
@@ -97,7 +97,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        virtual ~CommandFactoryPrivate()
+        virtual ~CommandFactoryEntry()
         {
         }
         /*!
@@ -123,45 +123,68 @@ namespace cascades
         createCommand * const commandCreate;
     };
 
-    QHash<QString, CommandFactoryPrivate*>
-        CommandFactory::commandCache;
-
-    #define INSERT(cmd, data) \
-        if (CommandFactory::commandCache.contains(cmd)) \
-        { \
-            if (CommandFactory::commandCache[cmd]) \
-            { \
-                delete CommandFactory::commandCache[cmd]; \
-            } \
-        } \
-        CommandFactory::commandCache.insert(cmd, data); \
-
-    void CommandFactory::initialise(void)
+    class CommandFactoryPrivate
     {
-        INSERT(ClickCommand::getCmd(), new CommandFactoryPrivate(&ClickCommand::create));
-        INSERT(LongClickCommand::getCmd(), new CommandFactoryPrivate(&LongClickCommand::create));
-        INSERT(TapCommand::getCmd(), new CommandFactoryPrivate(&TapCommand::create));
-        INSERT(TextCommand::getCmd(), new CommandFactoryPrivate(&TextCommand::create));
-        INSERT(TestCommand::getCmd(), new CommandFactoryPrivate(&TestCommand::create));
-        INSERT(ActionCommand::getCmd(), new CommandFactoryPrivate(&ActionCommand::create));
-        INSERT(SleepCommand::getCmd(), new CommandFactoryPrivate(&SleepCommand::create));
-        INSERT(TabCommand::getCmd(), new CommandFactoryPrivate(&TabCommand::create));
-        INSERT(KeyCommand::getCmd(), new CommandFactoryPrivate(&KeyCommand::create));
-        INSERT(TouchCommand::getCmd(), new CommandFactoryPrivate(&TouchCommand::create));
-        INSERT(RecordCommand::getCmd(), new CommandFactoryPrivate(&RecordCommand::create));
-        INSERT(RecordCommand::getStopCmd(), new CommandFactoryPrivate(&RecordCommand::createStop));
-        INSERT(HelpCommand::getCmd(), new CommandFactoryPrivate(&HelpCommand::create));
-        INSERT(QmlCommand::getCmd(), new CommandFactoryPrivate(&QmlCommand::create));
-        INSERT(ToastCommand::getCmd(), new CommandFactoryPrivate(&ToastCommand::create));
-        INSERT(PopCommand::getCmd(), new CommandFactoryPrivate(&PopCommand::create));
-        INSERT(ToggleCommand::getCmd(), new CommandFactoryPrivate(&ToggleCommand::create));
-        INSERT(DropDownCommand::getCmd(), new CommandFactoryPrivate(&DropDownCommand::create));
-        INSERT(SpyCommand::getCmd(), new CommandFactoryPrivate(&SpyCommand::create));
-        INSERT(ContactsCommand::getCmd(), new CommandFactoryPrivate(&ContactsCommand::create));
-        INSERT(PageCommand::getCmd(), new CommandFactoryPrivate(&PageCommand::create));
-        INSERT(ExitCommand::getCmd(), new CommandFactoryPrivate(&ExitCommand::create));
-        INSERT(ListCommand::getCmd(), new CommandFactoryPrivate(&ListCommand::create));
-        INSERT(SegmentCommand::getCmd(), new CommandFactoryPrivate(&SegmentCommand::create));
+    public:
+        static void insert(const QString& name,
+                           CommandFactoryEntry * const entry);
+        /*!
+         * \brief initialise Installs all the commands into the factory.
+         * This needs to be called before the factory is used
+         *
+         * @since test-cascades 1.0.0
+         */
+        static void initialise(void);
+        /*!
+         * \brief commandCache The cache of all the commands
+         */
+        static QHash<QString, CommandFactoryEntry*> commandCache;
+    };
+
+    QHash<QString, CommandFactoryEntry*>
+        CommandFactoryPrivate::commandCache;
+
+    CommandFactoryPrivate * CommandFactory::privateData;
+
+    void CommandFactoryPrivate::insert(const QString& name,
+                                       CommandFactoryEntry * const entry)
+    {
+        if (commandCache.contains(name))
+        {
+            if (commandCache[name])
+            {
+                delete commandCache[name];
+            }
+        }
+        commandCache.insert(name, entry); \
+    }
+
+    void CommandFactoryPrivate::initialise(void)
+    {
+        insert(ClickCommand::getCmd(), new CommandFactoryEntry(&ClickCommand::create));
+        insert(LongClickCommand::getCmd(), new CommandFactoryEntry(&LongClickCommand::create));
+        insert(TapCommand::getCmd(), new CommandFactoryEntry(&TapCommand::create));
+        insert(TextCommand::getCmd(), new CommandFactoryEntry(&TextCommand::create));
+        insert(TestCommand::getCmd(), new CommandFactoryEntry(&TestCommand::create));
+        insert(ActionCommand::getCmd(), new CommandFactoryEntry(&ActionCommand::create));
+        insert(SleepCommand::getCmd(), new CommandFactoryEntry(&SleepCommand::create));
+        insert(TabCommand::getCmd(), new CommandFactoryEntry(&TabCommand::create));
+        insert(KeyCommand::getCmd(), new CommandFactoryEntry(&KeyCommand::create));
+        insert(TouchCommand::getCmd(), new CommandFactoryEntry(&TouchCommand::create));
+        insert(RecordCommand::getCmd(), new CommandFactoryEntry(&RecordCommand::create));
+        insert(RecordCommand::getStopCmd(), new CommandFactoryEntry(&RecordCommand::createStop));
+        insert(HelpCommand::getCmd(), new CommandFactoryEntry(&HelpCommand::create));
+        insert(QmlCommand::getCmd(), new CommandFactoryEntry(&QmlCommand::create));
+        insert(ToastCommand::getCmd(), new CommandFactoryEntry(&ToastCommand::create));
+        insert(PopCommand::getCmd(), new CommandFactoryEntry(&PopCommand::create));
+        insert(ToggleCommand::getCmd(), new CommandFactoryEntry(&ToggleCommand::create));
+        insert(DropDownCommand::getCmd(), new CommandFactoryEntry(&DropDownCommand::create));
+        insert(SpyCommand::getCmd(), new CommandFactoryEntry(&SpyCommand::create));
+        insert(ContactsCommand::getCmd(), new CommandFactoryEntry(&ContactsCommand::create));
+        insert(PageCommand::getCmd(), new CommandFactoryEntry(&PageCommand::create));
+        insert(ExitCommand::getCmd(), new CommandFactoryEntry(&ExitCommand::create));
+        insert(ListCommand::getCmd(), new CommandFactoryEntry(&ListCommand::create));
+        insert(SegmentCommand::getCmd(), new CommandFactoryEntry(&SegmentCommand::create));
     }
 
     Command * CommandFactory::getCommand(
@@ -170,11 +193,27 @@ namespace cascades
             QObject * parent)
     {
         Command * harnessCommand = NULL;
-        if (CommandFactory::commandCache.contains(command))
+        if (not CommandFactory::privateData)
         {
-            harnessCommand = CommandFactory::commandCache.value(command)->create(client, parent);
+            privateData = new CommandFactoryPrivate();
+            privateData->initialise();
+        }
+        if (privateData->commandCache.contains(command))
+        {
+            harnessCommand = privateData->commandCache.value(
+                        command)->create(client, parent);
         }
         return harnessCommand;
+    }
+
+    const QList<QString> CommandFactory::getAvailableCommands()
+    {
+        if (not CommandFactory::privateData)
+        {
+            privateData = new CommandFactoryPrivate();
+            privateData->initialise();
+        }
+        return privateData->commandCache.keys();
     }
 }  // namespace cascades
 }  // namespace test
