@@ -9,11 +9,14 @@
 
 #include <bb/cascades/ListView>
 #include <bb/cascades/DataModel>
+#include <bb/cascades/MultiSelectHandler>
+#include <bb/cascades/MultiSelectActionItem>
 
 #include "Connection.h"
 #include "Utils.h"
 
 using bb::cascades::ListView;
+using bb::cascades::MultiSelectHandler;
 using bb::cascades::DataModel;
 
 namespace truphone
@@ -134,6 +137,14 @@ namespace cascades
                 else if (command == "key")
                 {
                     ret = showKeysOnPath(arguments, listView);
+                }
+                else if (command == "hold")
+                {
+                    ret = holdPath(arguments, listView, true);
+                }
+                else if (command == "release")
+                {
+                    ret = holdPath(arguments, listView, false);
                 }
                 else if (command == "tap")
                 {
@@ -596,6 +607,66 @@ namespace cascades
         else
         {
             this->client->write("ERROR: list tap command needs more parameters\r\n");
+        }
+        return ret;
+    }
+
+    bool ListCommand::holdPath(
+            QStringList * const arguments,
+            bb::cascades::ListView * const listView,
+            const bool select)
+    {
+        bool ret = false;
+        if (arguments->size() > 1)
+        {
+            bool indexPathOk = true;
+            QVariantList indexPath;
+            const QString selectType = arguments->first();
+            arguments->removeFirst();
+            if (selectType == "index")
+            {
+                if (not findElementByIndex(arguments->first(), indexPath))
+                {
+                    this->client->write("ERROR: Failed to convert index to indexPath\n");
+                    indexPathOk = false;
+                }
+                arguments->removeFirst();
+            }
+            else if (selectType == "name")
+            {
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
+                if (not findElementByName(listView, namedIndex, indexPath))
+                {
+                    this->client->write("ERROR: Failed to convert named index to indexPath\n");
+                    indexPathOk = false;
+                }
+            }
+            else
+            {
+                indexPathOk = false;
+                this->client->write("ERROR: Invalid lookup method, use index or name\r\n");
+            }
+            if (indexPathOk)
+            {
+                QVariant element = listView->dataModel()->data(indexPath);
+                if (not element.isNull() and element.isValid())
+                {
+                    if (select not_eq listView->multiSelectHandler()->isActive())
+                    {
+                        listView->select(indexPath, select);
+                        listView->multiSelectHandler()->setActive(select);
+                        ret = true;
+                    }
+                }
+                else
+                {
+                    this->client->write("ERROR: Tried to hold invalid item\r\n");
+                }
+            }
+        }
+        else
+        {
+            this->client->write("ERROR: list hold command needs more parameters\r\n");
         }
         return ret;
     }
