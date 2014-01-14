@@ -167,19 +167,27 @@ namespace cascades
                     }
                     else
                     {
-                        action = findAction(pane, name);
+                        action = Application::instance()->findChild<AbstractActionItem*>(name);
                         if (action)
                         {
                             ret = executeAction(action);
-                            if (not ret)
-                            {
-                                this->client->write("ERROR: Failed to execute the"\
-                                                    " named action\r\n");
-                            }
                         }
                         else
                         {
-                            this->client->write("ERROR: Unable to find the named action\r\n");
+                            action = findAction(pane, name);
+                            if (action)
+                            {
+                                ret = executeAction(action);
+                                if (not ret)
+                                {
+                                    this->client->write("ERROR: Failed to execute the"\
+                                                        " named action\r\n");
+                                }
+                            }
+                            else
+                            {
+                                this->client->write("ERROR: Unable to find the named action\r\n");
+                            }
                         }
                     }
                 }
@@ -285,6 +293,8 @@ namespace cascades
     void ActionCommand::showHelp()
     {
         this->client->write("> action <objectName/title>\r\n");
+        this->client->write("> action menu <index>\r\n");
+        this->client->write("> action page <index>\r\n");
         this->client->write("Execute an Action Item\r\n");
     }
 }  // namespace cascades
