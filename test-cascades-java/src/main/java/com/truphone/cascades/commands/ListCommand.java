@@ -232,4 +232,76 @@ public class ListCommand extends DefaultCommand {
 	        return this._payload;
 	    }
 	}
+	
+	/**
+	 * Command to hold on an item in a list (multiselect menu)
+	 * @author STruscott
+	 *
+	 */
+	public static final class ListHoldCommand extends DefaultCommand {
+
+		private final String _payload;
+		/**
+		 * Hold an index on a list.
+		 * @param listView The listview
+		 * @param indexMode The index mode (numeric, name)
+		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
+		 */
+		public ListHoldCommand(
+				final String listView,
+				final IndexingMode indexMode,
+				final String indexPath) {
+			super("");
+			final StringBuilder builder = new StringBuilder();
+			builder.append(COMMAND_NAME);
+			builder.append(listView);
+			builder.append(" hold ");
+			builder.append(indexMode.asString());
+			builder.append(' ');
+			builder.append(indexPath);
+			builder.append("\r\n");
+			this._payload = builder.toString();
+		}
+
+		@Override
+	    public String getPayload() {
+	        return this._payload;
+	    }
+	}
+	
+	/**
+	 * Command to release on an item in a list (hide multiselect menu)
+	 * @author STruscott
+	 *
+	 */
+	public static final class ListReleaseCommand extends DefaultCommand {
+
+		private final String _payload;
+		/**
+		 * Release an index on a list.
+		 * @param listView The listview
+		 * @param indexMode The index mode (numeric, name)
+		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
+		 */
+		public ListReleaseCommand(
+				final String listView,
+				final IndexingMode indexMode,
+				final String indexPath) {
+			super("");
+			final StringBuilder builder = new StringBuilder();
+			builder.append(COMMAND_NAME);
+			builder.append(listView);
+			builder.append(" release ");
+			builder.append(indexMode.asString());
+			builder.append(' ');
+			builder.append(indexPath);
+			builder.append("\r\n");
+			this._payload = builder.toString();
+		}
+
+		@Override
+	    public String getPayload() {
+	        return this._payload;
+	    }
+	}
 }

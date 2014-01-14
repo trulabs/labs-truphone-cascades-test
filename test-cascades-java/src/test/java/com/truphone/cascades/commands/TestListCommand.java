@@ -275,4 +275,96 @@ public final class TestListCommand {
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
+	
+	/**
+	 * Test the List (tap, index) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testListHoldIndexCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("list list1 hold index 0~1~2".equals(message)) {
+					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
+				}
+			}
+		};
+		FakeDevice.DEVICE.getProcess().addListener(response);
+		final IReply reply = FakeDevice.CONN.transmit(
+				new ListCommand.ListHoldCommand("list1", ListCommand.IndexingMode.INDEX, "0~1~2"), FakeDevice.DEFAULT_TIMEOUT);
+		FakeDevice.DEVICE.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the List (tap, named index) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testListHoldNamedIndexCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("list list1 hold name S~Susan^".equals(message)) {
+					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
+				}
+			}
+		};
+		FakeDevice.DEVICE.getProcess().addListener(response);
+		final IReply reply = FakeDevice.CONN.transmit(
+				new ListCommand.ListHoldCommand("list1", ListCommand.IndexingMode.NAME, "S~Susan^"), FakeDevice.DEFAULT_TIMEOUT);
+		FakeDevice.DEVICE.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+	
+	/**
+	 * Test the List (tap, index) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testListReleaseIndexCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("list list1 release index 0~1~2".equals(message)) {
+					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
+				}
+			}
+		};
+		FakeDevice.DEVICE.getProcess().addListener(response);
+		final IReply reply = FakeDevice.CONN.transmit(
+				new ListCommand.ListReleaseCommand("list1", ListCommand.IndexingMode.INDEX, "0~1~2"), FakeDevice.DEFAULT_TIMEOUT);
+		FakeDevice.DEVICE.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the List (tap, named index) command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testListReleaseNamedIndexCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("list list1 release name S~Susan^".equals(message)) {
+					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
+				}
+			}
+		};
+		FakeDevice.DEVICE.getProcess().addListener(response);
+		final IReply reply = FakeDevice.CONN.transmit(
+				new ListCommand.ListReleaseCommand("list1", ListCommand.IndexingMode.NAME, "S~Susan^"), FakeDevice.DEFAULT_TIMEOUT);
+		FakeDevice.DEVICE.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
 }
