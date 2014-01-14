@@ -26,8 +26,6 @@ namespace cascades
         serverSocket(new Server(this)),
         delim(", ")
     {
-        CommandFactory::initialise();
-
         if (this->serverSocket)
         {
             connect(this->serverSocket,
@@ -46,7 +44,7 @@ namespace cascades
             }
             catch (...)  // NOLINT(whitespace/parens)
             {
-                /* we don't care just catch it */
+                qWarning("Caught an unexpected exception on socket close");
             }
             delete this->serverSocket;
         }
