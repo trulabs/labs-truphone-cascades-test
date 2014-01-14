@@ -6,8 +6,6 @@
 #include <string.h>
 #include <bb/cascades/Application>
 
-#include "Buffer.h"
-
 using bb::cascades::Application;
 
 namespace truphone
@@ -16,17 +14,15 @@ namespace test
 {
 namespace cascades
 {
-    bool Utils::isDelim(const Buffer * const delim,
+    bool Utils::isDelim(const QString& delim,
                         const char c)
     {
-        size_t delim_count;
-        size_t p;
+        const int delim_count = delim.length();
         bool is_delim = false;
 
-        delim_count = delim->strlen();
-        for (p = 0 ; (p < delim_count) and (not is_delim) ; p++)
+        for (int p = 0 ; (p < delim_count) and (not is_delim) ; p++)
         {
-            if (c == delim->cdata()[p])
+            if (c == delim.at(p))
             {
                 is_delim = true;
             }
@@ -35,25 +31,22 @@ namespace cascades
         return is_delim;
     }
 
-    QStringList Utils::tokenise(const Buffer * const delim,
-                                const Buffer * const buffer,
+    QStringList Utils::tokenise(const QString& delim,
+                                const QString& buffer,
                                 const bool includeDelim)
     {
         QStringList list;
-        const size_t length = buffer->strlen();
-        const char * str = buffer->cdata();
-        size_t p, t = 0;
-        const Buffer tmp;
+        QString tmp;
 
-        for (p = 0; p < length; p++)
+        for (int p = 0; p < buffer.length(); p++)
         {
-            if (str[p] == static_cast<char>(0xC2u))  // ASCII/SHIFT etc
+            if (buffer.at(p) == static_cast<char>(0xC2u))  // ASCII/SHIFT etc
             {
                 // ignore me
             }
-            else if (isDelim(delim, str[p]))
+            else if (isDelim(delim, buffer.at(p).toAscii()))
             {
-                list.append(tmp);
+                list.append(QString(tmp));
                 // ensure tokens are added
                 // TODO(struscott): Q: why are spaces a special case?
                 // we can use isDelim (which they are)
@@ -64,25 +57,21 @@ namespace cascades
                 // so we may have to peek at the top
                 // of the list to see if a space already
                 // exists.
-                if (str[p] not_eq ' ')
+                if (buffer.at(p) not_eq ' ')
                 {
                     if (includeDelim)
                     {
-                        list.append(QString(str[p]));
+                        list.append(QString(buffer.at(p)));
                     }
                 }
-                memset(tmp.data(), 0, t);
-                t = 0;
+                tmp.clear();
             }
             else
             {
-                if (str[p] not_eq '\n' and str[p] not_eq '\r')
-                {
-                    tmp.data()[t++] = str[p];
-                }
+                tmp.append(buffer.at(p));
             }
         }
-        if (t)
+        if (not tmp.isEmpty())
         {
             list.append(tmp);
         }

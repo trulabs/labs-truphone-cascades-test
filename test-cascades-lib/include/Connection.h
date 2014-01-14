@@ -8,8 +8,6 @@
 #include <QTcpSocket>
 #include <bb/cascades/Application>
 
-#include "Buffer.h"
-
 namespace truphone
 {
 namespace test
@@ -89,7 +87,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.1
              */
-            void packetReceived(Connection* connection, const Buffer& packet);
+            void packetReceived(Connection* connection, const QString& packet);
         protected:
         private:
             /*!

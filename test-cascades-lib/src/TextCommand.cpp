@@ -39,7 +39,7 @@ namespace cascades
     bool TextCommand::executeCommand(QStringList * const arguments)
     {
         bool ret = false;
-        if (arguments->size() >= 2)
+        if (arguments->size() >= 1)
         {
             QObject * const obj =
                     Application::instance()->scene()->findChild<QObject*>(arguments->first());

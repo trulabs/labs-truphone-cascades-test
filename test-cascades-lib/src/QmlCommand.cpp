@@ -14,7 +14,6 @@
 
 using bb::cascades::Application;
 using bb::cascades::QmlDocument;
-using truphone::test::cascades::Buffer;
 
 namespace truphone
 {
@@ -84,14 +83,9 @@ namespace cascades
         }
         else
         {
-            const Buffer delim, qmlCommand;
-            strncpy(delim.data(), ".", delim.length());
-            strncpy(qmlCommand.data(),
-                    arguments->first().toUtf8().constData(),
-                    qmlCommand.length());
-
-            QStringList tokens = Utils::tokenise(&delim,
-                                                 &qmlCommand);
+            const QString delim(".");
+            const QString qmlCommand = arguments->first();
+            QStringList tokens = Utils::tokenise(delim, qmlCommand);
             if (tokens.size() not_eq 3)
             {
                 this->client->write("ERROR: qml <var>.<func> (i.e. app.func)\r\n");
@@ -104,14 +98,11 @@ namespace cascades
                 tokens.removeFirst();  // remove the period
                 if (obj)
                 {
-                    const char * const methodName = tokens.first().toUtf8().constData();
+                    const QString methodName(tokens.first() + "()");
                     tokens.removeFirst();
                     const QMetaObject * const objectMeta = obj->metaObject();
 
-                    const Buffer tmp;
-                    snprintf(tmp.data(), tmp.length(), "%s()", methodName);
-
-                    const int methodIndex = objectMeta->indexOfMethod(tmp.cdata());
+                    const int methodIndex = objectMeta->indexOfMethod(methodName.toUtf8());
                     if (methodIndex not_eq -1)
                     {
                         const QMetaMethod methodMeta = objectMeta->method(methodIndex);

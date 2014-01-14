@@ -2,9 +2,6 @@
  * Copyright 2013 Truphone
  */
 #include "Connection.h"
-#include "Buffer.h"
-
-using truphone::test::cascades::Buffer;
 
 namespace truphone
 {
@@ -33,21 +30,18 @@ namespace cascades
 
     void Connection::processPacket(void)
     {
-        qint64 bytesRead = 0;
-        const Buffer buffer;
-
         while (this->socket->bytesAvailable())
         {
             // read in a command from the client
 
-            bytesRead = this->socket->readLine(buffer.data(), buffer.length());
+            const QString newPacket(this->socket->readLine(1024));
 
-            if (bytesRead)
+            if (not newPacket.isNull() and not newPacket.isEmpty())
             {
                 // string out all the tokens of the command
                 // and if there's something to process strip
                 // off the first word (the command) and execute it
-                emit this->packetReceived(this, buffer);
+                emit this->packetReceived(this, newPacket);
             }
         }
     }

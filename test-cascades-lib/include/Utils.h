@@ -7,8 +7,6 @@
 #include <QObject>
 #include <QList>
 
-#include "Buffer.h"
-
 namespace truphone
 {
 namespace test
@@ -36,8 +34,8 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        static QStringList tokenise(const Buffer * const delim,
-                                    const Buffer * const buffer,
+        static QStringList tokenise(const QString& delim,
+                                    const QString& buffer,
                                     const bool includeDelim = true);
 
         // from Hooq
@@ -73,7 +71,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        static bool isDelim(const Buffer * const delim,
+        static bool isDelim(const QString& delim,
                             const char c);
         // from Hooq
 

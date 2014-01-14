@@ -8,7 +8,6 @@
 #include <bb/cascades/ListView>
 
 #include "Command.h"
-#include "Buffer.h"
 
 namespace truphone
 {
@@ -137,7 +136,7 @@ namespace cascades
          */
         static void normalisePath(
                 QString * const value,
-                const char * const endOfPath);
+                const QString& endOfPath);
 
         /*!
          * \brief extractNamedPath Iterate over arguments building up
@@ -152,7 +151,7 @@ namespace cascades
          */
         static QString extractNamedPath(
                 QStringList * const arguments,
-                const char * const endOfPath);
+                const QString& endOfPath);
 
         /*!
          * \brief selectUnselectPath (Un)Select a path
@@ -228,15 +227,15 @@ namespace cascades
         /*!
          * @brief namedPathEnd Path end marker
          */
-        const Buffer namedPathEnd;
+        const QString namedPathEnd;
         /*!
          * \brief namedPathSep Path/Index separator
          */
-        const Buffer namedPathSep;
+        const QString namedPathSep;
         /*!
          * \brief assignSep Assignment separator
          */
-        const Buffer assignSep;
+        const QString assignSep;
     };
 }  // namespace cascades
 }  // namespace test

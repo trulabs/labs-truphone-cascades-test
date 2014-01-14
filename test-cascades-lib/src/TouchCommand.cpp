@@ -10,7 +10,6 @@
 #include <bb/cascades/TouchType>
 #include <bb/cascades/VisualNode>
 
-#include "Buffer.h"
 #include "Utils.h"
 #include "TouchCommandLPHandler.h"
 #include "Connection.h"
@@ -47,42 +46,59 @@ namespace cascades
     {
         bool ret = false;
 
-        const Buffer args;
-        while (arguments->size() > 1)
-        {
-            strncat(args.data(), arguments->first().toUtf8().constData(), args.length());
-            arguments->removeFirst();
-            strncat(args.data(), " ", args.length());
-        }
-        strncat(args.data(), arguments->first().toUtf8().constData(), args.length());
-        arguments->removeFirst();
-
         float sx = NAN, sy = NAN, wx = NAN, wy = NAN, lx = NAN, ly = NAN;
         int touchType = -1, processed;
-        const Buffer targetBuffer;
-        const Buffer receiverBuffer;
+        QString targetBuffer;
+        QString receiverBuffer;
 
-        processed = sscanf(args.cdata(),  // NOLINT(runtime/printf)
-                           "%15f %15f %15f %15f %15f %15f %1d %511s %511s",
-                           &sx,
-                           &sy,
-                           &wx,
-                           &wy,
-                           &lx,
-                           &ly,
-                           &touchType,
-                           receiverBuffer.data(),
-                           targetBuffer.data());
+        for (int param = 0 ; param < 8 ; param++)
+        {
+            bool ok = false;
+            switch(param)
+            {
+            case 0:
+                sx = QString(arguments->first()).toInt(&ok);
+                break;
+            case 1:
+                sy = QString(arguments->first()).toInt(&ok);
+                break;
+            case 2:
+                wx = QString(arguments->first()).toInt(&ok);
+                break;
+            case 3:
+                wy = QString(arguments->first()).toInt(&ok);
+                break;
+            case 4:
+                lx = QString(arguments->first()).toInt(&ok);
+                break;
+            case 5:
+                ly = QString(arguments->first()).toInt(&ok);
+                break;
+            case 6:
+                receiverBuffer = arguments->first();
+                ok = not receiverBuffer.isNull() and not receiverBuffer.isEmpty();
+                break;
+            case 7:
+                targetBuffer = arguments->first();
+                ok = not targetBuffer.isNull() and not targetBuffer.isEmpty();
+                break;
+            default:
+                break;
+            }
+            arguments->removeFirst();
+            if (ok)
+            {
+                processed++;
+            }
+        }
 
         if (processed == 8)
         {
-            const size_t tlen = targetBuffer.strlen();
-            if (tlen <= 1)
+            if (targetBuffer.isNull() || targetBuffer.isEmpty())
             {
-                const size_t rlen = receiverBuffer.strlen();
                 // there's no receiver and the receiver has been replaced
                 // with the target so we need to watch them over
-                strncpy(targetBuffer.data(), receiverBuffer.data(), rlen);
+                receiverBuffer = targetBuffer;
                 processed++;
             }
         }
