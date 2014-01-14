@@ -185,6 +185,22 @@ namespace cascades
                 bb::cascades::ListView * const listView);
 
         /*!
+         * \brief tapPath Execute (selectionChanged) for an item
+         * as if it was being clicked on and held (long-press).
+         *
+         * \param arguments The arguments for the tap
+         * \param listView The list view to work on
+         *
+         * \return
+         *
+         * @since test-cascades 1.0.10
+         */
+        bool holdPath(
+                QStringList * const arguments,
+                bb::cascades::ListView * const listView,
+                const bool select = true);
+
+        /*!
          * \brief scrollToPath Scrolls to a known path
          *
          * \param arguments The arguments used to scroll to
