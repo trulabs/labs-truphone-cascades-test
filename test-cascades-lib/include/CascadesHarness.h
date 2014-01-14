@@ -7,7 +7,6 @@
 #include <QObject>
 #include <bb/cascades/Application>
 
-#include "Buffer.h"
 #include "CascadesTest.h"
 
 namespace truphone
@@ -74,7 +73,7 @@ namespace cascades
             /*!
              * \brief delim A constant buffer containing all the delimiters we check
              */
-            const Buffer delim;
+            const QString delim;
         private slots:
             /*!
              * \brief processPacket Slot used to process a packet from a connection
@@ -83,7 +82,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.0
              */
-            void processPacket(class Connection * connection, const Buffer& packet);
+            void processPacket(class Connection * connection, const QString& packet);
             /*!
              * \brief handleNewConnection Handle a new client connection
              *

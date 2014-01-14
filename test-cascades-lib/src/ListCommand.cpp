@@ -102,7 +102,7 @@ namespace cascades
                 // check an element by named index
                 else if (command == "name")
                 {
-                    const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
+                    const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
                     QVariantList indexPath;
                     if (findElementByName(listView, namedIndex, indexPath))
                     {
@@ -178,7 +178,7 @@ namespace cascades
             }
             else if (selectType == "name")
             {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -233,7 +233,7 @@ namespace cascades
             }
             else if (selectType == "name")
             {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -303,7 +303,7 @@ namespace cascades
             }
             else if (selectType == "name")
             {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");
@@ -338,7 +338,7 @@ namespace cascades
 
     QString ListCommand::extractNamedPath(
             QStringList * const arguments,
-            const char * const endOfPath)
+            const QString& endOfPath)
     {
         QStringList path;
         while (not arguments->isEmpty())
@@ -359,7 +359,7 @@ namespace cascades
 
     void ListCommand::normalisePath(
             QString * const value,
-            const char * const endOfPath)
+            const QString& endOfPath)
     {
         if (value->endsWith(endOfPath))
         {
@@ -371,8 +371,7 @@ namespace cascades
             const QString& index,
             QVariantList& elementIndexPath) const
     {
-        Buffer indexString(index.toUtf8().constData());
-        QStringList indexes = Utils::tokenise(&namedPathSep, &indexString, false);
+        QStringList indexes = Utils::tokenise(namedPathSep, index, false);
 
         bool failed = false;
         Q_FOREACH(QString sIndex, indexes)
@@ -397,9 +396,8 @@ namespace cascades
             const QString& index,
             QVariantList& elementIndexPath) const
     {
-        const Buffer indexString(index.toUtf8().constData());
         DataModel * const model = list->dataModel();
-        QStringList indexes = Utils::tokenise(&namedPathSep, &indexString, false);
+        QStringList indexes = Utils::tokenise(namedPathSep, index, false);
 
         bool failed = false;
         while (not indexes.isEmpty())
@@ -426,7 +424,7 @@ namespace cascades
                 // look up the name/value pair
                 else if (type == "QVariantMap")
                 {
-                    QStringList keyValuePair = elementName.split(assignSep.cdata());
+                    QStringList keyValuePair = elementName.split(assignSep);
                     if (keyValuePair.size() == 2)
                     {
                         const QString key = keyValuePair.first().trimmed();
@@ -493,8 +491,8 @@ namespace cascades
                 else if (elementType == "QVariantMap")
                 {
                     QString normalisedCheck(check);
-                    normalisePath(&normalisedCheck, namedPathEnd.cdata());
-                    QStringList keyValuePair = normalisedCheck.split(assignSep.cdata());
+                    normalisePath(&normalisedCheck, namedPathEnd);
+                    QStringList keyValuePair = normalisedCheck.split(assignSep);
                     if (keyValuePair.size() == 2)
                     {
                         const QString key = keyValuePair.first().trimmed();
@@ -562,7 +560,7 @@ namespace cascades
             }
             else if (selectType == "name")
             {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd.cdata());
+                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
                     this->client->write("ERROR: Failed to convert named index to indexPath\n");

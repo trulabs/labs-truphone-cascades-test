@@ -7,7 +7,6 @@
 #include <bb/cascades/Application>
 #include <bb/cascades/Control>
 
-#include "Buffer.h"
 #include "Utils.h"
 #include "Connection.h"
 
@@ -38,27 +37,45 @@ namespace cascades
     {
         bool ret = false;
         int theKey = 0, isPressed = 0, isAlt = 0, isShift = 0, isCtrl = 0, processed;
+        QString target;
 
-        const Buffer args;
-        while (arguments->size() > 1)
+        for (int param = 0 ; param < 6 ; param++)
         {
-            strncat(args.data(), arguments->first().toUtf8().constData(), args.length());
+            bool ok = false;
+            switch (param)
+            {
+            case 0:
+                theKey = QString(arguments->first()).toInt(&ok);
+                break;
+            case 1:
+                isPressed = QString(arguments->first()).toInt(&ok);
+                break;
+            case 2:
+                isAlt = QString(arguments->first()).toInt(&ok);
+                break;
+            case 3:
+                isShift = QString(arguments->first()).toInt(&ok);
+                break;
+            case 4:
+                isCtrl = QString(arguments->first()).toInt(&ok);
+                break;
+            case 5:
+                target = arguments->first();
+                ok = not target.isNull() and not target.isEmpty();
+                break;
+            default:
+                break;
+            }
+            if (ok)
+            {
+                processed++;
+            }
             arguments->removeFirst();
-            strncat(args.data(), " ", args.length());
         }
-        strncat(args.data(), arguments->first().toUtf8().constData(), args.length());
-        arguments->removeFirst();
 
-        const Buffer target;
-
-        processed = sscanf(args.cdata(),  // NOLINT(runtime/printf)
-                           "%3d %1d %1d %1d %1d %511s",
-                           &theKey,
-                           &isPressed,
-                           &isAlt,
-                           &isShift,
-                           &isCtrl,
-                           target.data());
+        Q_UNUSED(isAlt);
+        Q_UNUSED(isShift);
+        Q_UNUSED(isCtrl);
 
         if (processed not_eq 6)  // 6 items are expected
         {

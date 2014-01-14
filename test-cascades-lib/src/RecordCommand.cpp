@@ -26,7 +26,6 @@
 #include "RecordCommandActionHandler.h"
 #include "RecordCommandToggleHandler.h"
 #include "RecordCommandDropDownHandler.h"
-#include "Buffer.h"
 #include "Utils.h"
 #include "Connection.h"
 
@@ -48,7 +47,6 @@ using bb::cascades::TabbedPane;
 using bb::cascades::VisualNode;
 using bb::system::SystemToast;
 using truphone::test::cascades::Utils;
-using truphone::test::cascades::Buffer;
 
 namespace truphone
 {
@@ -360,17 +358,15 @@ namespace cascades
 
     int RecordCommand::updateSleepValue()
     {
-        const Buffer buffer;
         const int msSinceLastTx = this->lastEventTime.restart();
 
         // check to see how far in the future we can
         // to see if we need to dump out some sleep statements
         if ( msSinceLastTx > SLEEP_GRANULARITY)
         {
-            snprintf(buffer.data(), buffer.length(), "sleep %d\r\n", msSinceLastTx);
-            this->client->write(buffer.data());
+            this->client->write(QString(("sleep %1\r\n"))
+                                .arg("%1", msSinceLastTx).toUtf8());
             this->client->flush();
-            buffer.data()[0] = '\0';
         }
         return msSinceLastTx;
     }
@@ -381,21 +377,20 @@ namespace cascades
             qobject_cast<TabbedPane*>(tab->parent());
         if (pane)
         {
-            const Buffer tmp;
+            QString tmp;
 
             updateSleepValue();
 
             const QString title = tab->title();
             if (not title.isNull() and not title.isEmpty())
             {
-                snprintf(tmp.data(), tmp.length(), "tab %s\r\n", title.toUtf8().constData());
+                tmp = QString("tab %1\r\n").arg("%1", title);
             }
             else
             {
-                const int indexOfTab = pane->indexOf(tab);
-                snprintf(tmp.data(), tmp.length(), "tab %d\r\n", indexOfTab);
+                tmp = QString("tab %1\r\n").arg("%1", pane->indexOf(tab));
             }
-            this->client->write(tmp.data());
+            this->client->write(tmp.toUtf8());
         }
     }
 
@@ -405,25 +400,24 @@ namespace cascades
     {
         const int msSinceLastTx = updateSleepValue();
 
-        const Buffer buffer;
+        QString tmp("touch %1 %2 %3 %4 %5 %6 %7 %8 %9\r\n");
 
         if ( not (msSinceLastTx < SLEEP_GRANULARITY and
              this->lastReceiver == receiver and
              this->lastTarget == event->target() and
              this->lastTouchType == event->touchType()))
         {
-            snprintf(buffer.data(), buffer.length(),
-                     "touch %f %f %f %f %f %f %d %s %s\r\n",
-                     event->screenX(),
-                     event->screenY(),
-                     event->windowX(),
-                     event->windowY(),
-                     event->localX(),
-                     event->localY(),
-                     event->touchType(),
-                     Utils::objectPath(receiver).toUtf8().constData(),
-                     Utils::objectPath(event->target()).toUtf8().constData());
-            this->client->write(buffer.data());
+            tmp = tmp.arg(
+                        QString::number(event->screenX()),
+                        QString::number(event->screenY()),
+                        QString::number(event->windowX()),
+                        QString::number(event->windowY()),
+                        QString::number(event->localX()),
+                        QString::number(event->localY()),
+                        QString::number(event->touchType()),
+                        Utils::objectPath(receiver),
+                        Utils::objectPath(event->target()));
+            this->client->write(tmp.toUtf8());
         }
         if (this->ctrlAndShiftPressed and event->target() == receiver)
         {
@@ -447,19 +441,19 @@ namespace cascades
         }
         else
         {
-            const Buffer buffer;
+            QString tmp("key %d %d %d %d %d %s\r\n");
             updateSleepValue();
 
             this->ctrlAndShiftPressed = false;
 
-            snprintf(buffer.data(), buffer.length(), "key %d %d %d %d %d %s\r\n",
-                     event->key(),
-                     event->isPressed()?1:0,
-                     event->isAltPressed()?1:0,
-                     event->isShiftPressed()?1:0,
-                     event->isCtrlPressed()?1:0,
-                     Utils::objectPath(receiver).toUtf8().constData());
-            this->client->write(buffer.data());
+            tmp = tmp.arg(
+                        QString::number(event->key()),
+                        event->isPressed()?"1":"0",
+                        event->isAltPressed()?"1":"0",
+                        event->isShiftPressed()?"1":"0",
+                        event->isCtrlPressed()?"1":"0",
+                        Utils::objectPath(receiver));
+            this->client->write(tmp.toUtf8());
         }
     }
 
@@ -600,11 +594,8 @@ namespace cascades
                         {
                             if (menu->actionAt(i) == qobject_cast<ActionItem*>(action))
                             {
-                                const Buffer tmp;
-
-                                snprintf(tmp.data(), tmp.length(), "%d", i);
                                 this->client->write("action menu ");
-                                this->client->write(tmp.cdata());
+                                this->client->write(QString::number(i).toUtf8());
                                 this->client->write("\r\n");
                                 break;
                             }
@@ -621,11 +612,8 @@ namespace cascades
                         {
                             if (page->actionAt(i) == action)
                             {
-                                const Buffer tmp;
-
-                                snprintf(tmp.data(), tmp.length(), "%d", i);
                                 this->client->write("action page ");
-                                this->client->write(tmp.cdata());
+                                this->client->write(QString::number(i).toUtf8());
                                 this->client->write("\r\n");
                                 break;
                             }

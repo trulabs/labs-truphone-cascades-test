@@ -23,11 +23,10 @@ namespace cascades
     CascadesHarness::CascadesHarness(
             QObject* parent) :
         QObject(parent),
-        serverSocket(new Server(this))
+        serverSocket(new Server(this)),
+        delim(", ")
     {
         CommandFactory::initialise();
-
-        strncpy(this->delim.data(), ", ", this->delim.length());
 
         if (this->serverSocket)
         {
@@ -62,22 +61,23 @@ namespace cascades
     void CascadesHarness::handleNewConnection(Connection * connection)
     {
         connect(connection,
-                SIGNAL(packetReceived(Connection*, Buffer)),
-                SLOT(processPacket(Connection*, Buffer)));
+                SIGNAL(packetReceived(Connection*, const QString&)),
+                SLOT(processPacket(Connection*, const QString&)));
     }
 
-    void CascadesHarness::processPacket(Connection * connection, const Buffer& packet)
+    void CascadesHarness::processPacket(Connection * connection, const QString& packet)
     {
-        QStringList tokens = Utils::tokenise(&this->delim, &packet);
+        QStringList tokens = Utils::tokenise(this->delim, packet.trimmed());
         if (not tokens.empty())
         {
             const QString command = tokens.first();
             if (not command.startsWith("#", Qt::CaseInsensitive))
             {
                 tokens.removeFirst();
-                Command * const cmd = CommandFactory::getCommand(connection,
-                                                                 command,
-                                                                 this);
+                Command * const cmd = CommandFactory::getCommand(
+                            connection,
+                            command,
+                            this);
                 if (cmd)
                 {
                     const bool cmdOk = cmd->executeCommand(&tokens);

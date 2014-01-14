@@ -12,7 +12,6 @@
 #include <bb/pim/contacts/ContactSearchFilters>
 
 #include "Connection.h"
-#include "Buffer.h"
 #include "Utils.h"
 
 using bb::pim::contacts::ContactService;
@@ -38,15 +37,13 @@ namespace cascades
         : Command(parent),
           connection(connection),
           contactService(new ContactService(this)),
-          listDelim(new Buffer(",")),
-          settingDelim(new Buffer("="))
+          listDelim(","),
+          settingDelim("=")
     {
     }
 
     ContactsCommand::~ContactsCommand()
     {
-        delete listDelim;
-        delete settingDelim;
     }
 
     bool ContactsCommand::findContact(const QString name, Contact * const contact)
@@ -145,13 +142,11 @@ namespace cascades
             int attrs = 0;
             ContactBuilder contactBuilder;
             const QString line = args->join(" ");
-            const Buffer lineBuffer(line.toUtf8().constData());
-            QStringList settings = Utils::tokenise(listDelim, &lineBuffer, false);
+            QStringList settings = Utils::tokenise(listDelim, line, false);
 
             Q_FOREACH(const QString setting, settings)
             {
-                const Buffer buffer(setting.toUtf8().constData());
-                QStringList params = Utils::tokenise(settingDelim, &buffer);
+                QStringList params = Utils::tokenise(settingDelim, setting);
                 if (params.size() == 3)
                 {
                     const QString varName = params.first().trimmed();
@@ -300,8 +295,7 @@ namespace cascades
         bool ret = false;
 
         const QString line = args->join(" ");
-        const Buffer buffer(line.toUtf8().constData());
-        QStringList params = Utils::tokenise(listDelim, &buffer, false);
+        QStringList params = Utils::tokenise(listDelim, line, false);
 
         if (params.size() > 1)
         {
@@ -316,8 +310,7 @@ namespace cascades
                 ContactBuilder contactBuilder = contact.edit();
                 Q_FOREACH(const QString setting, params)
                 {
-                    const Buffer buffer(setting.toUtf8().constData());
-                    QStringList params = Utils::tokenise(settingDelim, &buffer);
+                    QStringList params = Utils::tokenise(settingDelim, setting);
                     if (params.size() == 1)
                     {
                         // remove the option

@@ -7,7 +7,6 @@
 #include <bb/pim/contacts/ContactAttribute.hpp>
 
 #include "include/Command.h"
-#include "include/Buffer.h"
 
 namespace bb
 {
@@ -170,11 +169,11 @@ namespace cascades
         /*!
          * \brief listDelim The list delimiter for settings (,)
          */
-        const Buffer * listDelim;
+        const QString listDelim;
         /*!
          * \brief settingDelim The delimiter for settings (=)
          */
-        const Buffer * settingDelim;
+        const QString settingDelim;
     };
 }  // namespace cascades
 }  // namespace test
