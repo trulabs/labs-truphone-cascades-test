@@ -48,6 +48,9 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Version History
+### v1.0.14
+* Fix the CLI file stack (calling scripts from scripts)
+
 ### v1.0.12
 * Console now flushes
 * Commands don't just search the current scene()
