@@ -75,7 +75,7 @@ namespace cascades
                 ly = QString(arguments->first()).toFloat(&ok);
                 break;
             case 6:
-                touchType = QString(arguments->first().toInt(&ok));
+                touchType = QString(arguments->first()).toInt(&ok);
                 break;
             case 7:
                 receiverBuffer = arguments->first();
