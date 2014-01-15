@@ -54,7 +54,7 @@ namespace cascades
         for (int param = 0 ; param < 8 ; param++)
         {
             bool ok = false;
-            switch(param)
+            switch (param)
             {
             case 0:
                 sx = QString(arguments->first()).toFloat(&ok);
