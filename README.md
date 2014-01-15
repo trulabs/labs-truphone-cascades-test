@@ -1,12 +1,10 @@
-labs-truphone-cascades-test
-===========================
+# labs-truphone-cascades-test
 
-Framework that provides introspective automation API for 
-BlackBerry 10 devices (including simulators) over a network 
+Framework that provides introspective automation API for
+BlackBerry 10 devices (including simulators) over a network
 connection.
 
-Overview
-========
+## Overview
 This framework offers the ability to test bb10 applications
 on a device or simulator.
 
@@ -45,43 +43,72 @@ added built-in flow-control and XML output.
 The Java library can be integrated into BDD/TDD environments
 like easyB or JBehave
 
-License
-=======
+## License
 
 BSD 3-Clause / new / simplified (see LICENSE)
 
-Version History
-===============
-- v1.0.12 - Flush console UI, Commands don't just search scene(),
-            sysdialog now can do 'Button'
-- v1.0.11 - Fix the Touch command
-- v1.0.10 - List hold, release (multiselect), SystemDialog
-- v1.0.9 - CLI has settings, CLI retry, remove legacy code, fixes
-- v1.0.8 - Fix release builds
-- v1.0.7 - SegmentControl, List tap, cli call, fixes
-- v1.0.6 - More java unit tests, bug fixes
-- v1.0.5 - Page & list support
-- v1.0.4 - C++ include paths fixes
-- v1.0.3 - Java unit tests
-- v1.0.2 - Makefile support for devices and mingw/windows help
-- v1.0.1 - First foss release
-- v1.0.0 - Internal release
+## Version History
+### v1.0.12
+* Console now flushes
+* Commands don't just search the current scene()
+* sysdialog now can do 'Button'
 
-Prerequisites
-=============
+### v1.0.11
+* Fix the Touch command
+
+### v1.0.10
+* Added support for List hold & release (multiselect)
+* Added support for SystemDialogs (sysdialog command)
+
+### v1.0.9
+* The CLI now supports retries. You can enable and disable them as the script runs and configure intervals and maximums
+* Added 'settings' to the CLI such as CLI retry
+* Remove legacy code (Buffer class)
+* Fixes
+
+### v1.0.8
+* Fix release builds (debug ones were fine)
+
+### v1.0.7
+* Added SegmentControl support (segment command) to control them, either by index or by their text value
+* Added List tap (i.e. click on) support
+* Added CLI 'call' support so you can create snippets and call scripts from other scripts
+* Fixes
+
+### v1.0.6
+* More java unit tests, bug fixes
+
+### v1.0.5
+* Added the Page command to check which page your on. This works with the objectName of the page.
+* Added (initial) list support to check values and queries QVariantMaps
+
+### v1.0.4
+* C++ include paths fixed - no need to double include
+
+### v1.0.3
+* Java unit tests
+
+### v1.0.2
+* Makefile support for devices and mingw/windows help
+
+### v1.0.1
+* First FOSS release
+
+### v1.0.0
+* Internal release
+
+## Prerequisites
 - Qt4 (sdk) & make
 - BlackBerry NDK 10.1.0.1020+
 - QtCreator (2.8.x+) optional: for editing only
 
-ToDo
-====
+## ToDo
 
 * Look at integrating the new Automatic Input Control (_sys_inject_events)
 * Without the above:
 * Add lots of other support (hopefully AID will mean we don't have to)
 
-Building
-========
+## Building
 There are three projects
 * test-cascades-lib - the library file to embed
 * test-cascades-cli - the CLI application
@@ -89,32 +116,30 @@ There are three projects
 
 Or you can just use make
 
-	1. make					# Get some info up
-	2. make all-host			# Build the CLI & Java library
-	3. source <bbndk-path>/bbndk-env.sh	# Pull in the BlackBerry NDK tools
-	4. make all-target			# Build it for the targets
-	5. sudo -E make install-cli		# Install CLI into /usr/bin (linux only)
+        1. make					# Get some info up
+        2. make all-host			# Build the CLI & Java library
+        3. source <bbndk-path>/bbndk-env.sh	# Pull in the BlackBerry NDK tools
+        4. make all-target			# Build it for the targets
+        5. sudo -E make install-cli		# Install CLI into /usr/bin (linux only)
 
-Building on Windows (mingw)
----------------------------
+### Building on Windows (mingw)
 On windows you may need (depending if you have other make systems present) to
 tell the Makefile which make binary to use, for example, I needed to do the following:
 
-	1. mingw32-make MAKE=mingw32-make all-host	# Build on Windows
-	2. c:\bbndk\bbndk-env.bat 			# (for example)
-	3. make all-target				# Build it for the target
+        1. mingw32-make MAKE=mingw32-make all-host	# Build on Windows
+        2. c:\bbndk\bbndk-env.bat 			# (for example)
+        3. make all-target				# Build it for the target
 
 You should only need to do that for the host - once you've sourced bbdnk
 then you won't need to.
 
-Building cont.
---------------
+### Building cont.
 
 Other options are
-	
-	make doc			# Generate API documentation
-	make clean			# Clean the build
-	sudo -E make uninstall-lib	# Uninstall the library
+
+        make doc			# Generate API documentation
+        make clean			# Clean the build
+        sudo -E make uninstall-lib	# Uninstall the library
 
 If you want to edit & build the projects:
 
@@ -129,8 +154,7 @@ As these are Qt projects you can use the qmake on the CLI assuming that
 you have sourced the bbndk-env.sh file to setup the associated
 development environment variables
 
-Java Library
-============
+## Java Library
 
 The java library uses gradle for dependancy management.
 
@@ -139,8 +163,7 @@ The java library uses gradle for dependancy management.
     gradle clean 	# Clean everything out
     gradle eclipse 	# Generate an eclipse project
 
-Project Integration
-===================
+## Project Integration
 
 In your project file (.pro) add the following:
 
@@ -174,14 +197,12 @@ A number of commands can work on objectNames so you can make the script
 shorter by using them, otherwise it'll use a path to the object. Use the
 record command to work out and discover how paths work.
 
-Running on the Device
-=====================
+## Running on the Device
 
 To connect to the server running on the phone (i.e. 169.254.0.x) you need
 to ensure development mode is enabled.
 
-Commands
-========
+## Commands
 
 The list of available commands will change as the BlackBerry 10 NDK
 adds more functionality and we add more so it's best to simply
@@ -215,8 +236,7 @@ Here is a list:
 * toggle
 * touch (screenx, screeny, winx, winy, localx, localy, target, <receiver>)
 
-test-cascades-cli
-=================
+## test-cascades-cli
 
 The CLI is a single binary which takes 3 parameters
 * the ip of the device/simulator
@@ -237,8 +257,7 @@ The CLI supports two additional commands, call cli-setting.
 common set of scripts to build up larger functional tests from smaller,
 more manageable, scripts.
 
-call example
-------------
+### call example
 
     call login.txt
     call checkFirstPage.txt
@@ -258,8 +277,7 @@ call example
 
 If the call command is sent to the device, it will return an error.
 
-cli-setting
------------
+### cli-setting
 
     # Enable retries
     cli-setting retry 1
@@ -276,8 +294,7 @@ specifying a value, i.e.
 
 If the cli-setting command is sent to the device, it will return an error.
 
-Retries
--------
+### Retries
 
 If we execute a script where a test fails we'll see the following:
 
@@ -293,8 +310,7 @@ If we execute a script where a test fails we'll see the following:
     RT page thePage
     >> OK
 
-Record mode
------------
+### Record mode
 
 With the optional record mode all events that occur are streamed back
 to the CLI and recorded to the script file. You can then modify the
@@ -305,8 +321,7 @@ You can also press CTRL+SHIFT (simulator only) and click on an object and the re
 will generate test commands for all the object's properties (such
 as the text value of a textfield).
 
-Example Script
-==============
+## Example Script
 
     text createOrLoginUserName myUsername
     text createOrLoginPassword noPassword
@@ -324,8 +339,7 @@ Example Script
     touch down keyNumCall
     qml app.logout
 
-Script Recording
-================
+## Script Recording
 
     test-cascades-cli 192.168.70.130 15000 script --record
 
@@ -333,17 +347,14 @@ Once you've exited or logged out you'll find a file named 'script' which you can
 
     test-cascades-cli 192.168.70.130 15000 script
 
-Correctness & Style
-===================
+## Correctness & Style
 * checked with cppcheck
 * style checked with vera++ & modified Google's cpplint.py
 
-Documentation
-=============
+## Documentation
 
 Documentation is provided by doxygen, use make doc to generate
 the html documentation under ./doc directory.
 
-Limitations
-===========
+## Limitations
 * I'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly.
