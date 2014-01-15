@@ -415,6 +415,9 @@ namespace cli
 
     QString HarnessCliPrviate::readNextLine(void)
     {
+#if defined(QT_DEBUG)
+        qDebug() << "Attempting to read from" << this->currentFile->fileName();
+#endif  // QT_DEBUG
         QString line = QString(this->currentFile->readLine(1024));
         if (line.isNull() || line.isEmpty())
         {
@@ -423,10 +426,16 @@ namespace cli
 #endif  // QT_DEBUG
             if (not this->inputFiles->isEmpty())
             {
-                this->inputFiles->pop();
+#if defined(QT_DEBUG)
+                QFile * const oldFile = this->inputFiles->pop();
+                qDebug() << "Popped " << oldFile->fileName();
+#endif  // QT_DEBUG
                 if (not this->inputFiles->isEmpty())
                 {
-                    currentFile = this->inputFiles->front();
+                    currentFile = this->inputFiles->back();
+#if defined(QT_DEBUG)
+                    qDebug() << "Current file is now" << currentFile->fileName();
+#endif  // QT_DEBUG
                     line = QString(this->currentFile->readLine(1024));
 #if defined(QT_DEBUG)
                     qDebug() << "readNextLine read" << line.length() <<
