@@ -8,26 +8,26 @@ package com.truphone.cascades.commands;
  */
 public final class SystemDialogCommand extends DefaultCommand {
 
-	/**
-	 * Enumeration of all the dialog result types
+    /**
+	 * Enumeration of all the dialog result types.
 	 * @author STruscott
 	 *
 	 */
 	public enum DialogResult {
 		/**
-		 * No result - closed dialog
+		 * No result - closed dialog.
 		 */
 		NONE,
 		/**
-		 * Confirm result
+		 * Confirm result.
 		 */
 		CONFIRM,
 		/**
-		 * Dialog was cancelled
+		 * Dialog was cancelled.
 		 */
 		CANCEL,
 		/**
-		 * Custom button was pressed
+		 * Custom button was pressed.
 		 */
 		CUSTOM;
 
@@ -57,6 +57,11 @@ public final class SystemDialogCommand extends DefaultCommand {
 		}
 	}
 
+	/**
+	 * Create a new SystemDialog command.
+	 * @param dialogObjectName The name of the dialog
+	 * @param result The result to use
+	 */
 	public SystemDialogCommand(final String dialogObjectName, final DialogResult result) {
 		super(("sysdialog " + dialogObjectName + " " + result.asString()).trim() + "\r\n");
 	}

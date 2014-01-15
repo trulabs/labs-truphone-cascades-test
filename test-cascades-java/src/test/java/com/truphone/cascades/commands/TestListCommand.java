@@ -275,7 +275,7 @@ public final class TestListCommand {
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
-	
+
 	/**
 	 * Test the List (tap, index) command.
 	 * @throws TimeoutException Thrown if the command times out
@@ -321,7 +321,7 @@ public final class TestListCommand {
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
-	
+
 	/**
 	 * Test the List (tap, index) command.
 	 * @throws TimeoutException Thrown if the command times out
