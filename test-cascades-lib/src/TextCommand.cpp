@@ -41,8 +41,12 @@ namespace cascades
         bool ret = false;
         if (arguments->size() >= 1)
         {
-            QObject * const obj =
+            QObject * obj =
                     Application::instance()->scene()->findChild<QObject*>(arguments->first());
+            if (not obj)
+            {
+                obj =  Application::instance()->findChild<QObject*>(arguments->first());
+            }
             if (obj)
             {
                 TextField * const field = qobject_cast<TextField*>(obj);

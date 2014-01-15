@@ -4,6 +4,7 @@
 #include "include/ClickCommand.h"
 
 #include <bb/cascades/Application>
+#include <bb/cascades/AbstractPane>
 #include <bb/cascades/UIObject>
 #include <bb/cascades/AbstractActionItem>
 #include <QCoreApplication>
@@ -25,7 +26,6 @@ namespace cascades
     ClickCommand::ClickCommand(Connection * const socket,
                                QObject * parent)
         : Command(parent),
-          scenePane(bb::cascades::Application::instance()->scene()),
           client(socket)
 
     {
@@ -40,7 +40,12 @@ namespace cascades
         bool ret = false;
         if ((not arguments->isEmpty()) and (arguments->size() >= 1))
         {
-            QObject * const obj = this->scenePane->findChild<QObject*>(arguments->first());
+            QObject * obj =
+                    Application::instance()->scene()->findChild<QObject*>(arguments->first());
+            if (not obj)
+            {
+                obj = Application::instance()->findChild<QObject*>(arguments->first());
+            }
             if (obj)
             {
                 // if it's a standard button, try clicking as normal

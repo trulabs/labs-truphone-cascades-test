@@ -62,9 +62,20 @@ namespace cascades
              *
              * @since test-cascades 1.0.1
              */
-            inline qint64 write(const char * const data)
+            qint64 write(const char * const data)
             {
-                return this->socket->write(data);
+                const QByteArray qData(data);
+                const qint64 written = this->socket->write(qData);
+                if (written == qData.length())
+                {
+                    this->socket->flush();
+                }
+                else
+                {
+                    qWarning("Connection transmitted {%d} of {%d}, data {%s}",
+                             (int)(written), qData.length(), data);
+                }
+                return written;
             }
             /*!
              * \brief flush Flush the socket

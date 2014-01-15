@@ -4,13 +4,13 @@
 #include "TestCommand.h"
 
 #include <bb/cascades/Application>
-#include <bb/cascades/UIObject>
-#include <bb/cascades/AbstractActionItem>
-#include <bb/cascades/TouchEvent>
+#include <bb/cascades/AbstractPane>
+//#include <bb/cascades/TouchEvent>
 
 #include "Utils.h"
 #include "Connection.h"
 
+using bb::cascades::Application;
 using truphone::test::cascades::Utils;
 
 namespace truphone
@@ -24,8 +24,7 @@ namespace cascades
     TestCommand::TestCommand(Connection * const socket,
                              QObject * parent)
         : Command(parent),
-          client(socket),
-          scenePane(bb::cascades::Application::instance()->scene())
+          client(socket)
     {
     }
 
@@ -51,7 +50,11 @@ namespace cascades
 
             // try and find the element by object name, otherwise
             // use the path/index to try and find it
-            const QObject * tmp = this->scenePane->findChild<QObject*>(element);
+            const QObject * tmp = Application::instance()->scene()->findChild<QObject*>(element);
+            if (not tmp)
+            {
+                tmp = Application::instance()->findChild<QObject*>(element);
+            }
             if (not tmp)
             {
                 tmp = Utils::findObject(element);

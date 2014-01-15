@@ -4,8 +4,6 @@
 #ifndef CLICKCOMMAND_H_
 #define CLICKCOMMAND_H_
 
-#include <bb/cascades/AbstractPane>
-
 #include "Command.h"
 
 namespace truphone
@@ -87,10 +85,6 @@ namespace cascades
          * \brief CMD_NAME The name of this command
          */
         static const QString CMD_NAME;
-        /*!
-         * \brief scenePane The scene that we're working with
-         */
-        bb::cascades::AbstractPane * const scenePane;
         /*!
          * \brief client The TCP socket associated with the client
          */

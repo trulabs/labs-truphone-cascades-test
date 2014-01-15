@@ -4,9 +4,6 @@
 #ifndef LONGCLICKCOMMAND_H_
 #define LONGCLICKCOMMAND_H_
 
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
-
 #include "Command.h"
 
 namespace truphone
@@ -88,10 +85,6 @@ namespace cascades
          * \brief CMD_NAME The name of this command
          */
         static const QString CMD_NAME;
-        /*!
-         * \brief scenePane The root scene that we're trying to access
-         */
-        bb::cascades::AbstractPane * const scenePane;
         /*!
          * \brief client The TCP socket associated with the client
          */
