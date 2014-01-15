@@ -4,7 +4,6 @@
 #ifndef LISTCOMMAND_H_
 #define LISTCOMMAND_H_
 
-#include <bb/cascades/AbstractPane>
 #include <bb/cascades/ListView>
 
 #include "Command.h"
@@ -236,10 +235,6 @@ namespace cascades
          * \brief client The TCP socket associated with the client
          */
         class Connection * const client;
-        /*!
-         * \brief scenePane The scene that we're working with
-         */
-        bb::cascades::AbstractPane * const scenePane;
         /*!
          * @brief namedPathEnd Path end marker
          */

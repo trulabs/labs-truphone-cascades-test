@@ -11,10 +11,12 @@
 #include <bb/cascades/DataModel>
 #include <bb/cascades/MultiSelectHandler>
 #include <bb/cascades/MultiSelectActionItem>
+#include <bb/cascades/AbstractPane>
 
 #include "Connection.h"
 #include "Utils.h"
 
+using bb::cascades::Application;
 using bb::cascades::ListView;
 using bb::cascades::MultiSelectHandler;
 using bb::cascades::DataModel;
@@ -31,7 +33,6 @@ namespace cascades
                              QObject* parent)
         : Command(parent),
           client(socket),
-          scenePane(bb::cascades::Application::instance()->scene()),
           namedPathEnd("^"),
           namedPathSep("~"),
           assignSep("=")
@@ -49,8 +50,12 @@ namespace cascades
         {
             const QString listViewName = arguments->first();
             arguments->removeFirst();
-            ListView * const listView = scenePane->findChild<ListView*>(listViewName);
-
+            ListView * listView =
+                    Application::instance()->scene()->findChild<ListView*>(listViewName);
+            if (not listView)
+            {
+                listView = Application::instance()->findChild<ListView*>(listViewName);
+            }
             if (listView)
             {
                 const QString command = arguments->first();

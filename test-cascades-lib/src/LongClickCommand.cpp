@@ -4,9 +4,7 @@
 #include "include/LongClickCommand.h"
 
 #include <bb/cascades/Application>
-#include <bb/cascades/UIObject>
-#include <bb/cascades/AbstractActionItem>
-#include <QCoreApplication>
+#include <bb/cascades/AbstractPane>
 
 #include "Connection.h"
 
@@ -23,7 +21,6 @@ namespace cascades
     LongClickCommand::LongClickCommand(Connection * const socket,
                                        QObject * parent)
         : Command(parent),
-          scenePane(bb::cascades::Application::instance()->scene()),
           client(socket)
     {
     }
@@ -37,7 +34,12 @@ namespace cascades
         bool ret = false;
         if ((not arguments->isEmpty()) and (arguments->size() >= 1))
         {
-            QObject * const obj = this->scenePane->findChild<QObject*>(arguments->first());
+            QObject * obj =
+                    Application::instance()->scene()->findChild<QObject*>(arguments->first());
+            if (not obj)
+            {
+                obj = Application::instance()->findChild<QObject*>(arguments->first());
+            }
             if (obj)
             {
                 const bool invoked = QMetaObject::invokeMethod(obj, "longClicked");

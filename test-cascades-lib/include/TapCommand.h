@@ -4,9 +4,6 @@
 #ifndef TAPCOMMAND_H_
 #define TAPCOMMAND_H_
 
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
-
 #include "Command.h"
 
 namespace truphone
@@ -82,10 +79,6 @@ namespace cascades
          * \brief client The TCP socket associated with the client
          */
         class Connection * const client;
-        /*!
-         * \brief scenePane The scene we use to search for the receiver
-         */
-        bb::cascades::AbstractPane * const scenePane;
     };
 }  // namespace cascades
 }  // namespace test

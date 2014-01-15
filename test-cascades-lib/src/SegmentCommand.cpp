@@ -41,12 +41,16 @@ namespace cascades
         bool ret = false;
         if (arguments->size() == 3)
         {
-            SegmentedControl * const obj =
+            SegmentedControl * obj =
                     Application::instance()->scene()->findChild<SegmentedControl*>
                         (arguments->first());
-            arguments->removeFirst();
+            if (not obj)
+            {
+                obj = Application::instance()->findChild<SegmentedControl*>(arguments->first());
+            }
             if (obj)
             {
+                arguments->removeFirst();
                 const QString mode = arguments->first();
                 arguments->removeFirst();
                 if (mode == "index")

@@ -4,18 +4,15 @@
 #include "TapCommand.h"
 
 #include <bb/cascades/Application>
-#include <bb/cascades/UIObject>
-#include <bb/cascades/AbstractActionItem>
+#include <bb/cascades/AbstractPane>
 #include <bb/cascades/TouchEvent>
 #include <bb/cascades/VisualNode>
-#include <QCoreApplication>
 
 #include "Utils.h"
 #include "Connection.h"
 
 using truphone::test::cascades::Utils;
 using bb::cascades::Application;
-using bb::cascades::AbstractActionItem;
 using bb::cascades::VisualNode;
 using bb::cascades::TouchEvent;
 using bb::cascades::TouchType;
@@ -31,8 +28,7 @@ namespace cascades
     TapCommand::TapCommand(Connection * const socket,
                            QObject * parent)
         : Command(parent),
-          client(socket),
-          scenePane(bb::cascades::Application::instance()->scene())
+          client(socket)
     {
     }
 
@@ -47,7 +43,12 @@ namespace cascades
         {
             const QString typeName = arguments->first();
             arguments->removeFirst();
-            QObject * const obj = this->scenePane->findChild<QObject*>(arguments->first());
+            QObject * obj =
+                    Application::instance()->scene()->findChild<QObject*>(arguments->first());
+            if (not obj)
+            {
+                obj = Application::instance()->findChild<QObject*>(arguments->first());
+            }
             if (obj)
             {
                 TouchType::Type type = TouchType::Move;
