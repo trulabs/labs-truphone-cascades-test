@@ -49,8 +49,12 @@ namespace cascades
         {
             const QString dialogName = arguments->first();
             arguments->removeFirst();
-            SystemDialog * const dialog =
+            SystemDialog * dialog =
                     Application::instance()->scene()->findChild<SystemDialog*>(dialogName);
+            if (not dialog)
+            {
+                dialog = Application::instance()->findChild<SystemDialog*>(dialogName);
+            }
             if (dialog)
             {
                 if (arguments->isEmpty())
@@ -72,6 +76,10 @@ namespace cascades
                     else if (action == "custom")
                     {
                         ret = finishButton(dialog, SystemUiResult::CustomButtonSelection);
+                    }
+                    else if (action == "button")
+                    {
+                        ret = finishButton(dialog, SystemUiResult::ButtonSelection);
                     }
                     else
                     {
@@ -120,6 +128,7 @@ namespace cascades
         this->client->write("> sysdialog <dialog> - Closed, no answer\r\n");
         this->client->write("> sysdialog <dialog> confirm - Confirm the dialog\r\n");
         this->client->write("> sysdialog <dialog> cancel - Cancel the dialog\r\n");
+        this->client->write("> sysdialog <dialog> button - (Appended) Button to close dialog\r\n");
         this->client->write("> sysdialog <dialog> custom - Close with custom button\r\n");
     }
 }  // namespace cascades

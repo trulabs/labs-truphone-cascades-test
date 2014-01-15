@@ -17,7 +17,7 @@ import com.truphone.cascades.testutils.FakeDevice.FakeDeviceListener;
  */
 public final class TestSystemDialogCommand {
 	/**
-	 * Test the System dialog command command.
+	 * Test the System dialog command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
@@ -41,7 +41,7 @@ public final class TestSystemDialogCommand {
 	}
 
 	/**
-	 * Test the System dialog command command.
+	 * Test the System dialog command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
@@ -66,7 +66,7 @@ public final class TestSystemDialogCommand {
 	}
 
 	/**
-	 * Test the System dialog command command.
+	 * Test the System dialog command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test
@@ -91,7 +91,32 @@ public final class TestSystemDialogCommand {
 	}
 
 	/**
-	 * Test the System dialog command command.
+	 * Test the System dialog command.
+	 * @throws TimeoutException Thrown if the command times out
+	 */
+	@Test
+	public void testSystemDialogButtonCommand() throws TimeoutException {
+		final FakeDeviceListener response = new FakeDeviceListener() {
+			@Override
+			public void messageReceived(String message, PrintStream replyStream) {
+				if ("sysdialog isSusanBoyleAmazing button".equals(message)) {
+					replyStream.println(FakeDevice.OK_MESSAGE);
+				} else {
+					Assert.fail(message);
+				}
+			}
+		};
+		FakeDevice.DEVICE.getProcess().addListener(response);
+		final IReply reply = FakeDevice.CONN.transmit(new SystemDialogCommand(
+				"isSusanBoyleAmazing",
+				SystemDialogCommand.DialogResult.BUTTON), // cute as a...
+				FakeDevice.DEFAULT_TIMEOUT);
+		FakeDevice.DEVICE.getProcess().removeListener(response);
+		Assert.assertTrue(reply.isSuccess());
+	}
+
+	/**
+	 * Test the System dialog command.
 	 * @throws TimeoutException Thrown if the command times out
 	 */
 	@Test

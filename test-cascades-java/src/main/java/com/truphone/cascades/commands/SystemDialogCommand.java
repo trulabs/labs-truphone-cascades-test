@@ -27,6 +27,10 @@ public final class SystemDialogCommand extends DefaultCommand {
 		 */
 		CANCEL,
 		/**
+		 * An additional (added) button was used.
+		 */
+		BUTTON,
+		/**
 		 * Custom button was pressed.
 		 */
 		CUSTOM;
@@ -46,6 +50,9 @@ public final class SystemDialogCommand extends DefaultCommand {
 				break;
 			case CANCEL:
 				name = "cancel";
+				break;
+			case BUTTON:
+				name = "button";
 				break;
 			case CUSTOM:
 				name = "custom";
