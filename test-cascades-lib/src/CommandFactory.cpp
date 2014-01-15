@@ -158,36 +158,61 @@ namespace cascades
                 delete commandCache[name];
             }
         }
-        commandCache.insert(name, entry); \
+        commandCache.insert(name, entry);
     }
 
     void CommandFactoryPrivate::initialise(void)
     {
-        insert(ClickCommand::getCmd(), new CommandFactoryEntry(&ClickCommand::create));
-        insert(LongClickCommand::getCmd(), new CommandFactoryEntry(&LongClickCommand::create));
-        insert(TapCommand::getCmd(), new CommandFactoryEntry(&TapCommand::create));
-        insert(TextCommand::getCmd(), new CommandFactoryEntry(&TextCommand::create));
-        insert(TestCommand::getCmd(), new CommandFactoryEntry(&TestCommand::create));
-        insert(ActionCommand::getCmd(), new CommandFactoryEntry(&ActionCommand::create));
-        insert(SleepCommand::getCmd(), new CommandFactoryEntry(&SleepCommand::create));
-        insert(TabCommand::getCmd(), new CommandFactoryEntry(&TabCommand::create));
-        insert(KeyCommand::getCmd(), new CommandFactoryEntry(&KeyCommand::create));
-        insert(TouchCommand::getCmd(), new CommandFactoryEntry(&TouchCommand::create));
-        insert(RecordCommand::getCmd(), new CommandFactoryEntry(&RecordCommand::create));
-        insert(RecordCommand::getStopCmd(), new CommandFactoryEntry(&RecordCommand::createStop));
-        insert(HelpCommand::getCmd(), new CommandFactoryEntry(&HelpCommand::create));
-        insert(QmlCommand::getCmd(), new CommandFactoryEntry(&QmlCommand::create));
-        insert(ToastCommand::getCmd(), new CommandFactoryEntry(&ToastCommand::create));
-        insert(PopCommand::getCmd(), new CommandFactoryEntry(&PopCommand::create));
-        insert(ToggleCommand::getCmd(), new CommandFactoryEntry(&ToggleCommand::create));
-        insert(DropDownCommand::getCmd(), new CommandFactoryEntry(&DropDownCommand::create));
-        insert(SpyCommand::getCmd(), new CommandFactoryEntry(&SpyCommand::create));
-        insert(ContactsCommand::getCmd(), new CommandFactoryEntry(&ContactsCommand::create));
-        insert(PageCommand::getCmd(), new CommandFactoryEntry(&PageCommand::create));
-        insert(ExitCommand::getCmd(), new CommandFactoryEntry(&ExitCommand::create));
-        insert(ListCommand::getCmd(), new CommandFactoryEntry(&ListCommand::create));
-        insert(SegmentCommand::getCmd(), new CommandFactoryEntry(&SegmentCommand::create));
-        insert(SystemDialogCommand::getCmd(), new CommandFactoryEntry(&SystemDialogCommand::create));
+        insert(ClickCommand::getCmd(),
+               new CommandFactoryEntry(&ClickCommand::create));
+        insert(LongClickCommand::getCmd(),
+               new CommandFactoryEntry(&LongClickCommand::create));
+        insert(TapCommand::getCmd(),
+               new CommandFactoryEntry(&TapCommand::create));
+        insert(TextCommand::getCmd(),
+               new CommandFactoryEntry(&TextCommand::create));
+        insert(TestCommand::getCmd(),
+               new CommandFactoryEntry(&TestCommand::create));
+        insert(ActionCommand::getCmd(),
+               new CommandFactoryEntry(&ActionCommand::create));
+        insert(SleepCommand::getCmd(),
+               new CommandFactoryEntry(&SleepCommand::create));
+        insert(TabCommand::getCmd(),
+               new CommandFactoryEntry(&TabCommand::create));
+        insert(KeyCommand::getCmd(),
+               new CommandFactoryEntry(&KeyCommand::create));
+        insert(TouchCommand::getCmd(),
+               new CommandFactoryEntry(&TouchCommand::create));
+        insert(RecordCommand::getCmd(),
+               new CommandFactoryEntry(&RecordCommand::create));
+        insert(RecordCommand::getStopCmd(),
+               new CommandFactoryEntry(&RecordCommand::createStop));
+        insert(HelpCommand::getCmd(),
+               new CommandFactoryEntry(&HelpCommand::create));
+        insert(QmlCommand::getCmd(),
+               new CommandFactoryEntry(&QmlCommand::create));
+        insert(ToastCommand::getCmd(),
+               new CommandFactoryEntry(&ToastCommand::create));
+        insert(PopCommand::getCmd(),
+               new CommandFactoryEntry(&PopCommand::create));
+        insert(ToggleCommand::getCmd(),
+               new CommandFactoryEntry(&ToggleCommand::create));
+        insert(DropDownCommand::getCmd(),
+               new CommandFactoryEntry(&DropDownCommand::create));
+        insert(SpyCommand::getCmd(),
+               new CommandFactoryEntry(&SpyCommand::create));
+        insert(ContactsCommand::getCmd(),
+               new CommandFactoryEntry(&ContactsCommand::create));
+        insert(PageCommand::getCmd(),
+               new CommandFactoryEntry(&PageCommand::create));
+        insert(ExitCommand::getCmd(),
+               new CommandFactoryEntry(&ExitCommand::create));
+        insert(ListCommand::getCmd(),
+               new CommandFactoryEntry(&ListCommand::create));
+        insert(SegmentCommand::getCmd(),
+               new CommandFactoryEntry(&SegmentCommand::create));
+        insert(SystemDialogCommand::getCmd(),
+               new CommandFactoryEntry(&SystemDialogCommand::create));
     }
 
     Command * CommandFactory::getCommand(
