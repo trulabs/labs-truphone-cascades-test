@@ -104,7 +104,7 @@ namespace cascades
                         "finished",
                         Q_ARG(bb::system::SystemUiResult::Type,
                               result));
-            ret = QMetaObject::invokeMethod(
+            ret |= QMetaObject::invokeMethod(
                         dialog,
                         "finished",
                         Q_ARG(int,
