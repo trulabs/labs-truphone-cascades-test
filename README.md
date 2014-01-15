@@ -186,26 +186,31 @@ execute the help command (or read the code)
 
 Here is a list:
 
-* contacts
-* click
-* longClick
-* tap (up/down/move/cancel)
-* list (select, scroll, check, tap)
-* tab
-* sleep
-* text
-* test
-* touch (screenx, screeny, winx, winy, localx, localy, target, <receiver>)
-* record
-* stop (recording)
-* key
-* touch
 * action
-* qml
-* toggle
-* spy
+* click
+* contacts
+* dropdown
+* help
+* exit (close the connection)
+* key
+* list (select, scroll, check, tap)
+* longClick
 * page
 * pop
+* qml
+* record
+* segment (SegmentControl)
+* sleep
+* spy
+* stop (recording)
+* systemdialog
+* tab
+* tap (up/down/move/cancel)
+* test
+* text
+* toast
+* toggle
+* touch (screenx, screeny, winx, winy, localx, localy, target, <receiver>)
 
 test-cascades-cli
 =================
