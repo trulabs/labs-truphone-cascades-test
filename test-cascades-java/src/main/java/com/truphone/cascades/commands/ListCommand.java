@@ -284,17 +284,12 @@ public class ListCommand extends DefaultCommand {
 		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
 		 */
 		public ListReleaseCommand(
-				final String listView,
-				final IndexingMode indexMode,
-				final String indexPath) {
+				final String listView) {
 			super("");
 			final StringBuilder builder = new StringBuilder();
 			builder.append(COMMAND_NAME);
 			builder.append(listView);
-			builder.append(" release ");
-			builder.append(indexMode.asString());
-			builder.append(' ');
-			builder.append(indexPath);
+			builder.append(" release");
 			builder.append("\r\n");
 			this._payload = builder.toString();
 		}
