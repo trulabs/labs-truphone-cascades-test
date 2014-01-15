@@ -52,12 +52,13 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 Version History
 ===============
-- v1.0.11 - Fix the Touch command.
+- v1.0.12 - Fix console output on the CLI
+- v1.0.11 - Fix the Touch command
 - v1.0.10 - List hold, release (multiselect), SystemDialog
 - v1.0.9 - CLI has settings, CLI retry, remove legacy code, fixes
 - v1.0.8 - Fix release builds
 - v1.0.7 - SegmentControl, List tap, cli call, fixes
-- v1.0.6 - More java unit tests, bug fixes.
+- v1.0.6 - More java unit tests, bug fixes
 - v1.0.5 - Page & list support
 - v1.0.4 - C++ include paths fixes
 - v1.0.3 - Java unit tests
