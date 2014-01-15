@@ -209,6 +209,10 @@ namespace cli
          * \brief retryCount The current number of retries
          */
         uint retryCount;
+        /*!
+         * \brief qOut The output stream for messages
+         */
+        QTextStream qOut;
 
         /*!
          * \brief readNextLine Read the next line from the file.
@@ -344,7 +348,8 @@ namespace cli
           currentFile(rootFile),
           inputFiles(new QStack<QFile*>()),
           settings(new QMap<QString, QVariant>()),
-          retryTimer(new QTimer(this))
+          retryTimer(new QTimer(this)),
+          qOut(stdout)
     {
         inputFiles->push_back(rootFile);
     }
@@ -540,10 +545,12 @@ namespace cli
 
     void HarnessCliPrviate::unexpectedTransition(const event_t event)
     {
-        qDebug() << "Unexpected state transition, State: "  \
-                 << STATE_NAMES[this->stateMachine.state()] \
-                 << ", event " \
-                 << EVENT_NAMES[event];
+        qOut << "Unexpected state transition, State: "  \
+             << STATE_NAMES[this->stateMachine.state()] \
+             << ", event " \
+             << EVENT_NAMES[event]
+             << "\n";
+        qOut.flush();
     }
 
     void HarnessCliPrviate::shutdown(const int exitCode)
@@ -597,7 +604,8 @@ namespace cli
             this->outputFile->write("\t<retry count=\"");
             this->outputFile->write(QString::number(this->retryCount).toUtf8().constData());
             this->outputFile->write("\" command=\"");
-            qDebug() << "RT" << this->lastCommandWritten;
+            qOut << "RT" << this->lastCommandWritten << "\n";
+            qOut.flush();
             this->outputFile->write(this->lastCommandWritten.toUtf8());
             this->outputFile->write("\"/>\r\n");
         }
@@ -609,7 +617,8 @@ namespace cli
             {
                 if (nextLine.startsWith('#'))
                 {
-                    qDebug() << "CC" << nextLine.trimmed();
+                    qOut << "CC" << nextLine.trimmed() << "\n";
+                    qOut.flush();
                 }
                 else if (nextLine.startsWith("call "))
                 {
@@ -636,14 +645,16 @@ namespace cli
                 }
                 else if (nextLine.trimmed().isEmpty())
                 {
-                    qDebug() << "";
+                    qOut << "\n";
+                    qOut.flush();
                 }
                 else
                 {
                     this->lastCommandWritten = nextLine;
                     this->stream->write(nextLine.toUtf8());
                     this->outputFile->write("\t<command request sent=\"");
-                    qDebug() << "<<" << nextLine.trimmed();
+                    qOut << "<<" << nextLine.trimmed() << "\n";
+                    qOut.flush();
                     this->outputFile->write(nextLine.trimmed().toUtf8());
                     this->outputFile->write("\"/>\r\n");
                     waitingForReply = true;
@@ -727,7 +738,8 @@ namespace cli
                 {
                     data = data.trimmed();
                 }
-                qDebug() << ">>" <<  data;
+                qOut << ">>" <<  data << "\n";
+                qOut.flush();
                 switch (this->stateMachine.state())
                 {
                 case WAITING_FOR_SERVER:
