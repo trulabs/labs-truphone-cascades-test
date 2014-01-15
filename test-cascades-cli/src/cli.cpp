@@ -426,8 +426,9 @@ namespace cli
 #endif  // QT_DEBUG
             if (not this->inputFiles->isEmpty())
             {
-#if defined(QT_DEBUG)
                 QFile * const oldFile = this->inputFiles->pop();
+                Q_UNUSED(oldFile);
+#if defined(QT_DEBUG)
                 qDebug() << "Popped " << oldFile->fileName();
 #endif  // QT_DEBUG
                 if (not this->inputFiles->isEmpty())

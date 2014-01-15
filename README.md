@@ -48,6 +48,9 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Version History
+### v1.0.15
+* Fix the CLI file stack in release builds
+
 ### v1.0.14
 * Fix the CLI file stack (calling scripts from scripts)
 
