@@ -52,6 +52,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 Version History
 ===============
+- v1.0.11 - Fix the Touch command.
 - v1.0.10 - List hold, release (multiselect), SystemDialog
 - v1.0.9 - CLI has settings, CLI retry, remove legacy code, fixes
 - v1.0.8 - Fix release builds
