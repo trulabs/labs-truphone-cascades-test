@@ -666,7 +666,8 @@ namespace cascades
         }
         else
         {
-            this->client->write("ERROR: list hold command needs more parameters\r\n");
+            listView->multiSelectHandler()->setActive(select);
+            ret = true;
         }
         return ret;
     }
@@ -694,6 +695,10 @@ namespace cascades
         this->client->write("> list <list> key index <index> - list the keys in Map for index\r\n");
         this->client->write("> list <list> key name <name> - list the keys in Map " \
                             "for named index\r\n");
+        this->client->write("> list <list> hold index <index> - open multiselect\r\n");
+        this->client->write("> list <list> hold name <name> - open multiselect\r\n");
+        this->client->write("> list <list> release - close multiselect\r\n");
+        this->client->write("> list <list> release - close multiselect\r\n");
         this->client->write("e.g. list contacts scroll name J~Name=John Smith^\r\n");
         this->client->write("e.g. list contacts select index 0~1\r\n");
         this->client->write("> list <list> clear\r\n");
