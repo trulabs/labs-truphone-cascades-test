@@ -10,7 +10,12 @@ import com.truphone.cascades.replys.IReply;
 import com.truphone.cascades.testutils.FakeDevice;
 import com.truphone.cascades.testutils.FakeDevice.FakeDeviceListener;
 
-public class TestSystemDialogCommand {
+/**
+ * Test class.
+ * @author STruscott
+ *
+ */
+public final class TestSystemDialogCommand {
 	/**
 	 * Test the System dialog command command.
 	 * @throws TimeoutException Thrown if the command times out
@@ -34,7 +39,7 @@ public class TestSystemDialogCommand {
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
-	
+
 	/**
 	 * Test the System dialog command command.
 	 * @throws TimeoutException Thrown if the command times out
@@ -59,7 +64,7 @@ public class TestSystemDialogCommand {
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
-	
+
 	/**
 	 * Test the System dialog command command.
 	 * @throws TimeoutException Thrown if the command times out
@@ -84,7 +89,7 @@ public class TestSystemDialogCommand {
 		FakeDevice.DEVICE.getProcess().removeListener(response);
 		Assert.assertTrue(reply.isSuccess());
 	}
-	
+
 	/**
 	 * Test the System dialog command command.
 	 * @throws TimeoutException Thrown if the command times out

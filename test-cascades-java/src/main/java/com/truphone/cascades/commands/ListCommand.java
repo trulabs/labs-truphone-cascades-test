@@ -232,9 +232,9 @@ public class ListCommand extends DefaultCommand {
 	        return this._payload;
 	    }
 	}
-	
+
 	/**
-	 * Command to hold on an item in a list (multiselect menu)
+	 * Command to hold on an item in a list (multiselect menu).
 	 * @author STruscott
 	 *
 	 */
@@ -268,9 +268,9 @@ public class ListCommand extends DefaultCommand {
 	        return this._payload;
 	    }
 	}
-	
+
 	/**
-	 * Command to release on an item in a list (hide multiselect menu)
+	 * Command to release on an item in a list (hide multiselect menu).
 	 * @author STruscott
 	 *
 	 */
@@ -280,8 +280,6 @@ public class ListCommand extends DefaultCommand {
 		/**
 		 * Release an index on a list.
 		 * @param listView The listview
-		 * @param indexMode The index mode (numeric, name)
-		 * @param indexPath The path (0~1~2, S~Sam Truscott^)
 		 */
 		public ListReleaseCommand(
 				final String listView) {
