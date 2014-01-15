@@ -97,4 +97,5 @@ unix:!symbian {
 }
 
 OTHER_FILES += \
-    ../README.md
+    ../README.md \
+    ../Doxyfile
