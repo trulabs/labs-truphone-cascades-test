@@ -142,13 +142,16 @@ public final class FakeDevice {
 					String line = reader.readLine();
 					final PrintStream replyStream = new PrintStream(this.client.getOutputStream(), false, Charset.defaultCharset().name());
 					while (line != null) {
-						final List<FakeDeviceListener> theListeners = FakeDeviceProcess.this.getListeners();
-						synchronized (theListeners) {
-							for (final FakeDeviceListener listener : theListeners) {
-								try {
-									listener.messageReceived(line, replyStream);
-								} catch (Throwable t) {
-									Assert.fail(FAIL_MESSAGE + t);
+						if (!line.isEmpty()) {
+							final List<FakeDeviceListener> theListeners = FakeDeviceProcess.this.getListeners();
+							synchronized (theListeners) {
+								for (final FakeDeviceListener listener : theListeners) {
+									try {
+										listener.messageReceived(line, replyStream);
+									} catch (Throwable t) {
+										t.printStackTrace();
+										Assert.fail(FAIL_MESSAGE + t);
+									}
 								}
 							}
 						}
@@ -157,6 +160,7 @@ public final class FakeDevice {
 					this.client.close();
 				} catch (Throwable t) {
 					if (FakeDeviceProcess.this.isRunning()) {
+						t.printStackTrace();
 						Assert.fail(FAIL_MESSAGE + t);
 					}
 				}
