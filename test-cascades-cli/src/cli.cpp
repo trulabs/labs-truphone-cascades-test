@@ -604,7 +604,7 @@ namespace cli
             this->outputFile->write("\t<retry count=\"");
             this->outputFile->write(QString::number(this->retryCount).toUtf8().constData());
             this->outputFile->write("\" command=\"");
-            qOut << "RT" << this->lastCommandWritten << "\n";
+            qOut << "RT " << this->lastCommandWritten << "\n";
             qOut.flush();
             this->outputFile->write(this->lastCommandWritten.toUtf8());
             this->outputFile->write("\"/>\r\n");
@@ -617,7 +617,7 @@ namespace cli
             {
                 if (nextLine.startsWith('#'))
                 {
-                    qOut << "CC" << nextLine.trimmed() << "\n";
+                    qOut << "CC " << nextLine.trimmed() << "\n";
                     qOut.flush();
                 }
                 else if (nextLine.startsWith("call "))
@@ -653,7 +653,7 @@ namespace cli
                     this->lastCommandWritten = nextLine;
                     this->stream->write(nextLine.toUtf8());
                     this->outputFile->write("\t<command request sent=\"");
-                    qOut << "<<" << nextLine.trimmed() << "\n";
+                    qOut << "<< " << nextLine.trimmed() << "\n";
                     qOut.flush();
                     this->outputFile->write(nextLine.trimmed().toUtf8());
                     this->outputFile->write("\"/>\r\n");
@@ -738,7 +738,7 @@ namespace cli
                 {
                     data = data.trimmed();
                 }
-                qOut << ">>" <<  data << "\n";
+                qOut << ">> " <<  data << "\n";
                 qOut.flush();
                 switch (this->stateMachine.state())
                 {
