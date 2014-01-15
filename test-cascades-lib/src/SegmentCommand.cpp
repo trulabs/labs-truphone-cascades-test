@@ -1,5 +1,5 @@
 /**
- * Copyright 2013 Truphone
+ * Copyright 2014 Truphone
  */
 #include "SegmentCommand.h"
 
