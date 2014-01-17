@@ -48,6 +48,15 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Version History
+### v1.0.16
+* Add 'failure-ok' setting to the CLI so you can do the following:
+
+    test myObject text valueMustBeTrue
+    action magicActionThatMightHaveEffect
+    cli-setting failure-ok true
+    test myObject text valueMustBeFalse
+    cli-setting failure-ok false
+
 ### v1.0.15
 * Fix the CLI file stack in release builds
 
