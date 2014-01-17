@@ -48,7 +48,7 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Version History
-### v1.0.17
+### v1.0.16.1
 * 'test' command will accept 'Application' an an object
 
 ### v1.0.16
