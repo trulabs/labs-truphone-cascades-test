@@ -59,6 +59,10 @@ namespace cascades
             {
                 tmp = Utils::findObject(element);
             }
+            if (not tmp && element == "Application")
+            {
+                tmp = Application::instance();
+            }
             const QObject * const obj = tmp;
             if (obj)
             {
