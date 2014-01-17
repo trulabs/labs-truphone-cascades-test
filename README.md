@@ -48,6 +48,9 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Version History
+### v1.0.17
+* 'test' command will accept 'Application' an an object
+
 ### v1.0.16
 * Add 'failure-ok' setting to the CLI so you can do the following:
 
