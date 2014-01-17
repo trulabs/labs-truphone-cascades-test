@@ -62,6 +62,14 @@ namespace cli
          * \brief SETTING_RETRY_MAX_TIME_DEFAULT Default max retry time
          */
         static const QVariant SETTING_RETRY_MAX_INTERVALS_DEFAULT;
+        /*!
+         * \brief SETTINGS_FAILURE_OK Should we accept failures for these tests
+         */
+        static const QString SETTING_FAILURE_OK;
+        /*!
+         * \brief SETTINGS_FAILURE_OK_DEFAULT The default value for failures being accepted
+         */
+        static const QVariant SETTING_FAILURE_OK_DEFAULT;
 
         /*!
          * The states the CLI can be in
@@ -314,6 +322,8 @@ namespace cli
     const QVariant HarnessCliPrviate::SETTING_RETRY_INTERVAL_DEFAULT(1000);
     const QString HarnessCliPrviate::SETTING_RETRY_MAX_INTERVALS("retry-max-intervals");
     const QVariant HarnessCliPrviate::SETTING_RETRY_MAX_INTERVALS_DEFAULT(30);
+    const QString HarnessCliPrviate::SETTING_FAILURE_OK("failure-ok");
+    const QVariant HarnessCliPrviate::SETTING_FAILURE_OK_DEFAULT(false);
 
     const char * HarnessCliPrviate::STATE_NAMES[] =
     {
@@ -837,8 +847,16 @@ namespace cli
                     if (ok or confirmedFailed)
                     {
                         this->retryTimer->stop();
-                        if (ok)
+                        const bool acceptFailure = getSetting(
+                                    SETTING_FAILURE_OK,
+                                    SETTING_FAILURE_OK_DEFAULT).toBool();
+                        if (ok or acceptFailure)
                         {
+                            if (not recordingMode and acceptFailure)
+                            {
+                                this->outputFile->write("<warning reason=\"accepted-failure\"/>\r\n");
+                            }
+
                             this->postEventToStateMachine(RECEIVED_COMMAND_REPLY);
                         }
                         else
