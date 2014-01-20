@@ -226,13 +226,15 @@ namespace cli
          * \brief readNextLine Read the next line from the file.
          * If there's no file, try the file stack
          *
-         * \param line A pointer to the next line
+         * \param callLevel The current recursive call level
+         * \param callLevel The maximum recursive call level
          *
          * \return The number of bytes read
          *
          * @since test-cascades 1.0.7
          */
-        QString readNextLine(void);
+        QString readNextLine(const int callLevel = 0,
+                             const int maxCallLevel = 100);
 
         /*!
          * \brief startRecording Send the recording command to the server
@@ -423,43 +425,36 @@ namespace cli
         }
     }
 
-    QString HarnessCliPrviate::readNextLine(void)
+    QString HarnessCliPrviate::readNextLine(const int callLevel,
+                                            const int maxCallLevel)
     {
-#if defined(QT_DEBUG)
-        qDebug() << "Attempting to read from" << this->currentFile->fileName();
-#endif  // QT_DEBUG
-        QString line = QString(this->currentFile->readLine(1024));
-        if (line.isNull() || line.isEmpty())
+        QString line;
+        if (callLevel < maxCallLevel)
         {
-#if defined(QT_DEBUG)
-        qDebug() << "readNextLine checking for another file on stack";
+ #if defined(QT_DEBUG)
+            qDebug() << "Attempting to read from" << this->currentFile->fileName();
 #endif  // QT_DEBUG
-            if (not this->inputFiles->isEmpty())
+            line = QString(this->currentFile->readLine(1024));
+            if (line.isNull() || line.isEmpty())
             {
-                QFile * const oldFile = this->inputFiles->pop();
-                Q_UNUSED(oldFile);
-#if defined(QT_DEBUG)
-                qDebug() << "Popped " << oldFile->fileName();
-#endif  // QT_DEBUG
                 if (not this->inputFiles->isEmpty())
                 {
-                    currentFile = this->inputFiles->back();
-#if defined(QT_DEBUG)
-                    qDebug() << "Current file is now" << currentFile->fileName();
-#endif  // QT_DEBUG
-                    line = readNextLine();
-#if defined(QT_DEBUG)
-                    qDebug() << "readNextLine read" << line.length() <<
-                            "from" << this->currentFile->fileName();
-#endif  // QT_DEBUG
+                    QFile * const oldFile = this->inputFiles->pop();
+                    Q_UNUSED(oldFile);
+                    if (not this->inputFiles->isEmpty())
+                    {
+                        currentFile = this->inputFiles->back();
+ #if defined(QT_DEBUG)
+                        qDebug() << "Current file is now" << currentFile->fileName();
+ #endif  // QT_DEBUG
+                        line = readNextLine(callLevel + 1, maxCallLevel);
+                    }
                 }
             }
         }
         else
         {
-#if defined(QT_DEBUG)
-            qDebug() << "readNextLine read" << line.length() << "bytes";
-#endif  // QT_DEBUG
+            line = QString();
         }
         return line;
     }
