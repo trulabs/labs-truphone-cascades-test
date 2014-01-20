@@ -207,29 +207,28 @@ namespace cascades
         {
             const QString separator("::");
             QStringList parts = path.split(separator);
-            if (parts.isEmpty())
-            {
-                return NULL;
-            }
-            const QString name = parts.takeLast();
             const QObject * parent = NULL;
-            if (parts.isEmpty())
+            const QString name = parts.takeLast();
+            if (not parts.isEmpty())
             {
-                const QString childObjectName = Utils::objectName(Application::instance());
-                if (childObjectName == name)
+                if (parts.isEmpty())
                 {
-                    result = Application::instance();
-                }
-                else
-                {
-                    // Top level widget
-                    Q_FOREACH(QObject * const object, Application::instance()->children())
+                    const QString childObjectName = Utils::objectName(Application::instance());
+                    if (childObjectName == name)
                     {
-                        const QString childObjectName = Utils::objectName(object);
-                        if (childObjectName == name)
+                        result = Application::instance();
+                    }
+                    else
+                    {
+                        // Top level widget
+                        Q_FOREACH(QObject * const object, Application::instance()->children())
                         {
-                            result = object;
-                            break;
+                            const QString childObjectName = Utils::objectName(object);
+                            if (childObjectName == name)
+                            {
+                                result = object;
+                                break;
+                            }
                         }
                     }
                 }
