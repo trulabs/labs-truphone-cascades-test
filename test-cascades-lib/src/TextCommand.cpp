@@ -3,8 +3,6 @@
  */
 #include "TextCommand.h"
 
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
 #include <bb/cascades/TextField>
 #include <bb/cascades/TextArea>
 #include <QList>
@@ -12,6 +10,7 @@
 #include <QObject>
 
 #include "Connection.h"
+#include "Utils.h"
 
 using bb::cascades::Application;
 using bb::cascades::TextField;
@@ -41,18 +40,13 @@ namespace cascades
         bool ret = false;
         if (arguments->size() >= 1)
         {
-            QObject * obj =
-                    Application::instance()->scene()->findChild<QObject*>(arguments->first());
-            if (not obj)
-            {
-                obj =  Application::instance()->findChild<QObject*>(arguments->first());
-            }
+            QObject * const obj = Utils::findObject(arguments->first());
+            arguments->removeFirst();
             if (obj)
             {
                 TextField * const field = qobject_cast<TextField*>(obj);
                 if (field)
                 {
-                    arguments->removeFirst();
                     const QString tmp = arguments->join(" ");
                     field->setText(tmp);
                     ret = true;
@@ -62,7 +56,6 @@ namespace cascades
                     TextArea * const area = qobject_cast<TextArea*>(obj);
                     if (area)
                     {
-                        arguments->removeFirst();
                         const QString tmp = arguments->join(" ");
                         area->setText(tmp);
                         ret = true;

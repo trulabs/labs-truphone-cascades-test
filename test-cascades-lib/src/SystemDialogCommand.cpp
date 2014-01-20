@@ -11,17 +11,14 @@
 #include <bb/system/SystemUiButton>
 #include <bb/system/SystemUiResult>
 #include <bb/system/SystemUiReturnKeyAction>
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
 
 #include "Connection.h"
+#include "Utils.h"
 
 using bb::system::SystemDialog;
 using bb::system::SystemUiButton;
 using bb::system::SystemUiResult;
 using bb::system::SystemUiReturnKeyAction;
-using bb::cascades::AbstractPane;
-using bb::cascades::Application;
 
 namespace truphone
 {
@@ -47,14 +44,9 @@ namespace cascades
         bool ret = false;
         if (arguments->size() >= 1)
         {
-            const QString dialogName = arguments->first();
-            arguments->removeFirst();
             SystemDialog * dialog =
-                    Application::instance()->scene()->findChild<SystemDialog*>(dialogName);
-            if (not dialog)
-            {
-                dialog = Application::instance()->findChild<SystemDialog*>(dialogName);
-            }
+                    qobject_cast<SystemDialog*>(Utils::findObject(arguments->first()));
+            arguments->removeFirst();
             if (dialog)
             {
                 if (arguments->isEmpty())
@@ -106,7 +98,7 @@ namespace cascades
         bool ret = false;
         if (dialog)
         {
-            Application::processEvents();
+            bb::cascades::Application::processEvents();
             ret = QMetaObject::invokeMethod(
                         dialog,
                         "finished",
@@ -117,7 +109,7 @@ namespace cascades
                         "finished",
                         Q_ARG(int,
                               result));
-            QApplication::processEvents();
+            bb::cascades::Application::processEvents();
             dialog->cancel();
         }
         return ret;

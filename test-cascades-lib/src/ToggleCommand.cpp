@@ -3,18 +3,14 @@
  */
 #include "ToggleCommand.h"
 
-#include <bb/cascades/Application>
 #include <QList>
 #include <QString>
 #include <QObject>
 #include <bb/cascades/AbstractToggleButton>
-#include <bb/cascades/AbstractPane>
 
 #include "Utils.h"
 #include "Connection.h"
 
-using bb::cascades::Application;
-using bb::cascades::AbstractPane;
 using bb::cascades::AbstractToggleButton;
 
 namespace truphone
@@ -41,13 +37,8 @@ namespace cascades
         bool ret = false;
         if (arguments->size() >= 2)
         {
-            const AbstractPane * const pane = Application::instance()->scene();
-            AbstractToggleButton * button =
-                    pane->findChild<AbstractToggleButton*>(arguments->first());
-            if (not button)
-            {
-                button = qobject_cast<AbstractToggleButton*>(Utils::findObject(arguments->first()));
-            }
+            AbstractToggleButton * const button =
+                    qobject_cast<AbstractToggleButton*>(Utils::findObject(arguments->first()));
             arguments->removeFirst();  // button name
             if (button)
             {

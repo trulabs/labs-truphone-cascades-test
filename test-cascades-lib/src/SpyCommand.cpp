@@ -3,8 +3,6 @@
  */
 #include "SpyCommand.h"
 
-#include <bb/cascades/AbstractPane>
-#include <bb/cascades/Application>
 #include <QString>
 #include <QList>
 #include <QObject>
@@ -12,10 +10,6 @@
 
 #include "Utils.h"
 #include "Connection.h"
-
-using truphone::test::cascades::Utils;
-using bb::cascades::AbstractPane;
-using bb::cascades::Application;
 
 namespace truphone
 {
@@ -83,15 +77,6 @@ namespace cascades
                 ret = false;
             }
             if (ret)
-            {
-                this->spyObject = Application::instance()->findChild<QObject*>(this->myObject);
-            }
-            if (not this->spyObject)
-            {
-                this->spyObject =
-                        Application::instance()->scene()->findChild<QObject*>(this->myObject);
-            }
-            if (not this->spyObject)
             {
                 this->spyObject = Utils::findObject(this->myObject);
             }

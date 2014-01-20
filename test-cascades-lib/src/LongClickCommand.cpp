@@ -3,12 +3,8 @@
  */
 #include "include/LongClickCommand.h"
 
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
-
 #include "Connection.h"
-
-using bb::cascades::Application;
+#include "Utils.h"
 
 namespace truphone
 {
@@ -34,12 +30,7 @@ namespace cascades
         bool ret = false;
         if ((not arguments->isEmpty()) and (arguments->size() >= 1))
         {
-            QObject * obj =
-                    Application::instance()->scene()->findChild<QObject*>(arguments->first());
-            if (not obj)
-            {
-                obj = Application::instance()->findChild<QObject*>(arguments->first());
-            }
+            QObject * const obj = Utils::findObject(arguments->first());
             if (obj)
             {
                 const bool invoked = QMetaObject::invokeMethod(obj, "longClicked");

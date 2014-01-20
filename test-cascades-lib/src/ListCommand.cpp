@@ -11,12 +11,10 @@
 #include <bb/cascades/DataModel>
 #include <bb/cascades/MultiSelectHandler>
 #include <bb/cascades/MultiSelectActionItem>
-#include <bb/cascades/AbstractPane>
 
 #include "Connection.h"
 #include "Utils.h"
 
-using bb::cascades::Application;
 using bb::cascades::ListView;
 using bb::cascades::MultiSelectHandler;
 using bb::cascades::DataModel;
@@ -48,14 +46,9 @@ namespace cascades
         bool ret = false;
         if (arguments->size() > 1)
         {
-            const QString listViewName = arguments->first();
+            ListView * const listView =
+                    qobject_cast<ListView*>(Utils::findObject(arguments->first()));
             arguments->removeFirst();
-            ListView * listView =
-                    Application::instance()->scene()->findChild<ListView*>(listViewName);
-            if (not listView)
-            {
-                listView = Application::instance()->findChild<ListView*>(listViewName);
-            }
             if (listView)
             {
                 const QString command = arguments->first();

@@ -80,7 +80,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        static bool executeAction(const bb::cascades::AbstractActionItem * const action);
+        static bool executeAction(bb::cascades::AbstractActionItem * const action);
         /*!
          * \brief findAction Find an action for a given name
          *

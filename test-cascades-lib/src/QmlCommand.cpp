@@ -3,17 +3,14 @@
  */
 #include "include/QmlCommand.h"
 
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
-#include <bb/cascades/QmlDocument>
 #include <QStringList>
 #include <string.h>
+#include <bb/cascades/Application>
 
 #include "Utils.h"
 #include "Connection.h"
 
 using bb::cascades::Application;
-using bb::cascades::QmlDocument;
 
 namespace truphone
 {
@@ -32,44 +29,6 @@ namespace cascades
 
     QmlCommand::~QmlCommand()
     {
-    }
-
-    static QObject * scan(QObject * const obj,
-                          const QString varName,
-                          const int level = 0,
-                          const int maxLevel = 20)
-    {
-        // too deep
-        if (level > maxLevel)
-        {
-            return NULL;
-        }
-
-        // check this object
-        QmlDocument * const doc = qobject_cast<QmlDocument*>(obj);
-        if (doc)
-        {
-            QVariant var = doc->documentContext()->contextProperty(varName);
-            if (not var.isNull() and var.isValid())
-            {
-                QObject * const varPropertyObj = var.value<QObject*>();
-                if (varPropertyObj)
-                {
-                    return varPropertyObj;
-                }
-            }
-        }
-
-        // no luck, check all the children
-        Q_FOREACH(QObject * const child, obj->children())
-        {
-            QObject * const o = scan(child, varName, level+1, maxLevel);
-            if (o)
-            {
-                return o;
-            }
-        }
-        return NULL;
     }
 
     bool QmlCommand::executeCommand(QStringList * const arguments)
@@ -93,7 +52,7 @@ namespace cascades
             else
             {
                 // see if the object exists and execute the function
-                QObject * const obj = scan(Application::instance(), tokens.first(), 0);
+                QObject * const obj = Utils::findObject(tokens.first());
                 tokens.removeFirst();
                 tokens.removeFirst();  // remove the period
                 if (obj)
