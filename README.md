@@ -47,77 +47,10 @@ like easyB or JBehave
 
 BSD 3-Clause / new / simplified (see LICENSE)
 
-## Version History
-### v1.0.17
+## Latest Changes
+#### v1.0.17
 * Move the code for finding QObjects into common place
 * Fix the CLI popping commands from the end of a file
-
-### v1.0.16.1
-* 'test' command will accept 'Application' an an object
-
-### v1.0.16
-* Add 'failure-ok' setting to the CLI so you can do the following:
-
-        test myObject text valueMustBeTrue
-        action magicActionThatMightHaveEffect
-        cli-setting failure-ok true
-        test myObject text valueMustBeFalse
-        cli-setting failure-ok false
-
-### v1.0.15
-* Fix the CLI file stack in release builds
-
-### v1.0.14
-* Fix the CLI file stack (calling scripts from scripts)
-
-### v1.0.12
-* Console now flushes
-* Commands don't just search the current scene()
-* sysdialog now can do 'Button'
-
-### v1.0.11
-* Fix the Touch command
-
-### v1.0.10
-* Added support for List hold & release (multiselect)
-* Added support for SystemDialogs (sysdialog command)
-
-### v1.0.9
-* The CLI now supports retries. You can enable and disable them as the script runs and configure intervals and maximums
-* Added 'settings' to the CLI such as CLI retry
-* Remove legacy code (Buffer class)
-* Fixes
-
-### v1.0.8
-* Fix release builds (debug ones were fine)
-
-### v1.0.7
-* Added SegmentControl support (segment command) to control them, either by index or by their text value
-* Added List tap (i.e. click on) support
-* Added CLI 'call' support so you can create snippets and call scripts from other scripts
-* Fixes
-
-### v1.0.6
-* More java unit tests, bug fixes
-
-### v1.0.5
-* Added the Page command to check which page your on. This works with the objectName of the page.
-* Added (initial) list support to check values and queries QVariantMaps
-
-### v1.0.4
-* C++ include paths fixed - no need to double include
-
-### v1.0.3
-* Java unit tests
-
-### v1.0.2
-* Makefile support for devices and mingw/windows help
-
-### v1.0.1
-* First FOSS release
-
-### v1.0.0
-* Internal release
 
 ## Prerequisites
 - Qt4 (sdk) & make
@@ -126,9 +59,9 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 ## ToDo
 
-* Look at integrating the new Automatic Input Control (_sys_inject_events)
+- [x] Look at integrating the new Automatic Input Control (_sys_inject_events)
 * Without the above:
-* Add lots of other support (hopefully AID will mean we don't have to)
+- [ ] Add lots of other support (hopefully AID will mean we don't have to)
 
 ## Building
 There are three projects
@@ -380,3 +313,71 @@ the html documentation under ./doc directory.
 
 ## Limitations
 * I'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly.
+
+## Older versions
+#### v1.0.16.1
+* 'test' command will accept 'Application' an an object
+
+#### v1.0.16
+* Add 'failure-ok' setting to the CLI so you can do the following:
+
+        test myObject text valueMustBeTrue
+        action magicActionThatMightHaveEffect
+        cli-setting failure-ok true
+        test myObject text valueMustBeFalse
+        cli-setting failure-ok false
+
+#### v1.0.15
+* Fix the CLI file stack in release builds
+
+#### v1.0.14
+* Fix the CLI file stack (calling scripts from scripts)
+
+#### v1.0.12
+* Console now flushes
+* Commands don't just search the current scene()
+* sysdialog now can do 'Button'
+
+#### v1.0.11
+* Fix the Touch command
+
+#### v1.0.10
+* Added support for List hold & release (multiselect)
+* Added support for SystemDialogs (sysdialog command)
+
+#### v1.0.9
+* The CLI now supports retries. You can enable and disable them as the script runs and configure intervals and maximums
+* Added 'settings' to the CLI such as CLI retry
+* Remove legacy code (Buffer class)
+* Fixes
+
+#### v1.0.8
+* Fix release builds (debug ones were fine)
+
+#### v1.0.7
+* Added SegmentControl support (segment command) to control them, either by index or by their text value
+* Added List tap (i.e. click on) support
+* Added CLI 'call' support so you can create snippets and call scripts from other scripts
+* Fixes
+
+#### v1.0.6
+* More java unit tests, bug fixes
+
+#### v1.0.5
+* Added the Page command to check which page your on. This works with the objectName of the page.
+* Added (initial) list support to check values and queries QVariantMaps
+
+#### v1.0.4
+* C++ include paths fixed - no need to double include
+
+#### v1.0.3
+* Java unit tests
+
+#### v1.0.2
+* Makefile support for devices and mingw/windows help
+
+#### v1.0.1
+* First FOSS release
+
+#### v1.0.0
+* Internal release
