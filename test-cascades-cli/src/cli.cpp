@@ -447,7 +447,7 @@ namespace cli
 #if defined(QT_DEBUG)
                     qDebug() << "Current file is now" << currentFile->fileName();
 #endif  // QT_DEBUG
-                    line = QString(this->currentFile->readLine(1024));
+                    line = readNextLine();
 #if defined(QT_DEBUG)
                     qDebug() << "readNextLine read" << line.length() <<
                             "from" << this->currentFile->fileName();
