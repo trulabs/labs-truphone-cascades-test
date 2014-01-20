@@ -5,8 +5,11 @@
 
 #include <string.h>
 #include <bb/cascades/Application>
+#include <bb/cascades/AbstractPane>
+#include <bb/cascades/QmlDocument>
 
 using bb::cascades::Application;
+using bb::cascades::QmlDocument;
 
 namespace truphone
 {
@@ -139,54 +142,117 @@ namespace cascades
         return pathElements.join("::");
     }
 
-    QObject* Utils::findObject(const QString& path)
+    QObject * Utils::findQmlDocumentVaraible(
+            QObject * const obj,
+            const QString varName,
+            const int level,
+            const int maxLevel)
     {
-        const QString separator("::");
-        QStringList parts = path.split(separator);
-        if (parts.isEmpty())
+        QObject * result = NULL;
+        // too deep
+        if (level <= maxLevel)
         {
-            return NULL;
+            // check this object
+            QmlDocument * const doc = qobject_cast<QmlDocument*>(obj);
+            if (doc)
+            {
+                QVariant var = doc->documentContext()->contextProperty(varName);
+                if (not var.isNull() and var.isValid())
+                {
+                    QObject * const varPropertyObj = var.value<QObject*>();
+                    if (varPropertyObj)
+                    {
+                        result = varPropertyObj;
+                    }
+                }
+            }
+
+            if (not result)
+            {
+                // no luck, check all the children
+                Q_FOREACH(QObject * const child, obj->children())
+                {
+                    QObject * const o = findQmlDocumentVaraible(
+                                child,
+                                varName,
+                                level + 1,
+                                maxLevel);
+                    if (o)
+                    {
+                        result = o;
+                        break;
+                    }
+                }
+            }
         }
-        const QString name = parts.takeLast();
-        const QObject * parent = NULL;
-        if (parts.isEmpty())
+        return result;
+    }
+
+    QObject* Utils::findObject(const QString& path, const bool scanQmlContent)
+    {
+        QObject * result = Application::instance()->scene()->findChild<QObject*>(path);
+        if (not result)
         {
+            result = Application::instance()->findChild<QObject*>(path);
+        }
+        if (not result && path == "Application")
+        {
+            result = Application::instance();
+        }
+        if (not result and scanQmlContent)
+        {
+            result = findQmlDocumentVaraible(Application::instance(), path);
+        }
+        if (not result)
+        {
+            const QString separator("::");
+            QStringList parts = path.split(separator);
+            if (parts.isEmpty())
+            {
+                return NULL;
+            }
+            const QString name = parts.takeLast();
+            const QObject * parent = NULL;
+            if (parts.isEmpty())
             {
                 const QString childObjectName = Utils::objectName(Application::instance());
                 if (childObjectName == name)
                 {
-                    return Application::instance();
+                    result = Application::instance();
                 }
-            }
-            // Top level widget
-            Q_FOREACH(QObject * const object, Application::instance()->children())
-            {
-                const QString childObjectName = Utils::objectName(object);
-                if (childObjectName == name)
+                else
                 {
-                    return object;
+                    // Top level widget
+                    Q_FOREACH(QObject * const object, Application::instance()->children())
+                    {
+                        const QString childObjectName = Utils::objectName(object);
+                        if (childObjectName == name)
+                        {
+                            result = object;
+                            break;
+                        }
+                    }
                 }
             }
-            return NULL;
-        }
-        else
-        {
-            parent = findObject(parts.join(separator));
-            if (not parent)
+            else
             {
-                return NULL;
+                parent = findObject(parts.join(separator), false);
+            }
+
+            if (parent)
+            {
+                Q_FOREACH(QObject * const child, parent->children())
+                {
+                    if (objectName(child) == name)
+                    {
+                        result = child;
+                        break;
+                    }
+                }
             }
         }
 
-        Q_FOREACH(QObject * const child, parent->children())
-        {
-            if (objectName(child) == name)
-            {
-                return child;
-            }
-        }
-
-        return NULL;
+        return result;
     }
 }  // namespace cascades
 }  // namespace test

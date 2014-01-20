@@ -3,17 +3,10 @@
  */
 #include "include/ClickCommand.h"
 
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
-#include <bb/cascades/UIObject>
-#include <bb/cascades/AbstractActionItem>
-#include <QCoreApplication>
-
 #include "Utils.h"
 #include "Connection.h"
 
 using truphone::test::cascades::Utils;
-using bb::cascades::Application;
 
 namespace truphone
 {
@@ -40,12 +33,7 @@ namespace cascades
         bool ret = false;
         if ((not arguments->isEmpty()) and (arguments->size() >= 1))
         {
-            QObject * obj =
-                    Application::instance()->scene()->findChild<QObject*>(arguments->first());
-            if (not obj)
-            {
-                obj = Application::instance()->findChild<QObject*>(arguments->first());
-            }
+            QObject * const obj = Utils::findObject(arguments->first());
             if (obj)
             {
                 // if it's a standard button, try clicking as normal

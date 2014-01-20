@@ -3,8 +3,6 @@
  */
 #include "SegmentCommand.h"
 
-#include <bb/cascades/AbstractPane>
-#include <bb/cascades/Application>
 #include <bb/cascades/SegmentedControl>
 #include <bb/cascades/Option>
 #include <QString>
@@ -12,10 +10,10 @@
 #include <QObject>
 
 #include "Connection.h"
+#include "Utils.h"
 
 using bb::cascades::SegmentedControl;
 using bb::cascades::Option;
-using bb::cascades::Application;
 
 namespace truphone
 {
@@ -42,12 +40,7 @@ namespace cascades
         if (arguments->size() == 3)
         {
             SegmentedControl * obj =
-                    Application::instance()->scene()->findChild<SegmentedControl*>
-                        (arguments->first());
-            if (not obj)
-            {
-                obj = Application::instance()->findChild<SegmentedControl*>(arguments->first());
-            }
+                    qobject_cast<SegmentedControl*>(Utils::findObject(arguments->first()));
             if (obj)
             {
                 arguments->removeFirst();

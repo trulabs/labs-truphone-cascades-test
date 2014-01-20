@@ -60,8 +60,25 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        static QObject* findObject(const QString& path);
-    protected:
+        static QObject* findObject(const QString& path, const bool scanQmlContent = true);
+    private:
+        /*!
+         * \brief findQmlDocumentVaraible Find an object in QML
+         *
+         * \param obj The parent object to search
+         * \param varName The name of the variable we're looking for
+         * \param level Recursive depth start
+         * \param maxLevel Recursive depth maximum
+         *
+         * \return
+         *
+         * @since test-cascades 1.0.17
+         */
+        static QObject * findQmlDocumentVaraible(
+                QObject * const obj,
+                const QString varName,
+                const int level = 0,
+                const int maxLevel = 50);
         /*!
          * \brief isDelim Works out if a char is a delimiter
          *

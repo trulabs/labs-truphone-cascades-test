@@ -127,8 +127,7 @@ namespace cascades
                             {
                                 if (currentPage->actionAt(index))
                                 {
-                                    ret = executeAction(reinterpret_cast<AbstractActionItem*>(
-                                                            currentPage->actionAt(index)));
+                                    ret = executeAction(currentPage->actionAt(index));
                                     if (not ret)
                                     {
                                         this->client->write("ERROR: Failed to execute the " \
@@ -160,7 +159,7 @@ namespace cascades
                 }
                 else if (pane)
                 {
-                    const AbstractActionItem * action = pane->findChild<AbstractActionItem*>(name);
+                    AbstractActionItem * action = pane->findChild<AbstractActionItem*>(name);
                     if (action)
                     {
                         ret = executeAction(action);
@@ -205,12 +204,12 @@ namespace cascades
         return ret;
     }
 
-    bool ActionCommand::executeAction(const AbstractActionItem * const action)
+    bool ActionCommand::executeAction(AbstractActionItem * const action)
     {
         bool ret = false;
         if (action)
         {
-            ret = QMetaObject::invokeMethod(const_cast<AbstractActionItem*>(action), "triggered");
+            ret = QMetaObject::invokeMethod(action, "triggered");
         }
         return ret;
     }

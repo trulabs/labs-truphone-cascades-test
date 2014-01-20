@@ -4,8 +4,6 @@
 #ifndef QMLCOMMAND_H_
 #define QMLCOMMAND_H_
 
-#include <bb/cascades/AbstractActionItem>
-
 #include "Command.h"
 
 namespace truphone

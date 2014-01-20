@@ -3,14 +3,9 @@
  */
 #include "TestCommand.h"
 
-#include <bb/cascades/Application>
-#include <bb/cascades/AbstractPane>
-//#include <bb/cascades/TouchEvent>
-
 #include "Utils.h"
 #include "Connection.h"
 
-using bb::cascades::Application;
 using truphone::test::cascades::Utils;
 
 namespace truphone
@@ -48,22 +43,7 @@ namespace cascades
                 expected = reinterpret_cast<const QString*>(&expectedValue);
             }
 
-            // try and find the element by object name, otherwise
-            // use the path/index to try and find it
-            const QObject * tmp = Application::instance()->scene()->findChild<QObject*>(element);
-            if (not tmp)
-            {
-                tmp = Application::instance()->findChild<QObject*>(element);
-            }
-            if (not tmp)
-            {
-                tmp = Utils::findObject(element);
-            }
-            if (not tmp && element == "Application")
-            {
-                tmp = Application::instance();
-            }
-            const QObject * const obj = tmp;
+            const QObject * const obj = Utils::findObject(element);
             if (obj)
             {
                 const QVariant var = obj->property(property.toUtf8().constData());

@@ -3,19 +3,15 @@
  */
 #include "include/DropDownCommand.h"
 
-#include <bb/cascades/Application>
 #include <QList>
 #include <QString>
 #include <QObject>
-#include <bb/cascades/AbstractPane>
 #include <bb/cascades/DropDown>
 #include <bb/cascades/Option>
 
 #include "Utils.h"
 #include "Connection.h"
 
-using bb::cascades::Application;
-using bb::cascades::AbstractPane;
 using bb::cascades::DropDown;
 using bb::cascades::Option;
 
@@ -43,13 +39,8 @@ namespace cascades
         bool ret = false;
         if (arguments->size() >= 2)
         {
-            const AbstractPane * const pane = Application::instance()->scene();
-            DropDown * dropDown =
-                    pane->findChild<DropDown*>(arguments->first());
-            if (not dropDown)
-            {
-                dropDown = qobject_cast<DropDown*>(Utils::findObject(arguments->first()));
-            }
+            DropDown * const dropDown =
+                    qobject_cast<DropDown*>(Utils::findObject(arguments->first()));
             arguments->removeFirst();  // drop down name
             if (dropDown)
             {

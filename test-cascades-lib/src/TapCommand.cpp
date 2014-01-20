@@ -43,12 +43,8 @@ namespace cascades
         {
             const QString typeName = arguments->first();
             arguments->removeFirst();
-            QObject * obj =
-                    Application::instance()->scene()->findChild<QObject*>(arguments->first());
-            if (not obj)
-            {
-                obj = Application::instance()->findChild<QObject*>(arguments->first());
-            }
+            QObject * const obj = Utils::findObject(arguments->first());
+            arguments->removeFirst();
             if (obj)
             {
                 TouchType::Type type = TouchType::Move;
