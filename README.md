@@ -48,6 +48,10 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Version History
+### v1.0.17
+* Move the code for finding QObjects into common place
+* Fix the CLI popping commands from the end of a file
+
 ### v1.0.16.1
 * 'test' command will accept 'Application' an an object
 
