@@ -169,53 +169,24 @@ namespace cascades
             QStringList * const arguments,
             ListView * const listView)
     {
-        bool ret = false;
-        if (arguments->size() > 1)
+        QVariantList indexPath;
+        bool ret = convertPathToIndex(arguments, listView, indexPath);
+        if (ret)
         {
-            bool indexPathOk = true;
-            QVariantList indexPath;
-            const QString selectType = arguments->first();
-            arguments->removeFirst();
-            if (selectType == "index")
+            QVariant element = listView->dataModel()->data(indexPath);
+            if (not element.isNull() and element.isValid())
             {
-                if (not findElementByIndex(arguments->first(), indexPath))
-                {
-                    this->client->write("ERROR: Failed to convert index to indexPath\n");
-                    indexPathOk = false;
-                }
-                arguments->removeFirst();
-            }
-            else if (selectType == "name")
-            {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
-                if (not findElementByName(listView, namedIndex, indexPath))
-                {
-                    this->client->write("ERROR: Failed to convert named index to indexPath\n");
-                    indexPathOk = false;
-                }
+                listView->scrollToItem(indexPath);
+                ret = true;
             }
             else
             {
-                indexPathOk = false;
-                this->client->write("ERROR: Invalid lookup method, use index or name\r\n");
-            }
-            if (indexPathOk)
-            {
-                QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() and element.isValid())
-                {
-                    listView->scrollToItem(indexPath);
-                    ret = true;
-                }
-                else
-                {
-                    this->client->write("ERROR: Tried to scroll to invalid item\r\n");
-                }
+                this->client->write("ERROR: Tried to scroll to invalid item\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: list scroll command needs more parameters\r\n");
+            this->client->write("ERROR: failed to convert path to to index\r\n");
         }
         return ret;
     }
@@ -224,67 +195,38 @@ namespace cascades
             QStringList * const arguments,
             ListView * const listView)
     {
-        bool ret = false;
-        if (arguments->size() > 1)
+        QVariantList indexPath;
+        bool ret = convertPathToIndex(arguments, listView, indexPath);
+        if (ret)
         {
-            bool indexPathOk = true;
-            QVariantList indexPath;
-            const QString selectType = arguments->first();
-            arguments->removeFirst();
-            if (selectType == "index")
+            const QVariant element = listView->dataModel()->data(indexPath);
+            if (not element.isNull() and element.isValid())
             {
-                if (not findElementByIndex(arguments->first(), indexPath))
+                if (QString(element.typeName()) == "QVariantMap")
                 {
-                    this->client->write("ERROR: Failed to convert index to indexPath\n");
-                    indexPathOk = false;
+                    QStringList keys;
+                    Q_FOREACH(QString key, element.toMap().keys())
+                    {
+                        keys.push_back(key);
+                    }
+                    this->client->write("OK (");
+                    this->client->write(keys.join(", ").toUtf8().constData());
+                    this->client->write(")\r\n");
+                    ret = false;  // yep, false. Stops OK getting reported twice.
                 }
-                arguments->removeFirst();
-            }
-            else if (selectType == "name")
-            {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
-                if (not findElementByName(listView, namedIndex, indexPath))
+                else
                 {
-                    this->client->write("ERROR: Failed to convert named index to indexPath\n");
-                    indexPathOk = false;
+                    this->client->write("ERROR: Can only show keys for QVariantMaps\r\n");
                 }
             }
             else
             {
-                indexPathOk = false;
-                this->client->write("ERROR: Invalid lookup method, use index or name\r\n");
-            }
-            if (indexPathOk)
-            {
-                const QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() and element.isValid())
-                {
-                    if (QString(element.typeName()) == "QVariantMap")
-                    {
-                        QStringList keys;
-                        Q_FOREACH(QString key, element.toMap().keys())
-                        {
-                            keys.push_back(key);
-                        }
-                        this->client->write("OK (");
-                        this->client->write(keys.join(", ").toUtf8().constData());
-                        this->client->write(")\r\n");
-                        ret = false;  // yep, false. Stops OK getting reported twice.
-                    }
-                    else
-                    {
-                        this->client->write("ERROR: Can only show keys for QVariantMaps\r\n");
-                    }
-                }
-                else
-                {
-                    this->client->write("ERROR: Tried to key to invalid item\r\n");
-                }
+                this->client->write("ERROR: Tried to key to invalid item\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: list keys command needs more parameters\r\n");
+            this->client->write("ERROR: failed to convert path to to index\r\n");
         }
         return ret;
     }
@@ -294,6 +236,97 @@ namespace cascades
             ListView * const listView,
             const bool select)
     {
+        QVariantList indexPath;
+        bool ret = convertPathToIndex(arguments, listView, indexPath);
+        if (ret)
+        {
+            QVariant element = listView->dataModel()->data(indexPath);
+            if (not element.isNull() and element.isValid())
+            {
+                listView->select(indexPath, select);
+                ret = true;
+            }
+            else
+            {
+                this->client->write("ERROR: Tried to select invalid item\r\n");
+            }
+        }
+        else
+        {
+            this->client->write("ERROR: failed to convert path to to index\r\n");
+        }
+        return ret;
+    }
+
+    bool ListCommand::tapPath(
+            QStringList * const arguments,
+            bb::cascades::ListView * const listView)
+    {
+        QVariantList indexPath;
+        bool ret = convertPathToIndex(arguments, listView, indexPath);
+        if (ret)
+        {
+            QVariant element = listView->dataModel()->data(indexPath);
+            if (not element.isNull() and element.isValid())
+            {
+                // emit triggered;
+                ret = QMetaObject::invokeMethod(
+                            listView,
+                            "triggered",
+                            Q_ARG(QVariantList, indexPath));
+                if (not ret)
+                {
+                    this->client->write("ERROR: Failed to run triggered on object\r\n");
+                }
+            }
+            else
+            {
+                this->client->write("ERROR: Tried to tap invalid item\r\n");
+            }
+        }
+        else
+        {
+            this->client->write("ERROR: failed to convert path to to index\r\n");
+        }
+        return ret;
+    }
+
+    bool ListCommand::holdPath(
+            QStringList * const arguments,
+            bb::cascades::ListView * const listView,
+            const bool select)
+    {
+        QVariantList indexPath;
+        bool ret = convertPathToIndex(arguments, listView, indexPath);
+        if (ret)
+        {
+            QVariant element = listView->dataModel()->data(indexPath);
+            if (not element.isNull() and element.isValid())
+            {
+                if (select not_eq listView->multiSelectHandler()->isActive())
+                {
+                    listView->select(indexPath, select);
+                    listView->multiSelectHandler()->setActive(select);
+                    ret = true;
+                }
+            }
+            else
+            {
+                this->client->write("ERROR: Tried to hold invalid item\r\n");
+            }
+        }
+        else
+        {
+            this->client->write("ERROR: failed to convert path to to index\r\n");
+        }
+        return ret;
+    }
+
+    bool ListCommand::convertPathToIndex(
+            QStringList * const arguments,
+            bb::cascades::ListView * const listView,
+            QVariantList &index)
+    {
         bool ret = false;
         if (arguments->size() > 1)
         {
@@ -305,7 +338,6 @@ namespace cascades
             {
                 if (not findElementByIndex(arguments->first(), indexPath))
                 {
-                    this->client->write("ERROR: Failed to convert index to indexPath\n");
                     indexPathOk = false;
                 }
                 arguments->removeFirst();
@@ -315,32 +347,18 @@ namespace cascades
                 const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
                 if (not findElementByName(listView, namedIndex, indexPath))
                 {
-                    this->client->write("ERROR: Failed to convert named index to indexPath\n");
                     indexPathOk = false;
                 }
             }
             else
             {
                 indexPathOk = false;
-                this->client->write("ERROR: Invalid lookup method, use index or name\r\n");
             }
-            if (indexPathOk)
+            ret = indexPathOk;
+            if (ret)
             {
-                QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() and element.isValid())
-                {
-                    listView->select(indexPath, select);
-                    ret = true;
-                }
-                else
-                {
-                    this->client->write("ERROR: Tried to select invalid item\r\n");
-                }
+                index = indexPath;
             }
-        }
-        else
-        {
-            this->client->write("ERROR: list select command needs more parameters\r\n");
         }
         return ret;
     }
@@ -544,129 +562,6 @@ namespace cascades
             }
         }
 
-        return ret;
-    }
-
-    bool ListCommand::tapPath(
-            QStringList * const arguments,
-            bb::cascades::ListView * const listView)
-    {
-        bool ret = false;
-        if (arguments->size() > 1)
-        {
-            bool indexPathOk = true;
-            QVariantList indexPath;
-            const QString selectType = arguments->first();
-            arguments->removeFirst();
-            if (selectType == "index")
-            {
-                if (not findElementByIndex(arguments->first(), indexPath))
-                {
-                    this->client->write("ERROR: Failed to convert index to indexPath\n");
-                    indexPathOk = false;
-                }
-                arguments->removeFirst();
-            }
-            else if (selectType == "name")
-            {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
-                if (not findElementByName(listView, namedIndex, indexPath))
-                {
-                    this->client->write("ERROR: Failed to convert named index to indexPath\n");
-                    indexPathOk = false;
-                }
-            }
-            else
-            {
-                indexPathOk = false;
-                this->client->write("ERROR: Invalid lookup method, use index or name\r\n");
-            }
-            if (indexPathOk)
-            {
-                QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() and element.isValid())
-                {
-                    // emit triggered;
-                    ret = QMetaObject::invokeMethod(
-                                listView,
-                                "triggered",
-                                Q_ARG(QVariantList, indexPath));
-                    if (not ret)
-                    {
-                        this->client->write("ERROR: Failed to run triggered on object\r\n");
-                    }
-                }
-                else
-                {
-                    this->client->write("ERROR: Tried to tap invalid item\r\n");
-                }
-            }
-        }
-        else
-        {
-            this->client->write("ERROR: list tap command needs more parameters\r\n");
-        }
-        return ret;
-    }
-
-    bool ListCommand::holdPath(
-            QStringList * const arguments,
-            bb::cascades::ListView * const listView,
-            const bool select)
-    {
-        bool ret = false;
-        if (arguments->size() > 1)
-        {
-            bool indexPathOk = true;
-            QVariantList indexPath;
-            const QString selectType = arguments->first();
-            arguments->removeFirst();
-            if (selectType == "index")
-            {
-                if (not findElementByIndex(arguments->first(), indexPath))
-                {
-                    this->client->write("ERROR: Failed to convert index to indexPath\n");
-                    indexPathOk = false;
-                }
-                arguments->removeFirst();
-            }
-            else if (selectType == "name")
-            {
-                const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
-                if (not findElementByName(listView, namedIndex, indexPath))
-                {
-                    this->client->write("ERROR: Failed to convert named index to indexPath\n");
-                    indexPathOk = false;
-                }
-            }
-            else
-            {
-                indexPathOk = false;
-                this->client->write("ERROR: Invalid lookup method, use index or name\r\n");
-            }
-            if (indexPathOk)
-            {
-                QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() and element.isValid())
-                {
-                    if (select not_eq listView->multiSelectHandler()->isActive())
-                    {
-                        listView->select(indexPath, select);
-                        listView->multiSelectHandler()->setActive(select);
-                        ret = true;
-                    }
-                }
-                else
-                {
-                    this->client->write("ERROR: Tried to hold invalid item\r\n");
-                }
-            }
-        }
-        else
-        {
-            listView->multiSelectHandler()->setActive(select);
-            ret = true;
-        }
         return ret;
     }
 

@@ -5,6 +5,7 @@
 #define LISTCOMMAND_H_
 
 #include <bb/cascades/ListView>
+#include <QVariantList>
 
 #include "Command.h"
 
@@ -226,6 +227,22 @@ namespace cascades
         bool showKeysOnPath(
                 QStringList * const arguments,
                 bb::cascades::ListView * const listView);
+
+        /*!
+         * \brief convertPathToIndex Convert a path to an index
+         *
+         * \param arguments The arguments (path) to process
+         * \param listView The ListView to use to navigate
+         * \param index The resulting index
+         *
+         * \return @c True if it works
+         *
+         * @since test-cascades 1.0.18
+         */
+        bool convertPathToIndex(
+                QStringList * const arguments,
+                bb::cascades::ListView * const listView,
+                QVariantList &index);
 
         /*!
          * \brief CMD_NAME The name of this command
