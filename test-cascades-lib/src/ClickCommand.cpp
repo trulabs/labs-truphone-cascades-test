@@ -36,13 +36,12 @@ namespace cascades
             QObject * const obj = Utils::findObject(arguments->first());
             if (obj)
             {
+                bb::cascades::Application::processEvents();
                 // if it's a standard button, try clicking as normal
                 const bool invoked = QMetaObject::invokeMethod(obj, "clicked");
                 if (invoked)
                 {
-    #if defined(__DEBUG)
-                    this->client->write("DEBUG: Invoked\r\n");
-    #endif
+                    bb::cascades::Application::processEvents();
                     ret = true;
                 }
                 else
@@ -68,23 +67,30 @@ namespace cascades
         return ret;
     }
 
-    bool ClickCommand::clickOnChildren(QObject * const parent)
+    bool ClickCommand::clickOnChildren(
+            QObject * const parent,
+            const int level,
+            const int maxLevel)
     {
         bool found = false;
-        Q_FOREACH(QObject * object, parent->children())
+        if (level < maxLevel)
         {
-            found = QMetaObject::invokeMethod(object, "clicked");
-            if (not found)
+            Q_FOREACH(QObject * object, parent->children())
             {
-                found = clickOnChildren(object);
-                if (found)
+                found = QMetaObject::invokeMethod(object, "clicked");
+                if (not found)
                 {
+                    found = clickOnChildren(object, level+1, maxLevel);
+                    if (found)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    bb::cascades::Application::processEvents();
                     break;
                 }
-            }
-            else
-            {
-                break;
             }
         }
         return found;
