@@ -82,6 +82,7 @@ namespace cascades
                                                            0.0,
                                                            0.0,
                                                            visual_node);
+                    bb::cascades::Application::processEvents();
                     const bool invoked = QMetaObject::invokeMethod(
                                 obj,
                                 "touch",
