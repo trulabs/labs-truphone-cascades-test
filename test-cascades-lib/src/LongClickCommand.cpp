@@ -33,12 +33,11 @@ namespace cascades
             QObject * const obj = Utils::findObject(arguments->first());
             if (obj)
             {
+                bb::cascades::Application::processEvents();
                 const bool invoked = QMetaObject::invokeMethod(obj, "longClicked");
                 if (invoked)
                 {
-    #if defined(__DEBUG)
-                    this->client->write("DEBUG: Invoked\r\n");
-    #endif
+                    bb::cascades::Application::processEvents();
                     ret = true;
                 }
                 else
@@ -64,23 +63,30 @@ namespace cascades
         return ret;
     }
 
-    bool LongClickCommand::clickOnChildren(QObject * const parent)
+    bool LongClickCommand::clickOnChildren(
+            QObject * const parent,
+            const int level,
+            const int maxLevel)
     {
         bool found = false;
-        Q_FOREACH(QObject * object, parent->children())
+        if (level <= maxLevel)
         {
-            found = QMetaObject::invokeMethod(object, "longClicked");
-            if (not found)
+            Q_FOREACH(QObject * object, parent->children())
             {
-                found = clickOnChildren(object);
-                if (found)
+                found = QMetaObject::invokeMethod(object, "longClicked");
+                if (not found)
+                {
+                    found = clickOnChildren(object, level + 1, maxLevel);
+                    if (found)
+                    {
+                        bb::cascades::Application::processEvents();
+                        break;
+                    }
+                }
+                else
                 {
                     break;
                 }
-            }
-            else
-            {
-                break;
             }
         }
         return found;
