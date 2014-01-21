@@ -48,9 +48,9 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
-#### v1.0.17
-* Move the code for finding QObjects into common place
-* Fix the CLI popping commands from the end of a file
+#### v1.0.18
+* Flush event loop before/after Click command
+* Remove duplicated code in List command
 
 ## Prerequisites
 - Qt4 (sdk) & make
@@ -315,6 +315,10 @@ the html documentation under ./doc directory.
 * I'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly.
 
 ## Older versions
+#### v1.0.17
+* Move the code for finding QObjects into common place
+* Fix the CLI popping commands from the end of a file
+
 #### v1.0.16.1
 * 'test' command will accept 'Application' an an object
 
