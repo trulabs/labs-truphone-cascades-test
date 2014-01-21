@@ -74,6 +74,8 @@ namespace cascades
          * \brief clickOnChildren Find the onLongClicked on all the children
          *
          * \param parent The parent object to search through
+         * \param level The current level of recursion
+         * \param maxLevel The maximum recursion level
          *
          * \return @c true if an element was found
          *
