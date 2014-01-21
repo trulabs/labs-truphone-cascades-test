@@ -66,11 +66,12 @@ namespace cascades
                         ret = (actual == expected);
                         if (not ret)
                         {
-                            this->client->write("ERROR: List size is {");
-                            this->client->write(QString::number(actual).toUtf8().constData());
-                            this->client->write("} was expecting {");
-                            this->client->write(QString::number(expected).toUtf8().constData());
-                            this->client->write("}\r\n");
+                            QString data("ERROR: List size is {");
+                            data += QString::number(actual);
+                            data += "} was expecting {";
+                            data += QString::number(expected);
+                            data += "}\r\n";
+                            this->client->write(data.trimmed().toUtf8());
                         }
                     }
                     else
@@ -522,11 +523,12 @@ namespace cascades
                     ret = (check == element.toString());
                     if (not ret)
                     {
-                        this->client->write("ERROR: Value is {");
-                        this->client->write(element.toString().toUtf8().constData());
-                        this->client->write("} expected {");
-                        this->client->write(check.toUtf8().constData());
-                        this->client->write("}\r\n");
+                        QString data("ERROR: Value is {");
+                        data += element.toString();
+                        data += "} expected {";
+                        data += check;
+                        data += "}\r\n";
+                        this->client->write(data.trimmed().toUtf8());
                     }
                 }
                 else if (elementType == "QVariantMap")
@@ -548,11 +550,12 @@ namespace cascades
                             ret = (actual == value);
                             if (not ret)
                             {
-                                this->client->write("ERROR: Value is {");
-                                this->client->write(actual.toUtf8().constData());
-                                this->client->write("} expected {");
-                                this->client->write(value.toUtf8().constData());
-                                this->client->write("}\r\n");
+                                QString data("ERROR: Value is {");
+                                data += actual;
+                                data += "} expected {";
+                                data += value;
+                                data += "}\r\n";
+                                this->client->write(data.trimmed().toUtf8());
                             }
                         }
                         else
