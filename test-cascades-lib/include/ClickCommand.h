@@ -79,7 +79,9 @@ namespace cascades
          *
          * @since test-cascades 1.0.5
          */
-        bool clickOnChildren(QObject * const parent);
+        bool clickOnChildren(QObject * const parent,
+                             const int level = 0,
+                             const int maxLevel = 100);
     private:
         /*!
          * \brief CMD_NAME The name of this command
