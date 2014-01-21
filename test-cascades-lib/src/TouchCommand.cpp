@@ -193,6 +193,7 @@ namespace cascades
                                                       TouchType::Cancel,
                                                       sx, sy, wx, wy,
                                                       lx, ly, visualObject)));
+                                bb::cascades::Application::processEvents();
                             }
                             else
                             {

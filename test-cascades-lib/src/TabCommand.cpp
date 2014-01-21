@@ -103,7 +103,9 @@ namespace cascades
 
     void TabCommand::selectTab(TabbedPane * const pane, Tab * const tab)
     {
+        bb::cascades::Application::processEvents();
         pane->setActiveTab(tab);
+        bb::cascades::Application::processEvents();
     }
 
     void TabCommand::showHelp()

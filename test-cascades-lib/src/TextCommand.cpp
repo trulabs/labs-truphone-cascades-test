@@ -49,6 +49,7 @@ namespace cascades
                 {
                     const QString tmp = arguments->join(" ");
                     field->setText(tmp);
+                    bb::cascades::Application::processEvents();
                     ret = true;
                 }
                 else
@@ -58,6 +59,7 @@ namespace cascades
                     {
                         const QString tmp = arguments->join(" ");
                         area->setText(tmp);
+                        bb::cascades::Application::processEvents();
                         ret = true;
                     }
                     else

@@ -176,7 +176,9 @@ namespace cascades
             QVariant element = listView->dataModel()->data(indexPath);
             if (not element.isNull() and element.isValid())
             {
+                bb::cascades::Application::processEvents();
                 listView->scrollToItem(indexPath);
+                bb::cascades::Application::processEvents();
                 ret = true;
             }
             else
@@ -243,7 +245,9 @@ namespace cascades
             QVariant element = listView->dataModel()->data(indexPath);
             if (not element.isNull() and element.isValid())
             {
+                bb::cascades::Application::processEvents();
                 listView->select(indexPath, select);
+                bb::cascades::Application::processEvents();
                 ret = true;
             }
             else
@@ -269,11 +273,12 @@ namespace cascades
             QVariant element = listView->dataModel()->data(indexPath);
             if (not element.isNull() and element.isValid())
             {
-                // emit triggered;
+                bb::cascades::Application::processEvents();
                 ret = QMetaObject::invokeMethod(
                             listView,
                             "triggered",
                             Q_ARG(QVariantList, indexPath));
+                bb::cascades::Application::processEvents();
                 if (not ret)
                 {
                     this->client->write("ERROR: Failed to run triggered on object\r\n");
@@ -305,8 +310,11 @@ namespace cascades
             {
                 if (select not_eq listView->multiSelectHandler()->isActive())
                 {
+                    bb::cascades::Application::processEvents();
                     listView->select(indexPath, select);
+                    bb::cascades::Application::processEvents();
                     listView->multiSelectHandler()->setActive(select);
+                    bb::cascades::Application::processEvents();
                     ret = true;
                 }
             }
@@ -331,12 +339,11 @@ namespace cascades
         if (arguments->size() > 1)
         {
             bool indexPathOk = true;
-            QVariantList indexPath;
             const QString selectType = arguments->first();
             arguments->removeFirst();
             if (selectType == "index")
             {
-                if (not findElementByIndex(arguments->first(), indexPath))
+                if (not findElementByIndex(arguments->first(), index))
                 {
                     indexPathOk = false;
                 }
@@ -345,7 +352,7 @@ namespace cascades
             else if (selectType == "name")
             {
                 const QString namedIndex = extractNamedPath(arguments, namedPathEnd);
-                if (not findElementByName(listView, namedIndex, indexPath))
+                if (not findElementByName(listView, namedIndex, index))
                 {
                     indexPathOk = false;
                 }
@@ -355,10 +362,6 @@ namespace cascades
                 indexPathOk = false;
             }
             ret = indexPathOk;
-            if (ret)
-            {
-                index = indexPath;
-            }
         }
         return ret;
     }
