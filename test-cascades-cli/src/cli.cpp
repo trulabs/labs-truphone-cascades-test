@@ -455,9 +455,6 @@ namespace cli
         QString line;
         if (callLevel < maxCallLevel)
         {
- #if defined(QT_DEBUG)
-            qDebug() << "Attempting to read from" << this->currentFile->fileName();
-#endif  // QT_DEBUG
             line = QString(this->currentFile->readLine(1024));
             if (line.isNull() || line.isEmpty())
             {
@@ -468,9 +465,7 @@ namespace cli
                     if (not this->inputFiles->isEmpty())
                     {
                         currentFile = this->inputFiles->back();
- #if defined(QT_DEBUG)
-                        qDebug() << "Current file is now" << currentFile->fileName();
- #endif  // QT_DEBUG
+                        qOut << "IO Now reading from: " << currentFile->fileName() << "\r\n";
                         line = readNextLine(callLevel + 1, maxCallLevel);
                     }
                 }
@@ -677,6 +672,7 @@ namespace cli
                     }
                     this->inputFiles->push_back(newFile);
                     this->currentFile = newFile;
+                    qOut << "IO Now reading from: " << this->currentFile->fileName() << "\r\n";
                 }
                 else if (nextLine.startsWith("cli-setting "))
                 {
