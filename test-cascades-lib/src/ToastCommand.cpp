@@ -68,11 +68,12 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: Toast text is ");
-                        this->client->write(toast->body().toUtf8().constData());
-                        this->client->write(" but we expected ");
-                        this->client->write(toastText.toUtf8().constData());
-                        this->client->write("\r\n");
+                        QString data("ERROR: Toast text is ");
+                        data += toast->body();
+                        data += " but we expected ";
+                        data += toastText;
+                        data += "\r\n";
+                        this->client->write(data.trimmed().toUtf8());
                     }
                 }
                 else

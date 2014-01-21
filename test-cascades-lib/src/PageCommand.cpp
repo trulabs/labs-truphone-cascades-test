@@ -57,11 +57,12 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: Page is named {");
-                    this->client->write(page->objectName().toUtf8().constData());
-                    this->client->write("} which wasn't expected {");
-                    this->client->write(expectedPage.toUtf8().constData());
-                    this->client->write("}\r\n");
+                    QString data("ERROR: Page is named {");
+                    data += page->objectName();
+                    data += "} which wasn't expected {";
+                    data += expectedPage;
+                    data += "}\r\n";
+                    this->client->write(data.trimmed().toUtf8());
                 }
             }
             else

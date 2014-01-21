@@ -66,9 +66,10 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write(typeName.toUtf8().constData());
-                    this->client->write(" is not a known event type for touch events, " \
-                                        "assuming 'move'\r\n");
+                    QString data(typeName);
+                    data += " is not a known event type for touch events, " \
+                            "assuming 'move'\r\n";
+                    this->client->write(data.trimmed().toUtf8());
                 }
                 VisualNode * const visual_node = qobject_cast<VisualNode*>(obj);
                 if (visual_node)
