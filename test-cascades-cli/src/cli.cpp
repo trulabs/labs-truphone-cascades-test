@@ -210,10 +210,6 @@ namespace cli
          */
         QTimer * const retryTimer;
         /*!
-         * \brief maxRetries The maximum number of retries to do
-         */
-        uint maxRetries;
-        /*!
          * \brief retryCount The current number of retries
          */
         uint retryCount;
@@ -361,6 +357,7 @@ namespace cli
           inputFiles(new QStack<QFile*>()),
           settings(new QMap<QString, QVariant>()),
           retryTimer(new QTimer(this)),
+          retryCount(0),
           qOut(stdout)
     {
         inputFiles->push_back(rootFile);
@@ -613,7 +610,7 @@ namespace cli
     {
         this->stateMachine.setState(WAITING_FOR_REPLY);
 
-        if (this->retryTimer->isActive())
+        if (this->retryCount)
         {
             this->stream->write(this->lastCommandWritten.toUtf8());
             this->outputFile->write("\t<retry count=\"");
@@ -785,51 +782,20 @@ namespace cli
                     else
                     {
                         if (this->getSetting(SETTING_RETRY,
-                                             SETTING_RETRY_DEFAULT).toInt())
+                                             SETTING_RETRY_DEFAULT).toInt()
+                                and
+                                this->retryCount < this->getSetting(
+                                        SETTING_RETRY_MAX_INTERVALS,
+                                        SETTING_RETRY_MAX_INTERVALS_DEFAULT).toUInt())
                         {
-#if defined(QT_DEBUG)
-                            qDebug() << "Command failed, retries enabled...";
-#endif  // QT_DEBUG
-                            if (retryTimer->isActive())
-                            {
-#if defined(QT_DEBUG)
-                                qDebug() << "Timer already active";
-#endif  // QT_DEBUG
-                                if (this->retryCount == this->maxRetries)
-                                {
-#if defined(QT_DEBUG)
-                                    qDebug() << "Maximum number of retries";
-#endif  // QT_DEBUG
-                                    this->retryTimer->stop();
-                                }
-                                else
-                                {
-                                    this->retryCount++;
-#if defined(QT_DEBUG)
-                                    qDebug() << "Retry count increased to" << \
-                                                this->retryCount << "/" << this->maxRetries;
-#endif  // QT_DEBUG
-                                    confirmedFailed = false;
-                                }
-                            }
-                            else
-                            {
-                                this->retryTimer->setInterval(
-                                            this->getSetting(
-                                                SETTING_RETRY_INTERVAL,
-                                                SETTING_RETRY_INTERVAL_DEFAULT).toInt());
-#if defined(QT_DEBUG)
-                                qDebug() << "First time, starting up retry timer with interval" \
-                                         << this->retryTimer->interval();
-#endif  // QT_DEBUG
-                                this->maxRetries = this->getSetting(
-                                            SETTING_RETRY_MAX_INTERVALS,
-                                            SETTING_RETRY_MAX_INTERVALS_DEFAULT).toInt();
-                                this->retryCount = 0;
-                                this->retryTimer->setSingleShot(false);
-                                this->retryTimer->start();
-                                confirmedFailed = false;
-                            }
+                            this->retryTimer->setInterval(
+                                        this->getSetting(
+                                            SETTING_RETRY_INTERVAL,
+                                            SETTING_RETRY_INTERVAL_DEFAULT).toInt());
+                            this->retryTimer->setSingleShot(true);
+                            this->retryTimer->start();
+                            this->retryCount++;
+                            confirmedFailed = false;
                         }
                         if (confirmedFailed)
                         {
@@ -841,7 +807,7 @@ namespace cli
 
                     if (ok or confirmedFailed)
                     {
-                        this->retryTimer->stop();
+                        this->retryCount = 0;
                         const bool acceptFailure = getSetting(
                                     SETTING_FAILURE_OK,
                                     SETTING_FAILURE_OK_DEFAULT).toBool();
