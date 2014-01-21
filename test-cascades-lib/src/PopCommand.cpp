@@ -72,7 +72,9 @@ namespace cascades
                 const int stackSize = navPane->count();
                 if (stackSize > 1)
                 {
+                    bb::cascades::Application::processEvents();
                     navPane->pop();
+                    bb::cascades::Application::processEvents();
                     ret = true;
                 }
                 else

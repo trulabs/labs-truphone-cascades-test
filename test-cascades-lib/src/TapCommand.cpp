@@ -87,9 +87,7 @@ namespace cascades
                                 Q_ARG(bb::cascades::TouchEvent*, te));
                     if (invoked)
                     {
-    #if defined(__DEBUG)
-                        this->client->write("DEBUG: Invoked\r\n");
-    #endif
+                        bb::cascades::Application::processEvents();
                         ret = true;
                     }
                     else

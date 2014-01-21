@@ -74,7 +74,9 @@ namespace cascades
                     }
                     if (option)
                     {
+                        bb::cascades::Application::processEvents();
                         dropDown->setSelectedOption(const_cast<Option*>(option));
+                        bb::cascades::Application::processEvents();
                         ret = true;
                     }
                     else

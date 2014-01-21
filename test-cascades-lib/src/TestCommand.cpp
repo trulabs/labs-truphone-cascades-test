@@ -46,6 +46,7 @@ namespace cascades
             const QObject * const obj = Utils::findObject(element);
             if (obj)
             {
+                bb::cascades::Application::processEvents();
                 const QVariant var = obj->property(property.toUtf8().constData());
                 if (var.isNull())
                 {

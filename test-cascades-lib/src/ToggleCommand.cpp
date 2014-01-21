@@ -45,6 +45,7 @@ namespace cascades
                 const bool state = (arguments->first() == "true");
                 arguments->removeFirst();
                 button->setChecked(state);
+                bb::cascades::Application::processEvents();
                 ret = true;
             }
             else
