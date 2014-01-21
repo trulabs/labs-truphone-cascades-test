@@ -301,31 +301,41 @@ namespace cascades
             bb::cascades::ListView * const listView,
             const bool select)
     {
-        QVariantList indexPath;
-        bool ret = convertPathToIndex(arguments, listView, indexPath);
-        if (ret)
+        bool ret = false;
+        if (select)
         {
-            QVariant element = listView->dataModel()->data(indexPath);
-            if (not element.isNull() and element.isValid())
+            QVariantList indexPath;
+            ret = convertPathToIndex(arguments, listView, indexPath);
+            if (ret)
             {
-                if (select not_eq listView->multiSelectHandler()->isActive())
+                QVariant element = listView->dataModel()->data(indexPath);
+                if (not element.isNull() and element.isValid())
                 {
-                    bb::cascades::Application::processEvents();
-                    listView->select(indexPath, select);
-                    bb::cascades::Application::processEvents();
-                    listView->multiSelectHandler()->setActive(select);
-                    bb::cascades::Application::processEvents();
-                    ret = true;
+                    if (select not_eq listView->multiSelectHandler()->isActive())
+                    {
+                        bb::cascades::Application::processEvents();
+                        listView->select(indexPath, select);
+                        bb::cascades::Application::processEvents();
+                        listView->multiSelectHandler()->setActive(select);
+                        bb::cascades::Application::processEvents();
+                        ret = true;
+                    }
+                }
+                else
+                {
+                    this->client->write("ERROR: Tried to hold invalid item\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Tried to hold invalid item\r\n");
+                this->client->write("ERROR: failed to convert path to to index\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: failed to convert path to to index\r\n");
+            bb::cascades::Application::processEvents();
+            listView->multiSelectHandler()->setActive(select);
+            bb::cascades::Application::processEvents();
         }
         return ret;
     }
