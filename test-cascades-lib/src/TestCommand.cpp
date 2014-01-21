@@ -73,18 +73,19 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: The value is {");
-                        this->client->write(actual.toUtf8().constData());
-                        this->client->write("} which is not expected {");
+                        QString data("ERROR: The value is {");
+                        data += actual;
+                        data += "} which is not expected {";
                         if (expected)
                         {
-                            this->client->write(expected->toUtf8().constData());
+                            data += expected;
                         }
                         else
                         {
-                            this->client->write("<null>");
+                            data += "<null>";
                         }
-                        this->client->write("}\r\n");
+                        data += "}\r\n";
+                        this->client->write(data.trimmed().toUtf8());
                     }
                 }
             }
