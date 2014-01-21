@@ -336,6 +336,7 @@ namespace cascades
             bb::cascades::Application::processEvents();
             listView->multiSelectHandler()->setActive(select);
             bb::cascades::Application::processEvents();
+            ret = true;
         }
         return ret;
     }
