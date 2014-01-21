@@ -55,6 +55,8 @@ namespace cascades
          * a pointer to that object
          *
          * \param path The path to the object
+         * \param scanQmlContent Look for a QMLDocument and look at it's context
+         *
          * \return A pointer to an @c QObject or @c NULL if it couldn't
          * be found
          *

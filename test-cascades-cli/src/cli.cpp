@@ -22,9 +22,21 @@ namespace cascades
 {
 namespace cli
 {
+    /*!
+     * \brief The HarnessCliPrviate class is used to store the internal
+     * and private data for the CLI
+     */
     class HarnessCliPrviate : public QObject
     {
     public:
+        /*!
+         * \brief HarnessCliPrviate Create the internal data
+         *
+         * \param isRecord Is record mode on
+         * \param inFile The input file
+         * \param outFile The output file
+         * \param parent The parent object
+         */
         HarnessCliPrviate(bool isRecord,
                           QFile * const inFile,
                           QFile * const outFile,
@@ -136,6 +148,11 @@ namespace cli
         typedef struct stateMachine
         {
         public:
+            /*!
+             * \brief stateMachine Create a new state machine
+             *
+             * \param initial The initial state
+             */
             stateMachine(const state_t initial)
                 : initialState(initial),
                   currentState(initialState)
@@ -145,10 +162,20 @@ namespace cli
                          << STATE_NAMES[currentState];
     #endif  // QT_DEBUG
             }
+            /*!
+             * \brief state Get the current state
+             *
+             * \return The state of the state machine
+             */
             inline state_t state()
             {
                 return this->currentState;
             }
+            /*!
+             * \brief setState Set the new state for the state machine
+             *
+             * \param state The new state
+             */
             inline void setState(const state_t state)
             {
     #if defined (QT_DEBUG)
@@ -223,7 +250,7 @@ namespace cli
          * If there's no file, try the file stack
          *
          * \param callLevel The current recursive call level
-         * \param callLevel The maximum recursive call level
+         * \param maxCallLevel The maximum recursive call level
          *
          * \return The number of bytes read
          *

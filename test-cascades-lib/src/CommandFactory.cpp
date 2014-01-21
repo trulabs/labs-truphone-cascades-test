@@ -125,9 +125,21 @@ namespace cascades
         createCommand * const commandCreate;
     };
 
+    /*!
+     * \brief The CommandFactoryPrivate class is used to store
+     * the private internal data of the command factory.
+     */
     class CommandFactoryPrivate
     {
     public:
+        /*!
+         * \brief insert Insert a command into the factory
+         *
+         * \param name The name of the command
+         * \param entry An command bootstrap
+         *
+         * @since test-cascades 1.0.15
+         */
         static void insert(const QString& name,
                            CommandFactoryEntry * const entry);
         /*!
