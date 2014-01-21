@@ -209,7 +209,9 @@ namespace cascades
         bool ret = false;
         if (action)
         {
+            bb::cascades::Application::processEvents();
             ret = QMetaObject::invokeMethod(action, "triggered");
+            bb::cascades::Application::processEvents();
         }
         return ret;
     }
