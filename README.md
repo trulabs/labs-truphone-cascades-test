@@ -49,8 +49,10 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
 #### v1.0.18
-* Flush event loop before/after Click command
+* CLI prints out which file is being read
+* Flush event loop before/after commands
 * Remove duplicated code in List command
+* Fixes
 
 ## Prerequisites
 - Qt4 (sdk) & make
