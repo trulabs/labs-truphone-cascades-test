@@ -66,6 +66,7 @@ namespace cascades
     void CascadesHarness::processPacket(Connection * connection, const QString& packet)
     {
         QStringList tokens = Utils::tokenise(this->delim, packet.trimmed());
+        qDebug() << "test-cascades-lib: " << packet.trimmed();
         if (not tokens.empty())
         {
             const QString command = tokens.first();
