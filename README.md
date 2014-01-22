@@ -48,11 +48,10 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
-#### v1.0.18
-* CLI prints out which file is being read
-* Flush event loop before/after commands
-* Remove duplicated code in List command
-* Fixes
+#### v1.0.19
+* test-cascades-lib uses qDebug to print what's running.
+This can be used to correlate the activity of the CLI
+and the library - especially when doing post-mortem analysis.
 
 ## Prerequisites
 - Qt4 (sdk) & make
@@ -317,6 +316,12 @@ the html documentation under ./doc directory.
 * I'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly.
 
 ## Older versions
+#### v1.0.18
+* CLI prints out which file is being read
+* Flush event loop before/after commands
+* Remove duplicated code in List command
+* Fixes
+
 #### v1.0.17
 * Move the code for finding QObjects into common place
 * Fix the CLI popping commands from the end of a file
