@@ -46,6 +46,28 @@ namespace cascades
         }
     }
 
+    qint64 Connection::write(const char * const data)
+    {
+        const QByteArray qData(data);
+        this->socket->flush();
+        const qint64 written = this->socket->write(qData);
+        if (written == qData.length())
+        {
+            this->socket->flush();
+        }
+        else
+        {
+            qWarning("Connection transmitted {%d} of {%d}, data {%s}",
+                     (int)(written), qData.length(), data);
+        }
+        return written;
+    }
+
+    bool Connection::flush(void)
+    {
+        return this->socket->flush();
+    }
+
     void Connection::connectionDied(void)
     {
         emit this->disconnected(this);
