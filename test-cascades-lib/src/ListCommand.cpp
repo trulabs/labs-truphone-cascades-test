@@ -175,12 +175,12 @@ namespace cascades
         if (ret)
         {
             QVariant element = listView->dataModel()->data(indexPath);
-            if (not element.isNull() and element.isValid())
+            ret = not element.isNull() and element.isValid();
+            if (ret)
             {
                 bb::cascades::Application::processEvents();
                 listView->scrollToItem(indexPath);
                 bb::cascades::Application::processEvents();
-                ret = true;
             }
             else
             {
@@ -203,7 +203,8 @@ namespace cascades
         if (ret)
         {
             const QVariant element = listView->dataModel()->data(indexPath);
-            if (not element.isNull() and element.isValid())
+            ret = not element.isNull() and element.isValid();
+            if (ret)
             {
                 if (QString(element.typeName()) == "QVariantMap")
                 {
@@ -220,6 +221,7 @@ namespace cascades
                 else
                 {
                     this->client->write("ERROR: Can only show keys for QVariantMaps\r\n");
+                    ret = false;
                 }
             }
             else
@@ -244,12 +246,12 @@ namespace cascades
         if (ret)
         {
             QVariant element = listView->dataModel()->data(indexPath);
-            if (not element.isNull() and element.isValid())
+            ret = not element.isNull() and element.isValid();
+            if (ret)
             {
                 bb::cascades::Application::processEvents();
                 listView->select(indexPath, select);
                 bb::cascades::Application::processEvents();
-                ret = true;
             }
             else
             {
@@ -310,16 +312,17 @@ namespace cascades
             if (ret)
             {
                 QVariant element = listView->dataModel()->data(indexPath);
-                if (not element.isNull() and element.isValid())
+                ret = not element.isNull() and element.isValid();
+                if (ret)
                 {
-                    if (select not_eq listView->multiSelectHandler()->isActive())
+                    ret = select not_eq listView->multiSelectHandler()->isActive();
+                    if (ret)
                     {
                         bb::cascades::Application::processEvents();
                         listView->select(indexPath, select);
                         bb::cascades::Application::processEvents();
                         listView->multiSelectHandler()->setActive(select);
                         bb::cascades::Application::processEvents();
-                        ret = true;
                     }
                 }
                 else
