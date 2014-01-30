@@ -52,6 +52,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 * test-cascades-lib uses qDebug to print what's running.
 This can be used to correlate the activity of the CLI
 and the library - especially when doing post-mortem analysis.
+* Bug fixes for the List command
 
 ## Prerequisites
 - Qt4 (sdk) & make
