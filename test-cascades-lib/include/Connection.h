@@ -62,21 +62,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.1
              */
-            qint64 write(const char * const data)
-            {
-                const QByteArray qData(data);
-                const qint64 written = this->socket->write(qData);
-                if (written == qData.length())
-                {
-                    this->socket->flush();
-                }
-                else
-                {
-                    qWarning("Connection transmitted {%d} of {%d}, data {%s}",
-                             (int)(written), qData.length(), data);
-                }
-                return written;
-            }
+            qint64 write(const char * const data);
             /*!
              * \brief flush Flush the socket
              *
@@ -84,10 +70,7 @@ namespace cascades
              *
              * @since test-cascades 1.0.1
              */
-            bool flush(void)
-            {
-                return this->socket->flush();
-            }
+            bool flush(void);
 
         signals:
             /*!
