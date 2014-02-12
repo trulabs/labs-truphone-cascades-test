@@ -30,6 +30,7 @@
 #include "ListCommand.h"
 #include "SegmentCommand.h"
 #include "SystemDialogCommand.h"
+#include "QuitCommand.h"
 
 using truphone::test::cascades::Command;
 using truphone::test::cascades::ClickCommand;
@@ -56,6 +57,7 @@ using truphone::test::cascades::ExitCommand;
 using truphone::test::cascades::ListCommand;
 using truphone::test::cascades::SegmentCommand;
 using truphone::test::cascades::SystemDialogCommand;
+using truphone::test::cascades::QuitCommand;
 
 namespace truphone
 {
@@ -225,6 +227,8 @@ namespace cascades
                new CommandFactoryEntry(&SegmentCommand::create));
         insert(SystemDialogCommand::getCmd(),
                new CommandFactoryEntry(&SystemDialogCommand::create));
+        insert(QuitCommand::getCmd(),
+               new CommandFactoryEntry(&QuitCommand::create));
     }
 
     Command * CommandFactory::getCommand(
