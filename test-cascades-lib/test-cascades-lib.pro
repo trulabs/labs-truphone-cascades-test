@@ -46,7 +46,8 @@ SOURCES += \
     src/ExitCommand.cpp \
     src/ListCommand.cpp \
     src/SegmentCommand.cpp \
-    src/SystemDialogCommand.cpp
+    src/SystemDialogCommand.cpp \
+    src/QuitCommand.cpp
 
 HEADERS +=\
     include/CascadesTest.h \
@@ -85,7 +86,8 @@ HEADERS +=\
     include/ExitCommand.h \
     include/ListCommand.h \
     include/SegmentCommand.h \
-    include/SystemDialogCommand.h
+    include/SystemDialogCommand.h \
+    include/QuitCommand.h
 
 unix:!symbian {
     maemo5 {
