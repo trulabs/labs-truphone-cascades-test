@@ -13,6 +13,7 @@ TARGET = test-cascades-lib
 TEMPLATE = lib
 
 CONFIG += staticlib
+# Needed for Signal Spy
 CONFIG += qtestlib
 
 DEFINES += TESTCASCADESLIB_LIBRARY
