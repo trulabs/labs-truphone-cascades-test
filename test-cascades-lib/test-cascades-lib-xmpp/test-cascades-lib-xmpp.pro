@@ -18,30 +18,11 @@ CONFIG += staticlib
 
 DEFINES += TESTCASCADESLIB_LIBRARY
 
-# QXMPP settings
-DEFINES += QXMPP_BUILD QXMPP_STATIC
-
 HEADERS +=\
-    $$files(../../externals/qxmpp/src/base/*.h) \
-    $$files(../../externals/qxmpp/src/client/*.h) \
     include/XmppHarness.h
 
 SOURCES += \
-    $$files(../../externals/qxmpp/src/base/Q*.cpp) \
-    $$files(../../externals/qxmpp/src/client/*.cpp) \
     src/XmppHarness.cpp
-
-# DNS
-qt_version = $$QT_MAJOR_VERSION
-contains(qt_version, 4) {
-    INSTALL_HEADERS += base/qdnslookup.h base/qdnslookup_p.h
-    SOURCES += ../../externals/qxmpp/src/base/qdnslookup.cpp
-    android:SOURCES += ../../externals/qxmpp/src/base/qdnslookup_stub.cpp
-    else:symbian:SOURCES += ../../externals/qxmpp/src/base/qdnslookup_symbian.cpp
-    else:unix:SOURCES += ../../externals/qxmpp/src/base/qdnslookup_unix.cpp
-    else:win32:SOURCES += ../../externals/qxmpp/src/base/qdnslookup_win.cpp
-    else:SOURCES += ../../externals/qxmpp/src/base/qdnslookup_stub.cpp
-}
 
 unix:!symbian {
     maemo5 {
