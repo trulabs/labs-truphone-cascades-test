@@ -48,12 +48,8 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
-#### v1.0.19
-* test-cascades-lib uses qDebug to print what's running.
-This can be used to correlate the activity of the CLI
-and the library - especially when doing post-mortem analysis.
-* Add a Quit command to terminate the application
-* Bug fixes for the List command
+#### v1.1.0
+* Initial XMPP work
 
 ## Prerequisites
 - Qt4 (sdk) & make
@@ -318,6 +314,13 @@ the html documentation under ./doc directory.
 * I'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly.
 
 ## Older versions
+#### v1.0.19
+* test-cascades-lib uses qDebug to print what's running.
+This can be used to correlate the activity of the CLI
+and the library - especially when doing post-mortem analysis.
+* Add a Quit command to terminate the application
+* Bug fixes for the List command
+
 #### v1.0.18
 * CLI prints out which file is being read
 * Flush event loop before/after commands
