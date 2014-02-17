@@ -1,17 +1,11 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2013-04-18T15:44:38
-#
-#-------------------------------------------------
-
 INCLUDEPATH += include
 
 TARGET = test-cascades-lib
 TEMPLATE = subdirs
 
 CONFIG += ordered
+
 SUBDIRS += test-cascades-lib-core
-SUBDIRS += ../externals/qxmpp/src
 SUBDIRS += test-cascades-lib-xmpp
 
 unix:!symbian {
@@ -25,4 +19,5 @@ unix:!symbian {
 
 OTHER_FILES += \
     ../README.md \
-    ../Doxyfile
+    ../Doxyfile \
+    ../Makefile
