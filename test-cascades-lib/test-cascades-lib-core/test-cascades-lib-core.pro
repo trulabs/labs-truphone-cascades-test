@@ -9,7 +9,7 @@ QT       -= gui
 
 INCLUDEPATH += include
 
-TARGET = test-cascades-lib
+TARGET = test-cascades-lib-core
 TEMPLATE = lib
 
 CONFIG += staticlib

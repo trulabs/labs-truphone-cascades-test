@@ -4,15 +4,26 @@
 #
 #-------------------------------------------------
 
+QT       += network
+QT       -= gui
+
 INCLUDEPATH += include
+INCLUDEPATH += ../test-cascades-lib-core/include
+INCLUDEPATH += ../../externals/qxmpp/src/base
+INCLUDEPATH += ../../externals/qxmpp/src/client
 
-TARGET = test-cascades-lib
-TEMPLATE = subdirs
+TARGET = test-cascades-lib-xmpp
+TEMPLATE = lib
 
-CONFIG += ordered
-SUBDIRS += test-cascades-lib-core
-SUBDIRS += ../externals/qxmpp/src
-SUBDIRS += test-cascades-lib-xmpp
+CONFIG += staticlib
+
+DEFINES += TESTCASCADESLIB_LIBRARY
+
+SOURCES += \
+    src/XmppHarness.cpp
+
+HEADERS +=\
+    include/XmppHarness.h
 
 unix:!symbian {
     maemo5 {
