@@ -75,24 +75,13 @@ namespace cascades
     {
     public:
         /*!
-         * \brief createCommand Type declaration for creating a command
-         *
-         * \param parent The parent object
-         * \return A pointer to the new command or @c NULL if it failed
-         *
-         * @since test-cascades 1.0.0
-         */
-        typedef Command * createCommand(Connection * const,
-                                        QObject * parent = 0);
-
-        /*!
          * \brief CommandFactoryPrivate Construct a new wrapper
          *
          * \param cc A pointer to the function that will create the command
          *
          * @since test-cascades 1.0.0
          */
-        explicit CommandFactoryEntry(createCommand * const cc)
+        explicit CommandFactoryEntry(CommandFactory::createCommandType * const cc)
             : commandCreate(cc)
         {
         }
@@ -124,7 +113,7 @@ namespace cascades
         /*!
          * \brief commandCreate A pointer to the create routine
          */
-        createCommand * const commandCreate;
+        CommandFactory::createCommandType * const commandCreate;
     };
 
     /*!
@@ -258,6 +247,13 @@ namespace cascades
             privateData->initialise();
         }
         return privateData->commandCache.keys();
+    }
+
+    void CommandFactory::installCommand(
+                    const QString& commandName,
+                    createCommandType * const commandCreate)
+    {
+        privateData->insert(commandName, new CommandFactoryEntry(commandCreate));
     }
 }  // namespace cascades
 }  // namespace test
