@@ -19,10 +19,12 @@ CONFIG += staticlib
 DEFINES += TESTCASCADESLIB_LIBRARY
 
 HEADERS +=\
-    include/XmppHarness.h
+    include/XmppHarness.h \
+    include/XmppHelpCommand.h
 
 SOURCES += \
-    src/XmppHarness.cpp
+    src/XmppHarness.cpp \
+    src/XmppHelpCommand.cpp
 
 unix:!symbian {
     maemo5 {
