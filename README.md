@@ -11,13 +11,13 @@ on a device or simulator.
 It comes in three parts:
 * static-library linked into the instrumented application
 * console application on the host
-* Java library for bdd/tdd
+* Java library for BDD/TDD
 
 The static library provides a tcp server that the host connects
 to and drives the client.
 
 You can, if you wish, use a standard TCP connection
-to communute with the server (i.e. netcat).
+to communicate with the server (i.e. netcat).
 
 Once you connect to the device/simulator it will respond
 to every command as a primitive form of flow control.
@@ -100,9 +100,9 @@ If you want to edit & build the projects:
 Both are built with QtCreator 3+ which must be configured
 to use the installed BlackBerry 10 NDK for the device or simulator.
 
-the test-cascades-cli will use the qmake/gcc/etc from the host (x86)
-the test-cascades-lib will use the qmake/gcc/etc from the ndk
-the test-cascades-java will be built using Gradle
+The test-cascades-cli will use the qmake/gcc/etc from the host (x86).
+The test-cascades-lib will use the qmake/gcc/etc from the NDK.
+The test-cascades-java will be built using Gradle.
 
 As these are Qt projects you can use the qmake on the CLI assuming that
 you have sourced the bbndk-env.sh file to setup the associated
@@ -230,7 +230,7 @@ that may perform unreliably and where you can't rely on sleep commands.
 
 The CLI supports two additional commands, call cli-setting.
 
-'call' lets you call other scripts so that you can create a hierarcy or
+'call' lets you call other scripts so that you can create a hierarchy or
 common set of scripts to build up larger functional tests from smaller,
 more manageable, scripts.
 
