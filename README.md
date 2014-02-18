@@ -108,6 +108,20 @@ As these are Qt projects you can use the qmake on the CLI assuming that
 you have sourced the bbndk-env.sh file to setup the associated
 development environment variables
 
+## Target Library for BlackBerry
+
+The library is a plain old static library that you need to imbed into your project and call from your main() function.
+
+However, with recent versions, extensions are supported.
+
+### Core
+
+The Core is the main UI testing framework, it'll let you manipulate the UI and control it remotely.
+
+### XMPP
+
+This is the first extension and doesn't have to be included, it's optional. It lets you create XMPP clients so that you can automate the testing of messaging clients.
+
 ## Java Library
 
 The java library uses gradle for dependancy management.
@@ -146,6 +160,15 @@ Somewhere you need to add (before the blocking app.exec()) the following:
     // app is the Application instance
     CascadesHarness * harness = new CascadesHarness(&app);
     harness->startHarness(15000); // 15000 is the tcp port number to listen on
+    
+    // if you want to test XMPP stuff too
+    XmppHarness * const xmppHarness = new XmppHarness();
+    if (xmppHarness)
+    {
+        const bool xmppHarnessOk = xmppHarness->installHarness();
+        Q_ASSERT(xmppHarnessOk);
+        Q_UNUSED(xmppHarnessOk);
+    }
 
 A number of commands can work on objectNames so you can make the script
 shorter by using them, otherwise it'll use a path to the object. Use the
