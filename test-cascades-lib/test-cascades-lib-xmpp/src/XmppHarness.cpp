@@ -4,6 +4,7 @@
 #include "XmppHarness.h"
 
 #include "CommandFactory.h"
+#include "XmppResourceStore.h"
 #include "XmppHelpCommand.h"
 #include "XmppConnectCommand.h"
 
@@ -22,6 +23,7 @@ namespace cascades
     }
     bool XmppHarness::installHarness()
     {
+        XMPPResourceStore::initialiseStore(this);
         CommandFactory::installCommand(
                     XMPPHelpCommand::getCmd(),
                     &XMPPHelpCommand::create);

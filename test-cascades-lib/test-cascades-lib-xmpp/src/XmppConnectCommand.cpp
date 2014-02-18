@@ -7,6 +7,7 @@
 #include <QObject>
 
 #include "Connection.h"
+#include "XmppResourceStore.h"
 
 namespace truphone
 {
@@ -20,7 +21,7 @@ namespace cascades
                                            QObject* parent)
         : Command(parent),
           client(socket),
-          xmppClient(new QXmppClient(this))
+          xmppClient(new QXmppClient(XMPPResourceStore::instance()))
     {
         bool ok = connect(xmppClient, SIGNAL(connected()), SLOT(connected()));
         Q_ASSERT(ok); Q_UNUSED(ok);
@@ -46,12 +47,12 @@ namespace cascades
         {
             const QString username = arguments->at(0);
             const QString password = arguments->at(1);
-            const QString resource = arguments->at(2);
+            this->resourceName = arguments->at(2);
             this->xmppClient->connectToServer(username, password);
             this->xmppClient->configuration().setAutoAcceptSubscriptions(true);
             this->xmppClient->configuration().setAutoReconnectionEnabled(false);
             this->xmppClient->configuration().setIgnoreSslErrors(true);
-            this->xmppClient->configuration().setResource(resource);
+            this->xmppClient->configuration().setResource(this->resourceName);
         }
         // we always return false and wait for a signal
         // back from qxmpp about when we've connected at which point
@@ -67,18 +68,21 @@ namespace cascades
 
     void XMPPConnectCommand::connected()
     {
+        XMPPResourceStore::instance()->addToStore(this->resourceName, this->xmppClient);
         this->client->write("OK\r\n");
         this->deleteLater();
     }
 
     void XMPPConnectCommand::disconnected()
     {
+        this->xmppClient->deleteLater();
         this->client->write("ERROR: Disconnected\r\n");
         this->deleteLater();
     }
 
     void XMPPConnectCommand::error(QXmppClient::Error)
     {
+        this->xmppClient->deleteLater();
         this->client->write("ERROR: QXmppError\r\n");
         this->deleteLater();
     }

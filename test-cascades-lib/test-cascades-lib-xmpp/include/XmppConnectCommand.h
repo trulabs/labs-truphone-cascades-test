@@ -94,6 +94,8 @@ namespace cascades
         class Connection * const client;
 
         class QXmppClient * const xmppClient;
+
+        QString resourceName;
     };
 }  // namespace cascades
 }  // namespace test

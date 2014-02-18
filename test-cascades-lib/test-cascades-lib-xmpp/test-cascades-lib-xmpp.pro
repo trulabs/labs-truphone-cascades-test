@@ -21,12 +21,14 @@ DEFINES += TESTCASCADESLIB_LIBRARY
 HEADERS +=\
     include/XmppHarness.h \
     include/XmppHelpCommand.h \
-    include/XmppConnectCommand.h
+    include/XmppConnectCommand.h \
+    include/XmppResourceStore.h
 
 SOURCES += \
     src/XmppHarness.cpp \
     src/XmppHelpCommand.cpp \
-    src/XmppConnectCommand.cpp
+    src/XmppConnectCommand.cpp \
+    src/XmppResourceStore.cpp
 
 unix:!symbian {
     maemo5 {
