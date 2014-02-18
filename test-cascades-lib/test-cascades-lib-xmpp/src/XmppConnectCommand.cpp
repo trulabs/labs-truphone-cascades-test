@@ -44,9 +44,9 @@ namespace cascades
         }
         else
         {
-            const QString username = arguments->at(1);
-            const QString password = arguments->at(2);
-            const QString resource = arguments->at(3);
+            const QString username = arguments->at(0);
+            const QString password = arguments->at(1);
+            const QString resource = arguments->at(2);
             this->xmppClient->connectToServer(username, password);
             this->xmppClient->configuration().setAutoAcceptSubscriptions(true);
             this->xmppClient->configuration().setAutoReconnectionEnabled(false);
