@@ -24,7 +24,8 @@ HEADERS +=\
     include/XmppConnectCommand.h \
     include/XmppResourceStore.h \
     include/XmppPresenceCommand.h \
-    include/XmppMessageCommand.h
+    include/XmppMessageCommand.h \
+    include/XmppDisconnectCommand.h
 
 SOURCES += \
     src/XmppHarness.cpp \
@@ -32,7 +33,8 @@ SOURCES += \
     src/XmppConnectCommand.cpp \
     src/XmppResourceStore.cpp \
     src/XmppPresenceCommand.cpp \
-    src/XmppMessageCommand.cpp
+    src/XmppMessageCommand.cpp \
+    src/XmppDisconnectCommand.cpp
 
 unix:!symbian {
     maemo5 {
