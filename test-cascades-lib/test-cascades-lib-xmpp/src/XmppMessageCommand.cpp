@@ -31,6 +31,7 @@ namespace cascades
 
     bool XMPPMessageCommand::executeCommand(QStringList * const arguments)
     {
+        bool ret = false;
         if (arguments->length() < 3)
         {
             this->client->write("ERROR: xmppMessage <resource> <to> <message>\r\n");
@@ -53,17 +54,14 @@ namespace cascades
                 chatMessage.setTo(toJid);
                 chatMessage.setState(QXmppMessage::Active);
                 chatMessage.addHint(QXmppMessage::AllowPermantStorage);
-                client->sendPacket(chatMessage);
+                ret = client->sendPacket(chatMessage);
             }
             else
             {
                 this->client->write("ERROR: Unknown resource\r\n");
             }
         }
-        // we always return false and wait for a signal
-        // back from qxmpp about when we've connected at which point
-        // we'll write out OK to let us continue.
-        return false;
+        return ret;
     }
 
     void XMPPMessageCommand::showHelp()

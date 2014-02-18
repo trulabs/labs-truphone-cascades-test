@@ -30,6 +30,7 @@ namespace cascades
 
     bool XMPPPresenceCommand::executeCommand(QStringList * const arguments)
     {
+        bool ret = false;
         if (arguments->length() < 4)
         {
             this->client->write("ERROR: xmppPresence <resource> <priority> <status> <message>\r\n");
@@ -90,7 +91,7 @@ namespace cascades
                     {
                         const QString message = arguments->join(" ");
                         presence.setStatusText(message);
-                        client->sendPacket(presence);
+                        ret = client->sendPacket(presence);
                     }
                 }
             }
@@ -99,10 +100,7 @@ namespace cascades
                 this->client->write("ERROR: Unknown resource\r\n");
             }
         }
-        // we always return false and wait for a signal
-        // back from qxmpp about when we've connected at which point
-        // we'll write out OK to let us continue.
-        return false;
+        return ret;
     }
 
     void XMPPPresenceCommand::showHelp()
