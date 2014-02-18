@@ -1,11 +1,11 @@
 /**
  * Copyright 2014 Truphone
  */
-#ifndef XMPPHELPCOMMAND_H_
-#define XMPPHELPCOMMAND_H_
+#ifndef XMPPCONNECTCOMMAND_H_
+#define XMPPCONNECTCOMMAND_H_
 
 #include <QObject>
-
+#include <QXmppClient.h>
 #include "Command.h"
 
 namespace truphone
@@ -15,11 +15,11 @@ namespace test
 namespace cascades
 {
     /*!
-     * \brief The XMPPHelpCommand shows help about the XMPP addin.
+     * \brief The XMPPConnectCommand lets you connect to an XMPP server.
      *
      * @since test-cascades 1.1.0
      */
-    class XMPPHelpCommand : public Command
+    class XMPPConnectCommand : public Command
     {
     Q_OBJECT
     public:
@@ -46,24 +46,24 @@ namespace cascades
         static Command* create(class Connection * const s,
                                QObject * parent = 0)
         {
-            return new XMPPHelpCommand(s, parent);
+            return new XMPPConnectCommand(s, parent);
         }
         /*!
-         * \brief XMPPHelpCommand Constructor
+         * \brief XMPPConnectCommand Constructor
          *
          * \param socket The TCP socket associated with the client
          * \param parent The parent object
          *
          * @since test-cascades 1.1.0
          */
-        XMPPHelpCommand(class Connection * const socket,
+        XMPPConnectCommand(class Connection * const socket,
                       QObject* parent = 0);
         /*!
-         * \brief ~XMPPHelpCommand Destructor
+         * \brief ~XMPPConnectCommand Destructor
          *
          * @since test-cascades 1.1.0
          */
-        ~XMPPHelpCommand();
+        ~XMPPConnectCommand();
         /*
          * See super
          */
@@ -71,8 +71,18 @@ namespace cascades
         /*
          * See super
          */
+        void cleanUp(void)
+        {
+            /* do nothing */
+        }
+        /*
+         * See super
+         */
         void showHelp(void);
     protected slots:
+        void connected();
+        void disconnected();
+        void error(QXmppClient::Error);
     private:
         /*!
          * \brief CMD_NAME The name of this command
@@ -82,9 +92,11 @@ namespace cascades
          * \brief client The TCP socket associated with the client
          */
         class Connection * const client;
+
+        class QXmppClient * const xmppClient;
     };
 }  // namespace cascades
 }  // namespace test
 }  // namespace truphone
 
-#endif  // XMPPHELPCOMMAND_H_
+#endif  // XMPPCONNECTCOMMAND_H_

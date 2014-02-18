@@ -5,6 +5,7 @@
 
 #include "CommandFactory.h"
 #include "XmppHelpCommand.h"
+#include "XmppConnectCommand.h"
 
 namespace truphone
 {
@@ -21,8 +22,12 @@ namespace cascades
     }
     bool XmppHarness::installHarness()
     {
-        CommandFactory::installCommand(XMPPHelpCommand::getCmd(),
-                                       &XMPPHelpCommand::create);
+        CommandFactory::installCommand(
+                    XMPPHelpCommand::getCmd(),
+                    &XMPPHelpCommand::create);
+        CommandFactory::installCommand(
+                    XMPPConnectCommand::getCmd(),
+                    &XMPPConnectCommand::create);
         return true;
     }
 }  // namespace cascades
