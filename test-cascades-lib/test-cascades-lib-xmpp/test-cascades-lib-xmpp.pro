@@ -22,13 +22,15 @@ HEADERS +=\
     include/XmppHarness.h \
     include/XmppHelpCommand.h \
     include/XmppConnectCommand.h \
-    include/XmppResourceStore.h
+    include/XmppResourceStore.h \
+    include/XmppPresenceCommand.h
 
 SOURCES += \
     src/XmppHarness.cpp \
     src/XmppHelpCommand.cpp \
     src/XmppConnectCommand.cpp \
-    src/XmppResourceStore.cpp
+    src/XmppResourceStore.cpp \
+    src/XmppPresenceCommand.cpp
 
 unix:!symbian {
     maemo5 {

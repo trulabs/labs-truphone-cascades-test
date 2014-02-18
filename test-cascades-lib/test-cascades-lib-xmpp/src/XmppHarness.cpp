@@ -6,6 +6,7 @@
 #include "CommandFactory.h"
 #include "XmppResourceStore.h"
 #include "XmppHelpCommand.h"
+#include "XmppPresenceCommand.h"
 #include "XmppConnectCommand.h"
 
 namespace truphone
@@ -30,6 +31,9 @@ namespace cascades
         CommandFactory::installCommand(
                     XMPPConnectCommand::getCmd(),
                     &XMPPConnectCommand::create);
+        CommandFactory::installCommand(
+                    XMPPPresenceCommand::getCmd(),
+                    &XMPPPresenceCommand::create);
         return true;
     }
 }  // namespace cascades
