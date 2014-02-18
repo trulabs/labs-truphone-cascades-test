@@ -5,7 +5,6 @@
 #define XMPPPRESENCECOMMAND_H_
 
 #include <QObject>
-#include <QXmppClient.h>
 #include "Command.h"
 
 namespace truphone
