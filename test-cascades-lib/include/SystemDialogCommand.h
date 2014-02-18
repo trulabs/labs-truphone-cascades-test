@@ -81,13 +81,6 @@ namespace cascades
         /*
          * See super
          */
-        void cleanUp(void)
-        {
-            /* do nothing */
-        }
-        /*
-         * See super
-         */
         void showHelp(void);
     protected slots:
     private:
