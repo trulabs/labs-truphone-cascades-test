@@ -59,7 +59,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        static const QList<QString> getAvailableCommands();
+        static const QStringList getAvailableCommands();
         /*!
          * \brief installCommand Install an external command
          *

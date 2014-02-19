@@ -239,14 +239,16 @@ namespace cascades
         return harnessCommand;
     }
 
-    const QList<QString> CommandFactory::getAvailableCommands()
+    const QStringList CommandFactory::getAvailableCommands()
     {
         if (not CommandFactory::privateData)
         {
             privateData = new CommandFactoryPrivate();
             privateData->initialise();
         }
-        return privateData->commandCache.keys();
+        QStringList list(privateData->commandCache.keys());
+        list.sort();
+        return list;
     }
 
     void CommandFactory::installCommand(
