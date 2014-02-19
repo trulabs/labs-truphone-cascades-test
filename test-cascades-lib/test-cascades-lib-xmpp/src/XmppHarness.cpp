@@ -7,10 +7,10 @@
 #include "XmppResourceStore.h"
 #include "XmppHelpCommand.h"
 #include "XmppPresenceCommand.h"
-#include "XmppConnectCommand.h"
 #include "XmppMessageCommand.h"
 #include "XmppDisconnectCommand.h"
 #include "XmppChatStateCommand.h"
+#include "XmppConnectCommand.h"
 
 namespace truphone
 {
