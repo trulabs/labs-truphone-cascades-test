@@ -338,6 +338,7 @@ It supports the following commands:
     xmppChatMarker   # displayed/read
     xmppChatState    # composing/paused/active
     xmppConnect      # connect to a server
+    xmppCorrect      # edit/delete the last message sent
     xmppDisconnect   # disconnect a resource
     xmppHelp         # overview of the extension
     xmppMessage      # send a message to a client

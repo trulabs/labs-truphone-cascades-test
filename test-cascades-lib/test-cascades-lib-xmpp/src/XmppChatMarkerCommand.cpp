@@ -46,7 +46,7 @@ namespace cascades
             if (client)
             {
                 QXmppMessage lastMsg;
-                const bool lastMsgOk = XMPPResourceStore::instance()->getLastMessage(
+                const bool lastMsgOk = XMPPResourceStore::instance()->getLastMessageReceived(
                             client,
                             lastMsg);
                 if (lastMsgOk)
