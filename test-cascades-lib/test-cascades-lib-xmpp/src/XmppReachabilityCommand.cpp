@@ -44,7 +44,7 @@ namespace cascades
                     XMPPResourceStore::instance()->getFromStore(arguments->first());
             arguments->removeFirst();
             if (client)
-            {          
+            {
                 QXmppAddress addr;
                 addr.setAddress(arguments->first());
                 arguments->removeFirst();

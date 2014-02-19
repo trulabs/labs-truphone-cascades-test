@@ -62,4 +62,3 @@ namespace cascades
 }  // namespace truphone
 
 #endif  // XMPPHARNESS_H_
-

@@ -49,7 +49,7 @@ namespace cascades
                             client, lastSentMessage);
                 if (lastMsgOk)
                 {
-                    if (!(lastSentMessage.body().isNull()
+                    if (not (lastSentMessage.body().isNull()
                           or lastSentMessage.body().isEmpty()))
                     {
                         QXmppMessage correctedMessage;
@@ -76,7 +76,8 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: The previous message has no body to correct\r\n");
+                        this->client->write(
+                                    "ERROR: The previous message has no body to correct\r\n");
                     }
                 }
                 else

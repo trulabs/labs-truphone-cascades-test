@@ -64,7 +64,7 @@ namespace cascades
                     {
                         presence.setAvailableStatusType(QXmppPresence::Online);
                     }
-                    else if(type == "away")
+                    else if (type == "away")
                     {
                         presence.setAvailableStatusType(QXmppPresence::Away);
                     }

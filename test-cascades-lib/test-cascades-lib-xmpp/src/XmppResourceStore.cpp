@@ -48,7 +48,8 @@ namespace cascades
     {
         this->map.remove(resource);
     }
-    bool XMPPResourceStore::getLastMessageReceived(QXmppClient * const client, QXmppMessage& message)
+    bool XMPPResourceStore::getLastMessageReceived(QXmppClient * const client,
+                                                   QXmppMessage& message)
     {
         bool ret = false;
         if (this->lastMsgReceivedMap.contains(client))

@@ -21,11 +21,13 @@ all-target: build-lib
 install-host: install-cli install-java
 
 check:
-	cppcheck --enable=all --inline-suppr --xml -I test-cascades-lib test-cascades-lib/src/ 2> cppcheck.lib.xml
-	@cat cppcheck.lib.xml
-	cppcheck --enable=all --inline-suppr --xml -I test-cascades-cli test-cascades-cli/src/ 2> cppcheck.cli.xml
+	cppcheck --library=qt --enable=all --inline-suppr --xml -I test-cascades-lib/test-cascades-lib-core/include test-cascades-lib/test-cascades-lib-core/src/ 2> cppcheck.lib.core.xml
+	@cat cppcheck.lib.core.xml
+	cppcheck --library=qt --enable=all --inline-suppr --xml -I test-cascades-lib/test-cascades-lib-xmpp/include test-cascades-lib/test-cascades-lib-xmpp/src/ 2> cppcheck.lib.xmpp.xml
+	@cat cppcheck.lib.xmpp.xml
+	cppcheck --library=qt --enable=all --inline-suppr --xml -I test-cascades-cli/include test-cascades-cli/src/ 2> cppcheck.cli.xml
 	@cat cppcheck.cli.xml
-	vera++ -p full test-cascades-lib/include/*.h test-cascades-lib/src/*.cpp -s -x vera.lib.xml
+	vera++ -p full test-cascades-lib/test-cascades-lib-core/include/*.h test-cascades-lib/test-cascades-lib-core/src/*.cpp test-cascades-lib/test-cascades-lib-xmpp/include/*.h test-cascades-lib/test-cascades-lib-xmpp/src/*.cpp -s -x vera.lib.xml
 	@cat vera.lib.xml
 	vera++ -p full test-cascades-cli/include/*.h test-cascades-cli/src/*.cpp -s -x vera.cli.xml
 	@cat vera.cli.xml
