@@ -324,6 +324,26 @@ Once you've exited or logged out you'll find a file named 'script' which you can
 
     test-cascades-cli 192.168.70.130 15000 script
 
+## Extensions
+
+From version 1.1.0 onwards the the main functionality has been renamed 'core'. New functionality will
+be available via 'extensions'.
+
+### XMPP Extension
+
+The XMPP extension can be used to help automate XMPP messaging clients.
+
+It supports the following commands:
+
+    xmppChatMarker   # displayed/read
+    xmppChatState    # composing/paused/active
+    xmppConnect      # connect to a server
+    xmppDisconnect   # disconnect a resource
+    xmppHelp         # overview of the extension
+    xmppMessage      # send a message to a client
+    xmppPresence     # online/offline/dnd etc & status message
+    xmppReachability # telephone/address information
+
 ## Correctness & Style
 * checked with cppcheck
 * style checked with vera++ & modified Google's cpplint.py
