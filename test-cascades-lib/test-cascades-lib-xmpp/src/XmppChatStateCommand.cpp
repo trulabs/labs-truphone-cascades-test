@@ -6,6 +6,7 @@
 #include <QString>
 #include <QObject>
 #include <QXmppMessage.h>
+#include <QXmppClient.h>
 
 #include "Connection.h"
 #include "XmppResourceStore.h"
