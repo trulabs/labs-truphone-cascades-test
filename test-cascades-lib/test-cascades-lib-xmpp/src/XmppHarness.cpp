@@ -10,6 +10,7 @@
 #include "XmppConnectCommand.h"
 #include "XmppMessageCommand.h"
 #include "XmppDisconnectCommand.h"
+#include "XmppChatStateCommand.h"
 
 namespace truphone
 {
@@ -42,6 +43,9 @@ namespace cascades
         CommandFactory::installCommand(
                     XMPPDisconnectCommand::getCmd(),
                     &XMPPDisconnectCommand::create);
+        CommandFactory::installCommand(
+                    XMPPChatStateCommand::getCmd(),
+                    &XMPPChatStateCommand::create);
         return true;
     }
 }  // namespace cascades
