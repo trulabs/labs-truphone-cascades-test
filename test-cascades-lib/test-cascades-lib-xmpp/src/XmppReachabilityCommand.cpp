@@ -65,6 +65,10 @@ namespace cascades
                 listItems.append(item);
                 publish.setItems(listItems);
                 ret = client->sendPacket(publish);
+                if (not ret)
+                {
+                    this->client->write("ERROR: Failed to send packet\r\n");
+                }
             }
             else
             {

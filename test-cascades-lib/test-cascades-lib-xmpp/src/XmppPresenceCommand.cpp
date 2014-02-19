@@ -94,6 +94,10 @@ namespace cascades
                         const QString message = arguments->join(" ");
                         presence.setStatusText(message);
                         ret = client->sendPacket(presence);
+                        if (not ret)
+                        {
+                            this->client->write("ERROR: Failed to send packet\r\n");
+                        }
                     }
                 }
             }

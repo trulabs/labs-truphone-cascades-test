@@ -56,6 +56,10 @@ namespace cascades
                 chatMessage.setState(QXmppMessage::Active);
                 chatMessage.addHint(QXmppMessage::AllowPermantStorage);
                 ret = client->sendPacket(chatMessage);
+                if (not ret)
+                {
+                    this->client->write("ERROR: Failed to send packet\r\n");
+                }
             }
             else
             {

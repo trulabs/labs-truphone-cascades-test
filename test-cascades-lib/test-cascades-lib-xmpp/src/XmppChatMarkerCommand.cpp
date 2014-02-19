@@ -85,6 +85,10 @@ namespace cascades
                             markerMessage.setMarker(msgMarker, lastMsg.id());
                             markerMessage.addHint(QXmppMessage::AllowPermantStorage);
                             ret = client->sendPacket(markerMessage);
+                            if (not ret)
+                            {
+                                this->client->write("ERROR: Failed to send packet\r\n");
+                            }
                         }
                         else
                         {
