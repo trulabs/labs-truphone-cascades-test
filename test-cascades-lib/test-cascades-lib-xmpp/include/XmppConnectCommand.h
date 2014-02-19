@@ -80,8 +80,23 @@ namespace cascades
          */
         void showHelp(void);
     protected slots:
+        /*!
+         * \brief connected Event for XMPP connection
+         *
+         * @since test-cascades 1.1.0
+         */
         void connected();
+        /*!
+         * \brief disconnected Event for XMPP disconnection
+         *
+         * @since test-cascades 1.1.0
+         */
         void disconnected();
+        /*!
+         * \brief error Event for XMPP errors
+         *
+         * @since test-cascades 1.1.0
+         */
         void error(QXmppClient::Error);
     private:
         /*!
