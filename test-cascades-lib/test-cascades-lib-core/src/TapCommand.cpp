@@ -110,7 +110,7 @@ namespace cascades
         else
         {
             this->client->write("ERROR: Not enough arguments, " \
-                                "touch <up/down/move/cancel> <object>\r\n");
+                                "tap <up/down/move/cancel> <object>\r\n");
         }
         return ret;
     }
