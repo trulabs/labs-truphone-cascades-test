@@ -1,8 +1,3 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2013-04-18T15:44:38
-#
-#-------------------------------------------------
 QT       += network xml
 QT       -= gui
 
@@ -29,7 +24,8 @@ HEADERS +=\
     include/XmppChatStateCommand.h \
     include/XmppChatMarkerCommand.h \
     include/XmppReachabilityCommand.h \
-    include/XmppCorrectCommand.h
+    include/XmppCorrectCommand.h \
+    include/XmppTestCommand.h
 
 SOURCES += \
     src/XmppHarness.cpp \
@@ -42,7 +38,8 @@ SOURCES += \
     src/XmppChatStateCommand.cpp \
     src/XmppChatMarkerCommand.cpp \
     src/XmppReachabilityCommand.cpp \
-    src/XmppCorrectCommand.cpp
+    src/XmppCorrectCommand.cpp \
+    src/XmppTestCommand.cpp
 
 unix:!symbian {
     maemo5 {

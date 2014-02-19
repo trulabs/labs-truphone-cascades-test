@@ -1,5 +1,3 @@
-INCLUDEPATH += include
-
 TARGET = test-cascades-lib
 TEMPLATE = subdirs
 
