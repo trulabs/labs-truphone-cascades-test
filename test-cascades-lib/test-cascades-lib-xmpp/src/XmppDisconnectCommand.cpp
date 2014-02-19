@@ -37,13 +37,14 @@ namespace cascades
         }
         else
         {
+            const QString resource = arguments->first();
             QXmppClient * const client =
-                    XMPPResourceStore::instance()->getFromStore(arguments->first());
+                    XMPPResourceStore::instance()->getFromStore(resource);
             arguments->removeFirst();
             if (client)
             {
                 client->disconnectFromServer();
-                XMPPResourceStore::instance()->removeFromStore(arguments->first());
+                XMPPResourceStore::instance()->removeFromStore(resource);
                 ret = true;
             }
             else
