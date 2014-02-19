@@ -48,12 +48,12 @@ namespace cascades
     {
         this->map.remove(resource);
     }
-    bool XMPPResourceStore::getLastMessage(QXmppClient * const client, QXmppMessage& message)
+    bool XMPPResourceStore::getLastMessageReceived(QXmppClient * const client, QXmppMessage& message)
     {
         bool ret = false;
-        if (this->lastMsgMap.contains(client))
+        if (this->lastMsgReceivedMap.contains(client))
         {
-            message = this->lastMsgMap[client];
+            message = this->lastMsgReceivedMap[client];
             ret = true;
         }
         return ret;
@@ -64,7 +64,24 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgMap[client] = message;
+            this->lastMsgReceivedMap[client] = message;
+        }
+    }
+    bool XMPPResourceStore::getLastMessageSent(QXmppClient * const client, QXmppMessage& message)
+    {
+        bool ret = false;
+        if (this->lastMsgSentMap.contains(client))
+        {
+            message = this->lastMsgSentMap[client];
+            ret = true;
+        }
+        return ret;
+    }
+    void XMPPResourceStore::setLastMessageSent(QXmppClient * const client, QXmppMessage& message)
+    {
+        if (client)
+        {
+            this->lastMsgSentMap[client] = message;
         }
     }
 }  // namespace cascades

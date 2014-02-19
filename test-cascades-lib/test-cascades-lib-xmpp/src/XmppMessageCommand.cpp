@@ -60,6 +60,10 @@ namespace cascades
                 {
                     this->client->write("ERROR: Failed to send packet\r\n");
                 }
+                else
+                {
+                    XMPPResourceStore::instance()->setLastMessageSent(client, chatMessage);
+                }
             }
             else
             {

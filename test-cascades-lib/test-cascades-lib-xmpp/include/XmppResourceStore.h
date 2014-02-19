@@ -71,7 +71,7 @@ namespace cascades
          */
         void removeFromStore(const QString& resource);
         /*!
-         * \brief getLastMessage Get the latest message that was
+         * \brief getLastMessageReceived Get the latest message that was
          * received from the client.
          *
          * \param client The client to query.
@@ -81,7 +81,29 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        bool getLastMessage(QXmppClient * const client, QXmppMessage& message);
+        bool getLastMessageReceived(QXmppClient * const client, QXmppMessage& message);
+        /*!
+         * \brief getLastMessageSent Gets the latest message that was
+         * sent by the client.
+         *
+         * \param client The client to query.
+         * \param message A reference to the message
+         *
+         * \return @c True if the message is valid
+         *
+         * @since test-cascades 1.1.0
+         */
+        bool getLastMessageSent(QXmppClient * const client, QXmppMessage& message);
+        /*!
+         * \brief setLastMessageSent Sets the latest message that was
+         * sent by the client.
+         *
+         * \param client The client that sent the message.
+         * \param message A reference to the message
+         *
+         * @since test-cascades 1.1.0
+         */
+        void setLastMessageSent(QXmppClient * const client, QXmppMessage& message);
     private slots:
         /*!
          * \brief messageReceived Event that occurs when we receive a message.
@@ -118,7 +140,12 @@ namespace cascades
          * \brief lastMsgMap Contains the last message received
          * from each client.
          */
-        QMap<QXmppClient*, QXmppMessage> lastMsgMap;
+        QMap<QXmppClient*, QXmppMessage> lastMsgReceivedMap;
+        /*!
+         * \brief lastMsgMap Contains the last message sent
+         * from each client.
+         */
+        QMap<QXmppClient*, QXmppMessage> lastMsgSentMap;
     };
 }  // namespace cascades
 }  // namespace test
