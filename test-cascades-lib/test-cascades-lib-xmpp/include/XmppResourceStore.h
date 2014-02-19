@@ -5,8 +5,10 @@
 #define XMPPRESOURCESTORE_H_
 
 #include <QObject>
-#include <QXmppClient.h>
 #include <QMap>
+
+class QXmppClient;
+class QXmppMessage;
 
 namespace truphone
 {
@@ -67,6 +69,20 @@ namespace cascades
          * @since test-cascades 1.1.0
          */
         void removeFromStore(const QString& resource);
+        /*!
+         * \brief getLastMessage Get the latest message that was
+         * received from the client.
+         *
+         * \param client The client to query.
+         * \param message A reference to the message
+         *
+         * \return @c True if the message is valid
+         *
+         * @since test-cascades 1.1.0
+         */
+        bool getLastMessage(QXmppClient * const client, QXmppMessage& message);
+    private slots:
+        void messageReceived(const QXmppMessage &message);
     private:
         /*!
          * \brief INSTANCE Our singleton
@@ -89,7 +105,12 @@ namespace cascades
         /*!
          * \brief map Map of resources/to/connections.
          */
-        QMap<QString, QXmppClient*> * const map;
+        QMap<QString, QXmppClient*> map;
+        /*!
+         * \brief lastMsgMap Contains the last message received
+         * from each client.
+         */
+        QMap<QXmppClient*, QXmppMessage> lastMsgMap;
     };
 }  // namespace cascades
 }  // namespace test
