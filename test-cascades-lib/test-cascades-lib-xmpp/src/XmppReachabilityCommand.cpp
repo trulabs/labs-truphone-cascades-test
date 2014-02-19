@@ -1,7 +1,7 @@
 /**
  * Copyright 2014 Truphone
  */
-#include "XmppReachAbilityCommand.h"
+#include "XmppReachabilityCommand.h"
 
 #include <QString>
 #include <QObject>
