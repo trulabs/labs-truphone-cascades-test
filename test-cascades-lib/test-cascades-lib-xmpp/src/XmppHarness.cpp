@@ -10,6 +10,7 @@
 #include "XmppDisconnectCommand.h"
 #include "XmppChatStateCommand.h"
 #include "XmppChatMarkerCommand.h"
+#include "XmppReachabilityCommand.h"
 
 #include "XmppConnectCommand.h"
 #include "XmppResourceStore.h"
@@ -51,6 +52,9 @@ namespace cascades
         CommandFactory::installCommand(
                     XMPPChatMarkerCommand::getCmd(),
                     &XMPPChatMarkerCommand::create);
+        CommandFactory::installCommand(
+                    XMPPReachabilityCommand::getCmd(),
+                    &XMPPReachabilityCommand::create);
         return true;
     }
 }  // namespace cascades
