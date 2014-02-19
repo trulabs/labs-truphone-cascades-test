@@ -344,6 +344,7 @@ It supports the following commands:
     xmppMessage      # send a message to a client
     xmppPresence     # online/offline/dnd etc & status message
     xmppReachability # telephone/address information
+    xmppTest         # test variables of last received message
 
 ## Correctness & Style
 * checked with cppcheck
