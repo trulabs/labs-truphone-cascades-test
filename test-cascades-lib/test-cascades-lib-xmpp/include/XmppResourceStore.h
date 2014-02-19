@@ -8,7 +8,7 @@
 #include <QMap>
 
 class QXmppClient;
-class QXmppMessage;
+#include <QXmppMessage.h>
 
 namespace truphone
 {
@@ -24,6 +24,7 @@ namespace cascades
      */
     class XMPPResourceStore : public QObject
     {
+    Q_OBJECT
     public:
         /*!
          * \brief initialiseStore Initialise the singleton.
@@ -82,6 +83,13 @@ namespace cascades
          */
         bool getLastMessage(QXmppClient * const client, QXmppMessage& message);
     private slots:
+        /*!
+         * \brief messageReceived Event that occurs when we receive a message.
+         *
+         * \param message The message that we receive.
+         *
+         * @since test-cascades 1.1.0
+         */
         void messageReceived(const QXmppMessage &message);
     private:
         /*!

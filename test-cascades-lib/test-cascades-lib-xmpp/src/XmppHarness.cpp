@@ -4,13 +4,15 @@
 #include "XmppHarness.h"
 
 #include "CommandFactory.h"
-#include "XmppResourceStore.h"
 #include "XmppHelpCommand.h"
 #include "XmppPresenceCommand.h"
 #include "XmppMessageCommand.h"
 #include "XmppDisconnectCommand.h"
 #include "XmppChatStateCommand.h"
+#include "XmppChatMarkerCommand.h"
+
 #include "XmppConnectCommand.h"
+#include "XmppResourceStore.h"
 
 namespace truphone
 {
@@ -46,6 +48,9 @@ namespace cascades
         CommandFactory::installCommand(
                     XMPPChatStateCommand::getCmd(),
                     &XMPPChatStateCommand::create);
+        CommandFactory::installCommand(
+                    XMPPChatMarkerCommand::getCmd(),
+                    &XMPPChatMarkerCommand::create);
         return true;
     }
 }  // namespace cascades

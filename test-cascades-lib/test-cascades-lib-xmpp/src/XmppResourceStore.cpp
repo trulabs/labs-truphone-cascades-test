@@ -4,7 +4,6 @@
 #include "XmppResourceStore.h"
 
 #include <QXmppClient.h>
-#include <QXmppMessage.h>
 
 namespace truphone
 {
@@ -35,9 +34,11 @@ namespace cascades
     void XMPPResourceStore::addToStore(const QString &resource, QXmppClient * const client)
     {
         this->map[resource] = client;
-        connect(client,
-                SIGNAL(messageReceived(QXmppMessage)),
-                SLOT(messageReceived(QXmppMessage)));
+        const bool ok = connect(
+                    client,
+                    SIGNAL(messageReceived(const QXmppMessage&)),
+                    SLOT(messageReceived(const QXmppMessage&)));
+        Q_ASSERT(ok); Q_UNUSED(ok);
     }
     QXmppClient * XMPPResourceStore::getFromStore(const QString &resource)
     {
@@ -57,10 +58,10 @@ namespace cascades
         }
         return ret;
     }
-
     void XMPPResourceStore::messageReceived(const QXmppMessage &message)
     {
         QXmppClient * const client = qobject_cast<QXmppClient*>(sender());
+        Q_ASSERT(client);
         if (client)
         {
             this->lastMsgMap[client] = message;
