@@ -83,7 +83,7 @@ namespace cascades
                 else if (command == "index")
                 {
                     QVariantList indexPath;
-                    if (findElementByIndex(arguments->first(), indexPath))
+                    if (findElementByIndex(listView, arguments->first(), indexPath))
                     {
                         const QVariant element = listView->dataModel()->data(indexPath);
                         arguments->removeFirst();
@@ -358,7 +358,7 @@ namespace cascades
             arguments->removeFirst();
             if (selectType == "index")
             {
-                if (not findElementByIndex(arguments->first(), index))
+                if (not findElementByIndex(listView, arguments->first(), index))
                 {
                     indexPathOk = false;
                 }
@@ -413,6 +413,7 @@ namespace cascades
     }
 
     bool ListCommand::findElementByIndex(
+            bb::cascades::ListView * const list,
             const QString& index,
             QVariantList& elementIndexPath) const
     {
@@ -426,6 +427,11 @@ namespace cascades
             if (ok)
             {
                  elementIndexPath.push_back(iIndex);
+            }
+            else if (sIndex == "last")
+            {
+                elementIndexPath.push_back(
+                            list->dataModel()->childCount(elementIndexPath)-1);
             }
             else
             {
@@ -619,6 +625,7 @@ namespace cascades
         this->client->write("> list <list> clear\r\n");
         this->client->write(">\r\n");
         this->client->write("> <index> should be numerical and separated by ~ (i.e. 0~1~2)\r\n");
+        this->client->write("> <index> can also support \"last\" i.e. 0~1~last\r\n");
         this->client->write("> <name> should be text and separated by ~ and terminated by ^\r\n");
         this->client->write("\t level 1~level 2~level 3^");
     }

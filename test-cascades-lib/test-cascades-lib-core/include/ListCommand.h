@@ -86,6 +86,7 @@ namespace cascades
          * @since test-cascades 1.0.5
          */
         bool findElementByIndex(
+                bb::cascades::ListView * const list,
                 const QString& index,
                 QVariantList& elementIndexPath) const;
 
