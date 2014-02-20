@@ -612,6 +612,8 @@ namespace cascades
         this->client->write("> list <list> hold name <name> - open multiselect\r\n");
         this->client->write("> list <list> release - close multiselect\r\n");
         this->client->write("> list <list> release - close multiselect\r\n");
+        this->client->write("> list <list> tap index <index> - tap and open a list item\r\n");
+        this->client->write("> list <list> tap name <index> - tap and open a list item\r\n");
         this->client->write("e.g. list contacts scroll name J~Name=John Smith^\r\n");
         this->client->write("e.g. list contacts select index 0~1\r\n");
         this->client->write("> list <list> clear\r\n");
