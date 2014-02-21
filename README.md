@@ -60,7 +60,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 - [x] Look at integrating the new Automatic Input Control (_sys_inject_events)
 * Without the above:
-- [ ] Add lots of other support (hopefully AID will mean we don't have to)
+- [ ] Add lots of other support (hopefully AIC will mean we don't have to)
 
 ## Building
 There are three projects
