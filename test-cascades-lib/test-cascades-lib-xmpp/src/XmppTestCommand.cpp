@@ -119,6 +119,10 @@ namespace cascades
                     {
                         value = lastMessageRecieved.isMarkable();
                     }
+                    else if (property == "marker")
+                    {
+                        value = lastMessageRecieved.marker();
+                    }
                     else if (property == "markedId")
                     {
                         value = lastMessageRecieved.markedId();
@@ -204,6 +208,7 @@ namespace cascades
         this->client->write("\t" + tr("carbonBody") + "\r\n");
         this->client->write("\t" + tr("markable") + "\r\n");
         this->client->write("\t" + tr("markedId") + "\r\n");
+        this->client->write("\t" + tr("marker") + "\r\n");
         this->client->write("\t" + tr("markedThread") + "\r\n");
         this->client->write("\t" + tr("isReplace") + "\r\n");
         this->client->write("\t" + tr("replaceId") + "\r\n");
