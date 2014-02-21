@@ -161,7 +161,7 @@ namespace cascades
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, sleep <timeInMs>\r\n");
+            this->client->write("ERROR: Not enough arguments for sleep\r\n");
         }
         return ret;
     }
