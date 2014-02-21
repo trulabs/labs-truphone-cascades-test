@@ -294,7 +294,7 @@ as the text value of a textfield).
     click keyNumBackspace
     click keyNum5
     test keyNumToDial text 505
-    touch down keyNumCall
+    tap down keyNumCall
     qml app.logout
 
 ## Script Recording
