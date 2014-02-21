@@ -49,7 +49,7 @@ namespace cascades
          *
          * @since test-cascades 1.0.0
          */
-        static const QList<QString> getAvailableCommands();
+        static const QStringList getAvailableCommands();
     protected:
     private:
         static CommandFactoryPrivate * privateData;
