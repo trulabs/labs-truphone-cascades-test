@@ -48,6 +48,9 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
+#### v1.0.19.1
+* Bug fixes
+
 #### v1.0.19
 * test-cascades-lib uses qDebug to print what's running.
 This can be used to correlate the activity of the CLI
