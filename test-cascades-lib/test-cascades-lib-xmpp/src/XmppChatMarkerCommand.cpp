@@ -35,7 +35,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() not_eq 2)
         {
-            this->client->write("ERROR: xmppChatMarker <resource> <marker>\r\n");
+            this->client->write(tr("ERROR: xmppChatMarker <resource> <marker>") + "\r\n");
         }
         else
         {
@@ -87,27 +87,27 @@ namespace cascades
                             ret = client->sendPacket(markerMessage);
                             if (not ret)
                             {
-                                this->client->write("ERROR: Failed to send packet\r\n");
+                                this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
                             }
                         }
                         else
                         {
-                            this->client->write("ERROR: Invalid marker\r\n");
+                            this->client->write(tr("ERROR: Invalid marker") + "\r\n");
                         }
                     }
                     else
                     {
-                        this->client->write("ERROR: The last message isn't Markable\r\n");
+                        this->client->write(tr("ERROR: The last message isn't Markable") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: Can't find the last message received to mark\r\n");
+                    this->client->write(tr("ERROR: Can't find the last message received to mark") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -115,10 +115,10 @@ namespace cascades
 
     void XMPPChatMarkerCommand::showHelp()
     {
-        this->client->write("> xmppChatMarker <resource> <marker>\r\n");
-        this->client->write("Send a chat marker back for the last message\r\n");
-        this->client->write("received from that resource\r\n");
-        this->client->write("Valid markers: received, displayed, acknowledged\r\n");
+        this->client->write(tr("> xmppChatMarker <resource> <marker>") + "\r\n");
+        this->client->write(tr("Send a chat marker back for the last message") + "\r\n");
+        this->client->write(tr("received from that resource") + "\r\n");
+        this->client->write(tr("Valid markers: received, displayed, acknowledged") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

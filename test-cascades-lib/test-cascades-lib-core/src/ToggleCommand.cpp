@@ -50,21 +50,21 @@ namespace cascades
             }
             else
             {
-                this->client->write("ERROR: Can't find the button\r\n");
+                this->client->write(tr("ERROR: Can't find the button") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, " \
-                                "toggle <button> <true|false>\r\n");
+            this->client->write(tr("ERROR: Not enough arguments, " \
+                                "toggle <button> <true|false>") + "\r\n");
         }
         return ret;
     }
 
     void ToggleCommand::showHelp()
     {
-        this->client->write("> toggle <button> <true|false>\r\n");
-        this->client->write("toggle a toggle button to a new state\r\n");
+        this->client->write(tr("> toggle <button> <true|false>") + "\r\n");
+        this->client->write(tr("toggle a toggle button to a new state") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

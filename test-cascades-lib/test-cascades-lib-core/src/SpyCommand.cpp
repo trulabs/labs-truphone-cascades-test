@@ -311,13 +311,13 @@ namespace cascades
                     if (not ret)
                     {
                         this->client->write
-                                ("ERROR: Couldn't connect to the signal on that object\r\n");
+                                (tr("ERROR: Couldn't connect to the signal on that object") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: The create command needs a name," \
-                                        "object and signal\r\n");
+                    this->client->write(tr("ERROR: The create command needs a name," \
+                                        "object and signal") + "\r\n");
                 }
             }
             else if (command == "count")
@@ -330,14 +330,14 @@ namespace cascades
                     const int expectedCount = arguments->first().toInt(&countOk);
                     if (not countOk)
                     {
-                        this->client->write("ERROR: The expected count number isn't a number\r\n");
+                        this->client->write(tr("ERROR: The expected count number isn't a number") + "\r\n");
                     }
                     else
                     {
                         const Spy * const spy = this->spyPrivate->getSpy(name);
                         if (not spy)
                         {
-                            this->client->write("ERROR: Couldn't find a spy with that name\r\n");
+                            this->client->write(tr("ERROR: Couldn't find a spy with that name") + "\r\n");
                         }
                         else
                         {
@@ -345,8 +345,8 @@ namespace cascades
                             const int count = spy->count(&valid);
                             if (not valid)
                             {
-                                this->client->write("ERROR: Couldn't get the signal " \
-                                                    "count for the spy\r\n");
+                                this->client->write(tr("ERROR: Couldn't get the signal " \
+                                                    "count for the spy") + "\r\n");
                             }
                             else
                             {
@@ -356,8 +356,8 @@ namespace cascades
                                 }
                                 else
                                 {
-                                    this->client->write("ERROR: The spy's signal " \
-                                        "count doesn't match the expected count\r\n");
+                                    this->client->write(tr("ERROR: The spy's signal " \
+                                        "count doesn't match the expected count") + "\r\n");
                                 }
                             }
                         }
@@ -365,7 +365,7 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: Count needs at least two parameters\r\n");
+                    this->client->write(tr("ERROR: Count needs at least two parameter") + "\r\n");
                 }
             }
             else if (command == "kill")
@@ -377,17 +377,17 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: Can't delete an unknown spy\r\n");
+                    this->client->write(tr("ERROR: Can't delete an unknown spy") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown spy command\r\n");
+                this->client->write(tr("ERROR: Unknown spy command") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Spy commands need at least two parameters\r\n");
+            this->client->write(tr("ERROR: Spy commands need at least two parameters") + "\r\n");
         }
 
         return ret;
@@ -395,10 +395,10 @@ namespace cascades
 
     void SpyCommand::showHelp()
     {
-        this->client->write("> spy create <spyName> <object> <signal> - create a new Spy\r\n");
-        this->client->write("> spy count <spyName> <count> - check that the signal count for " \
-                            "a spy is <count>\r\n");
-        this->client->write("> spy kill <spyName> - remove a spy\r\n");
+        this->client->write(tr("> spy create <spyName> <object> <signal> - create a new Spy") + "\r\n");
+        this->client->write(tr("> spy count <spyName> <count> - check that the signal count for " \
+                            "a spy is <count>") + "\r\n");
+        this->client->write(tr("> spy kill <spyName> - remove a spy") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

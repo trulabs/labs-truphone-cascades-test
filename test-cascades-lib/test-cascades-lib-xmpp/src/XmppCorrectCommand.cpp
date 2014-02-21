@@ -35,7 +35,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() < 1)
         {
-            this->client->write("ERROR: xmppCorrect <resource> <optional: message>\r\n");
+            this->client->write(tr("ERROR: xmppCorrect <resource> <optional: message>") + "\r\n");
         }
         else
         {
@@ -66,7 +66,7 @@ namespace cascades
                         ret = client->sendPacket(correctedMessage);
                         if (not ret)
                         {
-                            this->client->write("ERROR: Failed to send packet\r\n");
+                            this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
                         }
                         else
                         {
@@ -76,18 +76,18 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write(
-                                    "ERROR: The previous message has no body to correct\r\n");
+                        this->client->write(tr(
+                                    "ERROR: The previous message has no body to correct") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: No previous sent message to correct\r\n");
+                    this->client->write(tr("ERROR: No previous sent message to correct") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -95,9 +95,9 @@ namespace cascades
 
     void XMPPCorrectCommand::showHelp()
     {
-        this->client->write("> xmppCorrect <resource> <optional: message>\r\n");
-        this->client->write("Corrects the last message sent. If <message> is missing\r\n");
-        this->client->write("then it's treated as a deletion of the previous message.\r\n");
+        this->client->write(tr("> xmppCorrect <resource> <optional: message>") + "\r\n");
+        this->client->write(tr("Corrects the last message sent. If <message> is missing") + "\r\n");
+        this->client->write(tr("then it's treated as a deletion of the previous message.") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

@@ -64,6 +64,19 @@ namespace cascades
                     &XMPPTestCommand::create);
         return true;
     }
+
+    bool XmppHarness::loadLocale(const QLocale& locale, const QString& directory)
+    {
+        bool loaded = false;
+        QString filename = QString("test-cascades-lib-xmpp_%1.qm").arg(locale.name());
+        QTranslator translator;
+        if(translator.load(filename, directory))
+        {
+            qApp->installTranslator(&translator);
+            loaded = true;
+        }
+        return loaded;
+    }
 }  // namespace cascades
 }  // namespace test
 }  // namespace truphone

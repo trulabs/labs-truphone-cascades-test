@@ -124,7 +124,7 @@ namespace cascades
         bool ret = false;
         if (not arguments->isEmpty())
         {
-            this->client->write("ERROR: record doesn't take arguments\r\n");
+            this->client->write(tr("ERROR: record doesn't take arguments") + "\r\n");
         }
         else
         {
@@ -365,7 +365,7 @@ namespace cascades
         if ( msSinceLastTx > SLEEP_GRANULARITY)
         {
             this->client->write(QString(("sleep %1\r\n"))
-                                .arg("%1", msSinceLastTx).toUtf8());
+                                .arg("%1", msSinceLastTx));
             this->client->flush();
         }
         return msSinceLastTx;
@@ -390,7 +390,7 @@ namespace cascades
             {
                 tmp = QString("tab %1\r\n").arg("%1", pane->indexOf(tab));
             }
-            this->client->write(tmp.toUtf8());
+            this->client->write(tmp);
         }
     }
 
@@ -417,7 +417,7 @@ namespace cascades
                         QString::number(event->touchType()),
                         Utils::objectPath(receiver),
                         Utils::objectPath(event->target()));
-            this->client->write(tmp.toUtf8());
+            this->client->write(tmp);
         }
         if (this->ctrlAndShiftPressed and event->target() == receiver)
         {
@@ -453,7 +453,7 @@ namespace cascades
                         event->isShiftPressed()?"1":"0",
                         event->isCtrlPressed()?"1":"0",
                         Utils::objectPath(receiver));
-            this->client->write(tmp.toUtf8());
+            this->client->write(tmp);
         }
     }
 
@@ -461,71 +461,65 @@ namespace cascades
     {
         Q_UNUSED(page);
         this->updateSleepValue();
-        this->client->write("pop\r\n");
+        this->client->write(QString("pop\r\n"));
     }
 
     void RecordCommand::toastStarted(const QString& value)
     {
+        QString data = "toast ";
         this->updateSleepValue();
-        this->client->write("toast ");
         if (value.isNull() or value.isEmpty())
         {
-            this->client->write("false");
+            data += "false";
         }
         else
         {
-            this->client->write(value.toUtf8().constData());
+            data += value;
         }
-        this->client->write("\r\n");
+        data += "\r\n";
+        this->client->write(data);
     }
 
     void RecordCommand::toastEnded(bb::system::SystemUiResult::Type result)
     {
         Q_UNUSED(result);
         this->updateSleepValue();
-        this->client->write("toast false\r\n");
+        this->client->write(QString("toast false\r\n"));
     }
 
     void RecordCommand::toggled(const bb::cascades::AbstractToggleButton * const button,
                                 const bool newState)
     {
+        QString data = "toggle ";
         this->updateSleepValue();
-        this->client->write("toggle ");
         if (not button->objectName().isNull() and not button->objectName().isEmpty())
         {
-            this->client->write(button->objectName().toUtf8().constData());
+            data += button->objectName();
         }
         else
         {
-            this->client->write(Utils::objectPath(button).toUtf8().constData());
+            data += Utils::objectPath(button);
         }
-        if (newState)
-        {
-            this->client->write(" true\r\n");
-        }
-        else
-        {
-            this->client->write(" false\r\n");
-        }
+        data += ((newState) ? " true\r\n" : " false\r\n");
+        this->client->write(data);
     }
 
     void RecordCommand::dropDownChanged(
                     const DropDown * const dropDown,
                     const Option* const option)
     {
+        QString data = "dropdown ";
         this->updateSleepValue();
-        this->client->write("dropdown ");
         if (not dropDown->objectName().isNull() and not dropDown->objectName().isEmpty())
         {
-            this->client->write(dropDown->objectName().toUtf8().constData());
+            data += dropDown->objectName();
         }
         else
         {
-            this->client->write(Utils::objectPath(dropDown).toUtf8().constData());
+            data += Utils::objectPath(dropDown);
         }
-        this->client->write(" ");
-        this->client->write(option->text().toUtf8().constData());
-        this->client->write("\r\n");
+        data += " " + option->text() + "\r\n";
+        this->client->write(data);
     }
 
     void RecordCommand::testObjectProperties(const QObject * const obj)
@@ -557,13 +551,9 @@ namespace cascades
                         const QString varString = var.toString();
                         if (var.isValid() and not varString.isNull() and not varString.isEmpty())
                         {
-                                this->client->write("test ");
-                                this->client->write(objName.toUtf8().constData());
-                                this->client->write(" ");
-                                this->client->write(propertyName);
-                                this->client->write(" ");
-                                this->client->write(varString.toUtf8().constData());
-                                this->client->write("\r\n");
+                            QString data("test " + objName + " " + propertyName
+                                    + " " + varString + "\r\n");
+                            this->client->write(data);
                         }
                     }
                 }
@@ -585,7 +575,7 @@ namespace cascades
                 {
                     if (menu->settingsAction() == qobject_cast<SettingsActionItem*>(action))
                     {
-                        this->client->write("action menu settings\r\n");
+                        this->client->write(QString("action menu settings\r\n"));
                     }
                     else
                     {
@@ -594,9 +584,7 @@ namespace cascades
                         {
                             if (menu->actionAt(i) == qobject_cast<ActionItem*>(action))
                             {
-                                this->client->write("action menu ");
-                                this->client->write(QString::number(i).toUtf8());
-                                this->client->write("\r\n");
+                                this->client->write("action menu " + QString::number(i) + "\r\n");
                                 break;
                             }
                         }
@@ -612,36 +600,31 @@ namespace cascades
                         {
                             if (page->actionAt(i) == action)
                             {
-                                this->client->write("action page ");
-                                this->client->write(QString::number(i).toUtf8());
-                                this->client->write("\r\n");
+                                this->client->write("action page " + QString::number(i) + "\r\n");
                                 break;
                             }
                         }
                     }
                     else
                     {
-                        this->client->write("ERROR: ");
-                        this->client->write(parent->metaObject()->className());
-                        this->client->write(" is not a supported action parent\r\n");
+                        this->client->write(tr("ERROR: ") + QString(parent->metaObject()->className())
+                                            + tr(" is not a supported action parent") + "\r\n");
                     }
                 }
             }
         }
         else
         {
-            this->client->write("action ");
-            this->client->write(action->title().toUtf8().constData());
-            this->client->write("\r\n");
+            this->client->write("action " + action->title() + "\r\n");
         }
     }
 
     void RecordCommand::showHelp()
     {
-        this->client->write("> record\r\n");
-        this->client->write("Record events - to stop listening you will have to " \
-                            "terminate the connection\r\n");
-        this->client->write("- it's really for debugging rather than for use in scripts\r\n");
+        this->client->write(tr("> record") + "\r\n");
+        this->client->write(tr("Record events - to stop listening you will have to " \
+                            "terminate the connection") + "\r\n");
+        this->client->write(tr("- it's really for debugging rather than for use in scripts") + "\r\n");
     }
 
     RecordCommand::StopRecordingCommand::StopRecordingCommand(
@@ -664,8 +647,8 @@ namespace cascades
 
     void RecordCommand::StopRecordingCommand::showHelp(void)
     {
-        this->client->write("> stop\r\n");
-        this->client->write("Stop the current recording session\r\n");
+        this->client->write(tr("> stop") + "\r\n");
+        this->client->write(tr("Stop the current recording session") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

@@ -49,7 +49,7 @@ namespace cascades
         }
         else
         {
-            this->client->write("ERROR: No parameters for pop\r\n");
+            this->client->write(tr("ERROR: No parameters for pop") + "\r\n");
         }
         return ret;
     }
@@ -79,7 +79,7 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: You can't pop now, there's only 1 thing left\r\n");
+                    this->client->write(tr("ERROR: You can't pop now, only 1 thing left") + "\r\n");
                 }
             }
             else
@@ -95,14 +95,14 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: Application root must be a " \
-                                        "Nav Pane or a Tabbed Pane\r\n");
+                    this->client->write(tr("ERROR: Application root must be a " \
+                                        "Nav Pane or a Tabbed Pane") + "\r\n");
                 }
             }
         }
         else
         {
-            this->client->write("ERROR: The depth of Panes is too deep!\r\n");
+            this->client->write(tr("ERROR: The depth of Panes is too deep") + "\r\n");
         }
 
         return ret;
@@ -110,8 +110,8 @@ namespace cascades
 
     void PopCommand::showHelp()
     {
-        this->client->write("> pop\r\n");
-        this->client->write("Pop a page from the Navigation stack\r\n");
+        this->client->write(tr("> pop") + "\r\n");
+        this->client->write(tr("Pop a page from the Navigation stack") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

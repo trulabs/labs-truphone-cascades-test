@@ -67,9 +67,9 @@ namespace cascades
                 else
                 {
                     QString data(typeName);
-                    data += " is not a known event type for touch events, " \
-                            "assuming 'move'\r\n";
-                    this->client->write(data.trimmed().toUtf8());
+                    data += tr(" is not a known event type for touch events, " \
+                            "assuming 'move'") + "\r\n";
+                    this->client->write(data);
                 }
                 VisualNode * const visual_node = qobject_cast<VisualNode*>(obj);
                 if (visual_node)
@@ -94,34 +94,34 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: Failed to invoke function\r\n");
+                        this->client->write(tr("ERROR: Failed to invoke function") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: The object in question isn't a visual element\r\n");
+                    this->client->write(tr("ERROR: The object in question isn't a visual element") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown object\r\n");
+                this->client->write(tr("ERROR: Unknown object") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, " \
-                                "tap <up/down/move/cancel> <object>\r\n");
+            this->client->write(tr("ERROR: Not enough arguments, " \
+                                "tap <up/down/move/cancel> <object>") + "\r\n");
         }
         return ret;
     }
     void TapCommand::showHelp()
     {
-        this->client->write("> tap <up/down/move/cancel> <object>\r\n");
-        this->client->write("Simulate a touch event on a UI object and " \
-                            "trigger the onTouched method.\r\n");
-        this->client->write("You can specify the type of touch as up/down/move/cancel " \
-                            "which will be\r\n");
-        this->client->write(" accessibleto the event handler\r\n");
+        this->client->write(tr("> tap <up/down/move/cancel> <object>") + "\r\n");
+        this->client->write(tr("Simulate a touch event on a UI object and " \
+                            "trigger the onTouched method.") + "\r\n");
+        this->client->write(tr("You can specify the type of touch as up/down/move/cancel " \
+                            "which will be") + "\r\n");
+        this->client->write(tr(" accessible to the event handler") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

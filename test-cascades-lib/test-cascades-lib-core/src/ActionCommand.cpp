@@ -47,7 +47,7 @@ namespace cascades
             arguments->removeFirst();
             if (name.isEmpty())
             {
-                this->client->write("ERROR: The name of the action is empty\r\n");
+                this->client->write(tr("ERROR: The name of the action is empty") + "\r\n");
             }
             else
             {
@@ -68,14 +68,14 @@ namespace cascades
                                                         menu->settingsAction()));
                                 if (not ret)
                                 {
-                                    this->client->write("ERROR: Failed to execute the menu " \
-                                                        "settings action\r\n");
+                                    this->client->write(tr("ERROR: Failed to execute the menu " \
+                                                        "settings action") + "\r\n");
                                 }
                             }
                             else
                             {
-                                this->client->write("ERROR: There is no settings action " \
-                                                    "in the menu\r\n");
+                                this->client->write(tr("ERROR: There is no settings action " \
+                                                    "in the menu") + "\r\n");
                             }
                         }
                         else
@@ -90,26 +90,26 @@ namespace cascades
                                                             menu->actionAt(index)));
                                     if (not ret)
                                     {
-                                        this->client->write("ERROR: Failed to execute the " \
-                                                            "indexed menu action\r\n");
+                                        this->client->write(tr("ERROR: Failed to execute the " \
+                                                            "indexed menu action") + "\r\n");
                                     }
                                 }
                                 else
                                 {
-                                    this->client->write("ERROR: That index is an invalid " \
-                                                        "action\r\n");
+                                    this->client->write(tr("ERROR: That index is an invalid " \
+                                                        "action") + "\r\n");
                                 }
                             }
                             else
                             {
-                                this->client->write("ERROR: Menu index couldn't be converted"\
-                                                    " to an integer\r\n");
+                                this->client->write(tr("ERROR: Menu index couldn't be converted"\
+                                                    " to an integer") + "\r\n");
                             }
                         }
                     }
                     else
                     {
-                        this->client->write("ERROR: action menu <settings|index>\r\n");
+                        this->client->write(tr("ERROR: action menu <settings|index>") + "\r\n");
                     }
                 }
                 else if (name == "page")
@@ -130,31 +130,31 @@ namespace cascades
                                     ret = executeAction(currentPage->actionAt(index));
                                     if (not ret)
                                     {
-                                        this->client->write("ERROR: Failed to execute the " \
-                                                            "indexed page action\r\n");
+                                        this->client->write(tr("ERROR: Failed to execute the " \
+                                                            "indexed page action") + "\r\n");
                                     }
                                 }
                                 else
                                 {
-                                    this->client->write("ERROR: Failed to find an action " \
-                                                        "at that index\r\n");
+                                    this->client->write(tr("ERROR: Failed to find an action " \
+                                                        "at that index") + "\r\n");
                                 }
                             }
                             else
                             {
-                                this->client->write("ERROR: Page index couldn't be converted"\
-                                                    "to an integer\r\n");
+                                this->client->write(tr("ERROR: Page index couldn't be converted"\
+                                                    "to an integer") + "\r\n");
                             }
                         }
                         else
                         {
-                            this->client->write("ERROR: Can't find the current page to "\
-                                                "run the action\r\n");
+                            this->client->write(tr("ERROR: Can't find the current page to "\
+                                                "run the action") + "\r\n");
                         }
                     }
                     else
                     {
-                        this->client->write("ERROR: action page <index>\r\n");
+                        this->client->write(tr("ERROR: action page <index>") + "\r\n");
                     }
                 }
                 else if (pane)
@@ -179,26 +179,26 @@ namespace cascades
                                 ret = executeAction(action);
                                 if (not ret)
                                 {
-                                    this->client->write("ERROR: Failed to execute the"\
-                                                        " named action\r\n");
+                                    this->client->write(tr("ERROR: Failed to execute the"\
+                                                        " named action") + "\r\n");
                                 }
                             }
                             else
                             {
-                                this->client->write("ERROR: Unable to find the named action\r\n");
+                                this->client->write(tr("ERROR: Unable to find the named action") + "\r\n");
                             }
                         }
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: Unable to obtain the root pane\r\n");
+                    this->client->write(tr("ERROR: Unable to obtain the root pane") + "\r\n");
                 }
             }
         }
         else
         {
-            this->client->write("ERROR: You need to specify which action to run\r\n");
+            this->client->write(tr("ERROR: You need to specify which action to run") + "\r\n");
         }
 
         return ret;
@@ -293,10 +293,10 @@ namespace cascades
 
     void ActionCommand::showHelp()
     {
-        this->client->write("> action <objectName/title>\r\n");
-        this->client->write("> action menu <index>\r\n");
-        this->client->write("> action page <index>\r\n");
-        this->client->write("Execute an Action Item\r\n");
+        this->client->write(tr("> action <objectName/title>") + "\r\n");
+        this->client->write(tr("> action menu <index>") + "\r\n");
+        this->client->write(tr("> action page <index>") + "\r\n");
+        this->client->write(tr("Execute an Action Item") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

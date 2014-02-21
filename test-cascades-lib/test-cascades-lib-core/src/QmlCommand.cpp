@@ -38,7 +38,7 @@ namespace cascades
         // check args
         if (arguments->size() not_eq 1)
         {
-            this->client->write("ERROR: qml <var>.<func> (i.e. app.func)\r\n");
+            this->client->write(tr("ERROR: qml <var>.<func> (i.e. app.func") + "\r\n");
         }
         else
         {
@@ -47,7 +47,7 @@ namespace cascades
             QStringList tokens = Utils::tokenise(delim, qmlCommand);
             if (tokens.size() not_eq 3)
             {
-                this->client->write("ERROR: qml <var>.<func> (i.e. app.func)\r\n");
+                this->client->write(tr("ERROR: qml <var>.<func> (i.e. app.func)") + "\r\n");
             }
             else
             {
@@ -70,7 +70,8 @@ namespace cascades
                                 type == QMetaMethod::Slot)
                                 and methodMeta.parameterNames().isEmpty())
                         {
-                            this->client->write("OK\r\n");
+                            // not translated; protocol
+                            this->client->write(QString("OK") + "\r\n");
                             Application::processEvents();
                             // we know the method exists so return that it's completed early (above)
                             methodMeta.invoke(obj);
@@ -81,18 +82,18 @@ namespace cascades
                         }
                         else
                         {
-                            this->client->write("ERROR: Method must be a method " \
-                                "(not constructor/slot/signal) and have no parameters\r\n");
+                            this->client->write(tr("ERROR: Method must be a method " \
+                                "(not constructor/slot/signal) and have no parameters") + "\r\n");
                         }
                     }
                     else
                     {
-                        this->client->write("ERROR: The method doesn't exist for that object\r\n");
+                        this->client->write(tr("ERROR: The method doesn't exist for that object") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: Unable to find the object\r\n");
+                    this->client->write(tr("ERROR: Unable to find the object") + "\r\n");
                 }
             }
         }
@@ -102,10 +103,10 @@ namespace cascades
 
     void QmlCommand::showHelp()
     {
-        this->client->write("> qml <var>.<func>\r\n");
-        this->client->write("Execute a zero-parameter QML function using " \
-                            "variables setup in the\r\n" \
-                            "context to access C++ classes\r\n");
+        this->client->write(tr("> qml <var>.<func>") + "\r\n");
+        this->client->write(tr("Execute a zero-parameter QML function using " \
+                            "variables setup in the") + "\r\n"
+                            + tr("context to access C++ classes") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

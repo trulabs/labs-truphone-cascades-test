@@ -35,7 +35,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() < 3)
         {
-            this->client->write("ERROR: xmppMessage <resource> <to> <message>\r\n");
+            this->client->write(tr("ERROR: xmppMessage <resource> <to> <message>") + "\r\n");
         }
         else
         {
@@ -58,7 +58,7 @@ namespace cascades
                 ret = client->sendPacket(chatMessage);
                 if (not ret)
                 {
-                    this->client->write("ERROR: Failed to send packet\r\n");
+                    this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
                 }
                 else
                 {
@@ -67,7 +67,7 @@ namespace cascades
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -75,8 +75,8 @@ namespace cascades
 
     void XMPPMessageCommand::showHelp()
     {
-        this->client->write("> xmppMessage <resource> <to> <message>\r\n");
-        this->client->write("Send a message to a user.\r\n");
+        this->client->write(tr("> xmppMessage <resource> <to> <message>") + "\r\n");
+        this->client->write(tr("Send a message to a user") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

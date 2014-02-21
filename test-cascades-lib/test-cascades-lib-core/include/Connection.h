@@ -60,9 +60,9 @@ namespace cascades
              * \param data The data you wish to send
              * \return The amount of data sent in bytes
              *
-             * @since test-cascades 1.0.1
+             * @since test-cascades 1.1.0
              */
-            qint64 write(const char * const data);
+            qint64 write(const QString& data);
             /*!
              * \brief flush Flush the socket
              *
@@ -110,6 +110,15 @@ namespace cascades
              * @since test-cascades 1.0.0
              */
             void processPacket(void);
+            /*!
+             * \brief write Write data out on the connection
+             *
+             * \param data The data you wish to send
+             * \return The amount of data sent in bytes
+             *
+             * @since test-cascades 1.0.1
+             */
+            qint64 write(const char * const data);
     };
 }  // namespace cascades
 }  // namespace test

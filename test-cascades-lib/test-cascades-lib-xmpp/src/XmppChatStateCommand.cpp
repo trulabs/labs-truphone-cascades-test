@@ -35,7 +35,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() not_eq 3)
         {
-            this->client->write("ERROR: xmppChatState <resource> <toJID> <state>\r\n");
+            this->client->write(tr("ERROR: xmppChatState <resource> <toJID> <state>") + "\r\n");
         }
         else
         {
@@ -89,17 +89,17 @@ namespace cascades
                     ret = client->sendPacket(chatMessage);
                     if (not ret)
                     {
-                        this->client->write("ERROR: Failed to send packet\r\n");
+                        this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: Invalid state\r\n");
+                    this->client->write(tr("ERROR: Invalid state") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -107,9 +107,9 @@ namespace cascades
 
     void XMPPChatStateCommand::showHelp()
     {
-        this->client->write("> xmppChatState <resource> <toJID> <state>\r\n");
-        this->client->write("Update the chat state for a user.\r\n");
-        this->client->write("Valid states: active, inactive, gone, composing, paused\r\n");
+        this->client->write(tr("> xmppChatState <resource> <toJID> <state>") + "\r\n");
+        this->client->write(tr("Update the chat state for a user.") + "\r\n");
+        this->client->write(tr("Valid states: active, inactive, gone, composing, paused") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

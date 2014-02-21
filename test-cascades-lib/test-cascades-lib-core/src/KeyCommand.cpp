@@ -79,14 +79,14 @@ namespace cascades
 
         if (processed not_eq 6)  // 6 items are expected
         {
-            this->client->write("ERROR: wrong number of arguments to key command\r\n");
+            this->client->write(tr("ERROR: wrong number of arguments to key command") + "\r\n");
         }
         else
         {
             QObject * const targetObject = Utils::findObject(target);
             if (not targetObject)
             {
-                this->client->write("ERROR: Couldn't find the target of the keypress\r\n");
+                this->client->write(tr("ERROR: Couldn't find the target of the keypress") + "\r\n");
             }
             else
             {
@@ -144,8 +144,8 @@ namespace cascades
 
     void KeyCommand::showHelp()
     {
-        this->client->write("> key <code> <pressed> <alt> <shift> <ctrl> <target>\r\n");
-        this->client->write("Simulate a key press\r\n");
+        this->client->write(tr("> key <code> <pressed> <alt> <shift> <ctrl> <target>") + "\r\n");
+        this->client->write(tr("Simulate a key press") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

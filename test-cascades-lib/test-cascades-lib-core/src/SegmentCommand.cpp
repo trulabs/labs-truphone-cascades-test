@@ -58,7 +58,7 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: Index isn't a valid number\r\n");
+                        this->client->write(tr("ERROR: Index isn't a valid number") + "\r\n");
                     }
                 }
                 else if (mode == "option")
@@ -79,32 +79,32 @@ namespace cascades
                     }
                     if (not ret)
                     {
-                        this->client->write("ERROR: Couldn't find the option\r\n");
+                        this->client->write(tr("ERROR: Couldn't find the option") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: Invalid selection method, use index or option\r\n");
+                    this->client->write(tr("ERROR: Invalid selection method, use index or option") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Couldn't find the segment\r\n");
+                this->client->write(tr("ERROR: Couldn't find the segment") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Need to specify a segment and an option\r\n");
+            this->client->write(tr("ERROR: Need to specify a segment and an option") + "\r\n");
         }
         return ret;
     }
 
     void SegmentCommand::showHelp()
     {
-        this->client->write("> segment <segment> <index | option> <option text>\r\n");
-        this->client->write("> i.e. segment mySegment index 1\r\n");
-        this->client->write("> i.e. segment mySegment option option5\r\n");
-        this->client->write("Select a segment option\r\n");
+        this->client->write(tr("> segment <segment> <index | option> <option text>") + "\r\n");
+        this->client->write(tr("> i.e. segment mySegment index 1") + "\r\n");
+        this->client->write(tr("> i.e. segment mySegment option option5") + "\r\n");
+        this->client->write(tr("Select a segment option") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

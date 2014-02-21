@@ -53,23 +53,25 @@ namespace cascades
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, sleep <timeInMs>\r\n");
+            this->client->write(
+                        tr("ERROR: Not enough arguments, sleep <timeInMs>") + "\r\n");
         }
         return false;
     }
 
     void SleepCommand::timedOut()
     {
-        this->client->write("OK\r\n");
+        // not translated; protocol
+        this->client->write(QString("OK") + "\r\n");
         this->deleteLater();
     }
 
     void SleepCommand::showHelp()
     {
-        this->client->write("> sleep <time in ms>\r\n");
-        this->client->write("Waits for a period of time - once the time has elapsed " \
-                            "'OK' will be transmitted\r\n");
-        this->client->write("back to the client\r\n");
+        this->client->write(tr("> sleep <time in ms>") + "\r\n");
+        this->client->write(tr("Waits for a period of time - once the time has elapsed " \
+                            "'OK' will be transmitted") + "\r\n");
+        this->client->write(tr("back to the client") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

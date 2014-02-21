@@ -79,24 +79,28 @@ namespace cascades
                             }
                             if (not ret)
                             {
-                                this->client->write("ERROR: Failed to find the tab\r\n");
+                                this->client->write(
+                                            tr("ERROR: Failed to find the tab") + "\r\n");
                             }
                         }
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: There is no tabbed pane in the scene\r\n");
+                    this->client->write(
+                                tr("ERROR: There is no tabbed pane in the scene") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Tab name/number is empty!\r\n");
+                this->client->write(
+                            tr("ERROR: Tab name/number is empty!") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, sleep <timeInMs>\r\n");
+            this->client->write(
+                        tr("ERROR: Not enough arguments, sleep <timeInMs>") + "\r\n");
         }
         return ret;
     }
@@ -110,10 +114,10 @@ namespace cascades
 
     void TabCommand::showHelp()
     {
-        this->client->write("> tab <index/name>\r\n");
-        this->client->write("Select a tab on a UI. You can use a zero-based index or " \
-                            "if the tab is named by\r\n");
-        this->client->write("title or objectName then you can use that too.\r\n");
+        this->client->write(tr("> tab <index/name") + "\r\n");
+        this->client->write(tr("Select a tab on a UI. You can use a zero-based index or " \
+                            "if the tab is named by") + "\r\n");
+        this->client->write(tr("title or objectName then you can use that too.") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

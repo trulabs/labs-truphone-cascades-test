@@ -34,15 +34,14 @@ namespace cascades
     {
         if (arguments->isEmpty())
         {
-            this->client->write("type help <cmd1> <cmd2> <cmdn> for more help\r\n"\
-                                "\r\n> COMMANDS:\r\n");
+            this->client->write(tr("type help <cmd1> <cmd2> <cmdn> for more help") + "\r\n"
+                                + "\r\n" + tr("> COMMANDS:") + "\r\n");
             const QList<QString> commands = CommandFactory::getAvailableCommands();
             Q_FOREACH(QString commandName, commands)
             {
-                this->client->write(commandName.toUtf8().constData());
-                this->client->write("\r\n");
+                this->client->write(commandName + "\r\n");
             }
-            this->client->write("\r\n");
+            this->client->write(QString("\r\n"));
         }
         else
         {
@@ -64,8 +63,8 @@ namespace cascades
 
     void HelpCommand::showHelp()
     {
-        this->client->write("> help - <command>\r\n");
-        this->client->write("Print out help for the commands\r\n");
+        this->client->write(tr("> help - <command>") + "\r\n");
+        this->client->write(tr("Print out help for the commands") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

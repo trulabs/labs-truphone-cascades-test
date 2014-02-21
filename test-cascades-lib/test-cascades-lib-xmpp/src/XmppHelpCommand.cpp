@@ -36,10 +36,10 @@ namespace cascades
 
     void XMPPHelpCommand::showHelp()
     {
-        this->client->write("> xmppHelp\r\n");
-        this->client->write("The XMPP addin can be used to control an XMPP\r\n");
-        this->client->write("connection and used to send messages, statues updates\r\n");
-        this->client->write("and other XEPs to fully test messaging clients.\r\n");
+        this->client->write(tr("> xmppHelp") + "\r\n");
+        this->client->write(tr("The XMPP addin can be used to control an XMPP") + "\r\n");
+        this->client->write(tr("connection and used to send messages, statues updates") + "\r\n");
+        this->client->write(tr("and other XEPs to fully test messaging clients.") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

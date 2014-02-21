@@ -57,22 +57,22 @@ namespace cascades
                 }
                 else
                 {
-                    QString data("ERROR: Page is named {");
+                    QString data(tr("ERROR: Page is named {"));
                     data += page->objectName();
-                    data += "} which wasn't expected {";
+                    data += tr("} which wasn't expected {");
                     data += expectedPage;
-                    data += "}\r\n";
-                    this->client->write(data.trimmed().toUtf8());
+                    data += tr("}") + "\r\n";
+                    this->client->write(data);
                 }
             }
             else
             {
-                this->client->write("ERROR: Couldn't find a page\r\n");
+                this->client->write(tr("ERROR: Couldn't find a page") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: No parameters for page\r\n");
+            this->client->write(tr("ERROR: No parameters for page") + "\r\n");
         }
         return ret;
     }
@@ -112,7 +112,7 @@ namespace cascades
         }
         else
         {
-            this->client->write("ERROR: The depth of Panes is too deep!\r\n");
+            this->client->write(tr("ERROR: The depth of Panes is too deep") + "\r\n");
         }
 
         return page;
@@ -120,8 +120,8 @@ namespace cascades
 
     void PageCommand::showHelp()
     {
-        this->client->write("> page <name>\r\n");
-        this->client->write("Ok if the current page objectName is right\r\n");
+        this->client->write(tr("> page <name>") + "\r\n");
+        this->client->write(tr("Ok if the current page objectName is right") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

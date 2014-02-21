@@ -95,22 +95,22 @@ namespace cascades
                     }
                     else
                     {
-                        connection->write("ERROR: Please suffix with yesImSure\n");
+                        connection->write(tr("ERROR: Please suffix with yesImSure") + "\r\n");
                     }
                 }
                 else
                 {
-                    connection->write("ERROR: Unknown subcommand\n");
+                    connection->write(tr("ERROR: Unknown subcommand") + "\r\n");
                 }
             }
             else
             {
-                connection->write("ERROR: The subcommand seems to be empty\n");
+                connection->write(tr("ERROR: The subcommand seems to be empty") + "\r\n");
             }
         }
         else
         {
-            connection->write("ERROR: You need to specify at least the subcommand\n");
+            connection->write(tr("ERROR: You need to specify at least the subcommand") + "\r\n");
         }
 
         return ret;
@@ -118,15 +118,15 @@ namespace cascades
 
     void ContactsCommand::showHelp(void)
     {
-        this->connection->write("You can use this command to change contacts\n");
-        this->connection->write("You can 'create' and 'delete' contacts\n");
-        this->connection->write("You can also modify existing contacts\n");
-        this->connection->write("The format is as such:\n");
-        this->connection->write("> contacts create forename=x, mobile=y, email=z, home=oops\n");
-        this->connection->write("> contacts modify x, mobile=90210, email=me@email.com, home\n");
-        this->connection->write("> contacts delete x\n");
-        this->connection->write("> contacts removeAll yesImSure\n");
-        this->connection->write("(Empty modify variables unset the variable)\n");
+        this->connection->write(tr("You can use this command to change contacts") + "\r\n");
+        this->connection->write(tr("You can 'create' and 'delete' contacts") + "\r\n");
+        this->connection->write(tr("You can also modify existing contacts") + "\r\n");
+        this->connection->write(tr("The format is as such:") + "\r\n");
+        this->connection->write(tr("> contacts create forename=x, mobile=y, email=z, home=oops") + "\r\n");
+        this->connection->write(tr("> contacts modify x, mobile=90210, email=me@email.com, home") + "\r\n");
+        this->connection->write(tr("> contacts delete x") + "\r\n");
+        this->connection->write(tr("> contacts removeAll yesImSure") + "\r\n");
+        this->connection->write(tr("(Empty modify variables unset the variable)") + "\r\n");
     }
 
     bool ContactsCommand::createContact(
@@ -214,8 +214,7 @@ namespace cascades
                     else
                     {
                         add = false;
-                        connection->write(QString("ERROR: " + varName + " isn't supported\n").
-                                          toUtf8().constData());
+                        connection->write(tr("ERROR: ") + varName + tr(" isn't supported") + "\r\n");
                     }
 
                     attrs++;
@@ -223,8 +222,8 @@ namespace cascades
                 else
                 {
                     add = false;
-                    connection->write(QString("ERROR: Parameter " + QString::number(attrs + 1) +
-                                              " needs to be x=y\n").toUtf8().constData());
+                    connection->write(tr("ERROR: Parameter ") + QString::number(attrs + 1) +
+                                              tr(" needs to be x=y") + "\r\n");
                     break;
                 }
             }
@@ -242,18 +241,18 @@ namespace cascades
                     }
                     else
                     {
-                        connection->write("ERROR: Failed to add the contact to the address book\n");
+                        connection->write(tr("ERROR: Failed to add the contact to the address book") + "\r\n");
                     }
                 }
                 else
                 {
-                    connection->write("ERROR: Didn't parse any parameters for the new contact\n");
+                    connection->write(tr("ERROR: Didn't parse any parameters for the new contact") + "\r\n");
                 }
             }
         }
         else
         {
-            connection->write("ERROR: No arguments specified\n");
+            connection->write(tr("ERROR: No arguments specified") + "\r\n");
         }
 
         return ret;
@@ -277,12 +276,12 @@ namespace cascades
             }
             else
             {
-                connection->write("ERROR: Couldn't find any contacts with that name");
+                connection->write(tr("ERROR: Couldn't find any contacts with that name") + "\r\n");
             }
         }
         else
         {
-            connection->write("ERROR: Only one parameter needed");
+            connection->write(tr("ERROR: Only one parameter needed") + "\r\n");
         }
 
         return ret;
@@ -368,8 +367,7 @@ namespace cascades
                         else
                         {
                             modify = false;
-                            connection->write(QString("ERROR: " + varName + " isn't supported\n").
-                                              toUtf8().constData());
+                            connection->write(tr("ERROR: ") + varName + tr(" isn't supported") + "\r\n");
                         }
                     }
                     else if (params.size() == 3)
@@ -448,13 +446,12 @@ namespace cascades
                         else
                         {
                             modify = false;
-                            connection->write(QString("ERROR: " + varName + " isn't supported\n")
-                                              .toUtf8().constData());
+                            connection->write(tr("ERROR: ") + varName + tr(" isn't supported") + "\r\n");
                         }
                     }
                     else
                     {
-                        connection->write("ERROR: Unknown setting configuration\n");
+                        connection->write(tr("ERROR: Unknown setting configuration") + "\r\n");
                     }
                 }
                 if (modify)
@@ -465,12 +462,12 @@ namespace cascades
             }
             else
             {
-                connection->write("ERROR: Failed to find the contact\n");
+                connection->write(tr("ERROR: Failed to find the contact") + "\r\n");
             }
         }
         else
         {
-            connection->write("ERROR: Need at least a user and a parameter to change\n");
+            connection->write(tr("ERROR: Need at least a user and a parameter to change") + "\r\n");
         }
 
         return ret;

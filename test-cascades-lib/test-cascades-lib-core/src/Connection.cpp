@@ -63,6 +63,11 @@ namespace cascades
         return written;
     }
 
+    qint64 Connection::write(const QString& data)
+    {
+        return this->write(data.toUtf8().constData());
+    }
+
     bool Connection::flush(void)
     {
         return this->socket->flush();

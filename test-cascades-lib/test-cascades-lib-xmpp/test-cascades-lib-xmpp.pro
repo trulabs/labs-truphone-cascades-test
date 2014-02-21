@@ -49,3 +49,15 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+TRANSLATIONS = \
+    $${TARGET}_en.ts \
+    $${TARGET}_fr.ts \
+    $${TARGET}_it.ts \
+    $${TARGET}_de.ts \
+    $${TARGET}_es.ts \
+    $${TARGET}_ru.ts \
+    $${TARGET}_pl.ts \
+    $${TARGET}_pt.ts \
+    $${TARGET}_ar.ts \
+    $${TARGET}.ts

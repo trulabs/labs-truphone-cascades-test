@@ -51,18 +51,21 @@ namespace cascades
                     ret = clickOnChildren(obj);
                     if (not ret)
                     {
-                        this->client->write("ERROR: Failed to invoke function\r\n");
+                        this->client->write(
+                                    tr("ERROR: Failed to invoke function") + "\r\n");
                     }
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown object\r\n");
+                this->client->write(
+                            tr("ERROR: Unknown object") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, click <object>\r\n");
+            this->client->write(
+                        tr("ERROR: Not enough arguments, click <object>") + "\r\n");
         }
         return ret;
     }
@@ -98,9 +101,9 @@ namespace cascades
 
     void ClickCommand::showHelp()
     {
-        this->client->write("> click <object>\r\n");
-        this->client->write("Simulate a clicked event on a UI object " \
-                            "and trigger the onClicked method\r\n");
+        this->client->write(tr("> click <object>") + "\r\n");
+        this->client->write(tr("Simulate a clicked event on a UI object " \
+                            "and trigger the onClicked method") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

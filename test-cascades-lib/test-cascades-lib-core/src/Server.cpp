@@ -60,18 +60,21 @@ namespace cascades
                 connect(client,
                         SIGNAL(disconnected(Connection*const)),
                         SLOT(connectionDied(Connection*const)));
+                // not translated; protocol
                 socket->write("OK\r\n");
                 emit newConnection(client);
             }
             else
             {
-                socket->write("ERROR: Failed to create a Harness for the new TCP Client\r\n");
+                socket->write((tr("ERROR: Failed to create a Harness for the new TCP Client") + "\r\n")
+                              .toUtf8().constData());
                 client->close();  // will disconnect and call connectionDied
             }
         }
         else
         {
-            qErrnoWarning(-1, "ERROR: Failed to create a new client connection\r\n");
+            qErrnoWarning(-1, (tr("ERROR: Failed to create a new client connection") + "\r\n")
+                          .toUtf8().constData());
         }
     }
 

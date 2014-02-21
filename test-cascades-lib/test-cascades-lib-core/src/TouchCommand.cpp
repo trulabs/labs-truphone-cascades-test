@@ -107,32 +107,32 @@ namespace cascades
         }
         if (processed not_eq 9)  // we're testing for 9 elements
         {
-            this->client->write("ERROR: Play touch command failed "\
-                                "because not all arguments were parsed\r\n");
+            this->client->write(tr("ERROR: Play touch command failed "\
+                                "because not all arguments were parsed") + "\r\n");
         }
         else
         {
             QObject * const targetObject = Utils::findObject(targetBuffer);
             if (not targetObject)
             {
-                this->client->write("ERROR: Could not find the object pointed " \
-                                    "to by the play touch command\r\n");
+                this->client->write(tr("ERROR: Could not find the object pointed " \
+                                    "to by the play touch command") + "\r\n");
             }
             else
             {
                 QObject * const receiverObject = Utils::findObject(receiverBuffer);
                 if (not receiverObject)
                 {
-                    this->client->write("ERROR: Could not find the object that " \
-                                        "receives the play touch event\r\n");
+                    this->client->write(tr("ERROR: Could not find the object that " \
+                                        "receives the play touch event") + "\r\n");
                 }
                 else
                 {
                     VisualNode * const visualObject = qobject_cast<VisualNode*>(targetObject);
                     if (not visualObject)
                     {
-                        this->client->write("ERROR: The object target of the play "\
-                                            "touch command isn't a Visual Object\r\n");
+                        this->client->write(tr("ERROR: The object target of the play "\
+                                            "touch command isn't a Visual Object") + "\r\n");
                     }
                     else
                     {
@@ -212,8 +212,8 @@ namespace cascades
                                         Q_ARG(bb::cascades::TouchEvent*, te));
                             if (not fired)
                             {
-                                this->client->write("ERROR: Failed to call touch " \
-                                                    "on receiver\r\n");
+                                this->client->write(tr("ERROR: Failed to call touch " \
+                                                    "on receiver") + "\r\n");
                             }
                         }
                         ret = fired;
@@ -226,10 +226,10 @@ namespace cascades
 
     void TouchCommand::showHelp()
     {
-        this->client->write("> touch <sx> <sy> <wx> <wy> <lx> <ly> <type> <receiver> <target>\r\n");
-        this->client->write("<type> should be 0=Down,1=Move,2=Up,3=Cancel\r\n");
-        this->client->write("<target> can be omitted if <receiver> is the target\r\n");
-        this->client->write("Simulate a touch event on a UI object\r\n");
+        this->client->write(tr("> touch <sx> <sy> <wx> <wy> <lx> <ly> <type> <receiver> <target>") + "\r\n");
+        this->client->write(tr("<type> should be 0=Down,1=Move,2=Up,3=Cancel") + "\r\n");
+        this->client->write(tr("<target> can be omitted if <receiver> is the target") + "\r\n");
+        this->client->write(tr("Simulate a touch event on a UI object") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

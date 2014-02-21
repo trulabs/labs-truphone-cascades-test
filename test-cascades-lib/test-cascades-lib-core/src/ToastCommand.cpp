@@ -50,7 +50,7 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write("ERROR: The Toast has an unexpected visiblity value\r\n");
+                    this->client->write(tr("ERROR: The Toast has an unexpected visiblity value") + "\r\n");
                 }
             }
             else
@@ -68,24 +68,24 @@ namespace cascades
                     }
                     else
                     {
-                        QString data("ERROR: Toast text is ");
+                        QString data(tr("ERROR: Toast text is "));
                         data += toast->body();
-                        data += " but we expected ";
+                        data += tr(" but we expected ");
                         data += toastText;
                         data += "\r\n";
-                        this->client->write(data.trimmed().toUtf8());
+                        this->client->write(data);
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: No Toast is visible\r\n");
+                    this->client->write(tr("ERROR: No Toast is visible") + "\r\n");
                 }
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, " \
-                                "toast <true|false/toast text>\r\n");
+            this->client->write(tr("ERROR: Not enough arguments, " \
+                                "toast <true|false/toast text>") + "\r\n");
         }
         return ret;
     }
@@ -127,10 +127,10 @@ namespace cascades
 
     void ToastCommand::showHelp()
     {
-        this->client->write("> toast <true|false/toast text>\r\n");
-        this->client->write("toast true|false will check if a toast is visible otherswise\r\n");
-        this->client->write("it will assert that the parameters match the current toast.\r\n");
-        this->client->write("if no toast is visible then the test will fail\r\n");
+        this->client->write(tr("> toast <true|false/toast text>") + "\r\n");
+        this->client->write(tr("toast true|false will check if a toast is visible otherswise") + "\r\n");
+        this->client->write(tr("it will assert that the parameters match the current toast.") + "\r\n");
+        this->client->write(tr("if no toast is visible then the test will fail") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

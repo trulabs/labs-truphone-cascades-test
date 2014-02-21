@@ -34,7 +34,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() not_eq 1)
         {
-            this->client->write("ERROR: xmppDisconnect <resource>\r\n");
+            this->client->write(tr("ERROR: xmppDisconnect <resource>") + "\r\n");
         }
         else
         {
@@ -50,7 +50,7 @@ namespace cascades
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -58,8 +58,8 @@ namespace cascades
 
     void XMPPDisconnectCommand::showHelp()
     {
-        this->client->write("> xmppDisconnect <resource>\r\n");
-        this->client->write("Disconnect a resource's connection.\r\n");
+        this->client->write(tr("> xmppDisconnect <resource>") + "\r\n");
+        this->client->write(tr("Disconnect a resource's connection.") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

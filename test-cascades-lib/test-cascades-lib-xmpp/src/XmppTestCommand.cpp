@@ -35,7 +35,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() < 2)
         {
-            this->client->write("ERROR: xmppTest <resource> <field> <optional: value>\r\n");
+            this->client->write(tr("ERROR: xmppTest <resource> <field> <optional: value>") + "\r\n");
         }
         else
         {
@@ -155,27 +155,27 @@ namespace cascades
                         }
                         if (not ret)
                         {
-                            QString buffer = "ERROR: Value is {";
+                            QString buffer = tr("ERROR: Value is {");
                             buffer += value.toString();
-                            buffer += "} but expected {";
+                            buffer += tr("} but expected {");
                             buffer += expectedValue.toString();
-                            buffer += "}\r\n";
-                            this->client->write(buffer.toUtf8());
+                            buffer += tr("}") + "\r\n";
+                            this->client->write(buffer);
                         }
                     }
                     else
                     {
-                        this->client->write("ERROR: Unknown property\r\n");
+                        this->client->write(tr("ERROR: Unknown property") + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write("ERROR: Couldn't find the last received message\r\n");
+                    this->client->write(tr("ERROR: Couldn't find the last received message") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -183,30 +183,30 @@ namespace cascades
 
     void XMPPTestCommand::showHelp()
     {
-        this->client->write("> xmppTest <resource> <field> <optional: value>\r\n");
-        this->client->write("Test a field in the last received message\r\n");
-        this->client->write("If <value> is missing it'll test for null/empty\r\n");
-        this->client->write("Supported <value> options:\r\n");
-        this->client->write("\tbody\r\n");
-        this->client->write("\tattentionRequired\r\n");
-        this->client->write("\tmucInvitationJid\r\n");
-        this->client->write("\tmucInvitationPassword\r\n");
-        this->client->write("\tmucInvitationReason\r\n");
-        this->client->write("\treceiptId\r\n");
-        this->client->write("\tstamp\r\n");
-        this->client->write("\tstate\r\n");
-        this->client->write("\tsubject\r\n");
-        this->client->write("\tthread\r\n");
-        this->client->write("\ttype\r\n");
-        this->client->write("\thasForward\r\n");
-        this->client->write("\tfordwardBody\r\n");
-        this->client->write("\thasCarbon\r\n");
-        this->client->write("\tcarbonBody\r\n");
-        this->client->write("\tmarkable\r\n");
-        this->client->write("\tmarkedId\r\n");
-        this->client->write("\tmarkedThread\r\n");
-        this->client->write("\tisReplace\r\n");
-        this->client->write("\treplaceId\r\n");
+        this->client->write(tr("> xmppTest <resource> <field> <optional: value>") + "\r\n");
+        this->client->write(tr("Test a field in the last received message") + "\r\n");
+        this->client->write(tr("If <value> is missing it'll test for null/empty") + "\r\n");
+        this->client->write(tr("Supported <value> options:") + "\r\n");
+        this->client->write("\t" + tr("body") + "\r\n");
+        this->client->write("\t" + tr("attentionRequired") + "\r\n");
+        this->client->write("\t" + tr("mucInvitationJid") + "\r\n");
+        this->client->write("\t" + tr("mucInvitationPassword") + "\r\n");
+        this->client->write("\t" + tr("mucInvitationReason") + "\r\n");
+        this->client->write("\t" + tr("receiptId") + "\r\n");
+        this->client->write("\t" + tr("stamp") + "\r\n");
+        this->client->write("\t" + tr("state") + "\r\n");
+        this->client->write("\t" + tr("subject") + "\r\n");
+        this->client->write("\t" + tr("thread") + "\r\n");
+        this->client->write("\t" + tr("type") + "\r\n");
+        this->client->write("\t" + tr("hasForward") + "\r\n");
+        this->client->write("\t" + tr("fordwardBody") + "\r\n");
+        this->client->write("\t" + tr("hasCarbon") + "\r\n");
+        this->client->write("\t" + tr("carbonBody") + "\r\n");
+        this->client->write("\t" + tr("markable") + "\r\n");
+        this->client->write("\t" + tr("markedId") + "\r\n");
+        this->client->write("\t" + tr("markedThread") + "\r\n");
+        this->client->write("\t" + tr("isReplace") + "\r\n");
+        this->client->write("\t" + tr("replaceId") + "\r\n");
 
 
     }

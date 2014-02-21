@@ -64,27 +64,28 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: Object isn't a TextField or TextArea\r\n");
+                        this->client->write(
+                                    tr("ERROR: Object isn't a TextField or TextArea") + "\r\n");
                     }
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown object\r\n");
+                this->client->write(tr("ERROR: Unknown object") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, " \
-                                "text <field> <str1> <str2> <strn>\r\n");
+            this->client->write(tr("ERROR: Not enough arguments, " \
+                                "text <field> <str1> <str2> <strn>") + "\r\n");
         }
         return ret;
     }
 
     void TextCommand::showHelp()
     {
-        this->client->write("> text <object> <value>\r\n");
-        this->client->write("Set the textual value of a TextField\r\n");
+        this->client->write(tr("> text <object> <value>") + "\r\n" +
+                                    tr("Set the textual value of a TextField") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

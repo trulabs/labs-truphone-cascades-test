@@ -35,7 +35,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() < 4)
         {
-            this->client->write("ERROR: xmppPresence <resource> <priority> <status> <message>\r\n");
+            this->client->write(tr("ERROR: xmppPresence <resource> <priority> <status> <message>") + "\r\n");
         }
         else
         {
@@ -49,7 +49,7 @@ namespace cascades
                 arguments->removeFirst();
                 if (not intOk)
                 {
-                    this->client->write("ERROR: Priority must be an integer\r\n");
+                    this->client->write(tr("ERROR: Priority must be an integer") + "\r\n");
                 }
                 else
                 {
@@ -87,7 +87,7 @@ namespace cascades
                     else
                     {
                         sOk = false;
-                        this->client->write("ERROR: Unknown presence status type\r\n");
+                        this->client->write(tr("ERROR: Unknown presence status type") + "\r\n");
                     }
                     if (sOk)
                     {
@@ -96,14 +96,14 @@ namespace cascades
                         ret = client->sendPacket(presence);
                         if (not ret)
                         {
-                            this->client->write("ERROR: Failed to send packet\r\n");
+                            this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
                         }
                     }
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -111,8 +111,8 @@ namespace cascades
 
     void XMPPPresenceCommand::showHelp()
     {
-        this->client->write("> xmppPresence <resource> <priority> <status> <message>\r\n");
-        this->client->write("Set your XMPP status (online, away, xa, dnd, chat, invisible).\r\n");
+        this->client->write(tr("> xmppPresence <resource> <priority> <status> <message>") + "\r\n");
+        this->client->write(tr("Set your XMPP status (online, away, xa, dnd, chat, invisible)") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

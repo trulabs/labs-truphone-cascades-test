@@ -64,6 +64,17 @@ namespace cascades
              * @since test-cascades 1.0.0
              */
             bool startHarness(const quint16 port = (quint16)(15000u));
+            /*!
+             * \brief loadLocale Load a locale
+             *
+             * \param locale The locale you want the library to load
+             * \param directory The app directory with translations
+             *
+             * \return @c True if the locale was loaded
+             *
+             * @since test-cascades 1.1.0
+             */
+            bool loadLocale(const QLocale& locale, const QString& directory);
         protected:
         private:
             /*!

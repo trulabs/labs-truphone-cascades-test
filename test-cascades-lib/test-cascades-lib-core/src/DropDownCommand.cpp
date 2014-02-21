@@ -56,7 +56,7 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: The index is out of bounds\r\n");
+                        this->client->write(tr("ERROR: The index is out of bounds") + "\r\n");
                     }
                 }
                 else
@@ -81,29 +81,29 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: The name of the selected entry"\
-                                            "wasn't found\r\n");
+                        this->client->write(tr("ERROR: The name of the selected entry"\
+                                            "wasn't found") + "\r\n");
                     }
                 }
             }
             else
             {
-                this->client->write("ERROR: Can't find the drop down\r\n");
+                this->client->write(tr("ERROR: Can't find the drop down") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, " \
-                                "toggle <button> <true|false>\r\n");
+            this->client->write(tr("ERROR: Not enough arguments, " \
+                                "toggle <button> <true|false>") + "\r\n");
         }
         return ret;
     }
 
     void DropDownCommand::showHelp()
     {
-        this->client->write("> dropdown <list> <index|value>\r\n");
-        this->client->write("Selects either an index in the menu or\r\n");
-        this->client->write("selections the option with the given text.\r\n");
+        this->client->write(tr("> dropdown <list> <index|value>") + "\r\n");
+        this->client->write(tr("Selects either an index in the menu or") + "\r\n");
+        this->client->write(tr("selections the option with the given text.") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

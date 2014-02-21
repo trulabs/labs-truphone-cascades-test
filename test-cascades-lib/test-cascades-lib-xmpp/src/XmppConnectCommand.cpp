@@ -41,7 +41,7 @@ namespace cascades
     {
         if (arguments->length() not_eq 3)
         {
-            this->client->write("ERROR: xmppConnect <user> <pass> <resource>\r\n");
+            this->client->write(tr("ERROR: xmppConnect <user> <pass> <resource>") + "\r\n");
         }
         else
         {
@@ -62,28 +62,29 @@ namespace cascades
 
     void XMPPConnectCommand::showHelp()
     {
-        this->client->write("> xmppConnect <user> <pass> <resourceId>\r\n");
-        this->client->write("Connect to an XMPP server.\r\n");
+        this->client->write(tr("> xmppConnect <user> <pass> <resourceId>") + "\r\n");
+        this->client->write(tr("Connect to an XMPP server.") + "\r\n");
     }
 
     void XMPPConnectCommand::connected()
     {
         XMPPResourceStore::instance()->addToStore(this->resourceName, this->xmppClient);
-        this->client->write("OK\r\n");
+        // not translated; protocol
+        this->client->write(QString("OK") + "\r\n");
         this->deleteLater();
     }
 
     void XMPPConnectCommand::disconnected()
     {
         this->xmppClient->deleteLater();
-        this->client->write("ERROR: Disconnected\r\n");
+        this->client->write(tr("ERROR: Disconnected") + "\r\n");
         this->deleteLater();
     }
 
     void XMPPConnectCommand::error(QXmppClient::Error)
     {
         this->xmppClient->deleteLater();
-        this->client->write("ERROR: QXmppError\r\n");
+        this->client->write(tr("ERROR: QXmppError") + "\r\n");
         this->deleteLater();
     }
 }  // namespace cascades

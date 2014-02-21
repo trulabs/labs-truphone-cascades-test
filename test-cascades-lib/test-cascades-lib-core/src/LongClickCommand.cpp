@@ -47,18 +47,18 @@ namespace cascades
                     ret = clickOnChildren(obj);
                     if (not ret)
                     {
-                        this->client->write("ERROR: Failed to invoke function\r\n");
+                        this->client->write(tr("ERROR: Failed to invoke function") + "\r\n");
                     }
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown object\r\n");
+                this->client->write(tr("ERROR: Unknown object") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: Not enough arguments, longClick <object>\r\n");
+            this->client->write(tr("ERROR: Not enough arguments, longClick <object>") + "\r\n");
         }
         return ret;
     }
@@ -94,9 +94,9 @@ namespace cascades
 
     void LongClickCommand::showHelp()
     {
-        this->client->write("> longClick <object>\r\n");
-        this->client->write("Simulate a long clicked event on a UI object " \
-                            "and trigger the onLongClicked method\r\n");
+        this->client->write(tr("> longClick <object>") + "\r\n");
+        this->client->write(tr("Simulate a long clicked event on a UI object " \
+                            "and trigger the onLongClicked method") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

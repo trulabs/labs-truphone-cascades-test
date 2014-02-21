@@ -36,7 +36,7 @@ namespace cascades
         bool ret = false;
         if (arguments->length() < 2)
         {
-            this->client->write("ERROR: xmppReachability <resource> <address>\r\n");
+            this->client->write(tr("ERROR: xmppReachability <resource> <address>") + "\r\n");
         }
         else
         {
@@ -67,12 +67,12 @@ namespace cascades
                 ret = client->sendPacket(publish);
                 if (not ret)
                 {
-                    this->client->write("ERROR: Failed to send packet\r\n");
+                    this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
                 }
             }
             else
             {
-                this->client->write("ERROR: Unknown resource\r\n");
+                this->client->write(tr("ERROR: Unknown resource") + "\r\n");
             }
         }
         return ret;
@@ -80,8 +80,8 @@ namespace cascades
 
     void XMPPReachabilityCommand::showHelp()
     {
-        this->client->write("> xmppReachability <resource> <address>\r\n");
-        this->client->write("Send a reachability address to a user\r\n");
+        this->client->write(tr("> xmppReachability <resource> <address>") + "\r\n");
+        this->client->write(tr("Send a reachability address to a user") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

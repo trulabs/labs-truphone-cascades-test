@@ -41,8 +41,8 @@ namespace cascades
 
     void ExitCommand::showHelp()
     {
-        this->client->write("> exit\r\n");
-        this->client->write("Terminate this connection to the server\r\n");
+        this->client->write(tr("> exit") + "\r\n");
+        this->client->write(tr("Terminate this connection to the server") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

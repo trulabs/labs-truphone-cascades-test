@@ -42,8 +42,8 @@ namespace cascades
 
     void QuitCommand::showHelp()
     {
-        this->client->write("> quit");
-        this->client->write("Terminate this application\r\n");
+        this->client->write(tr("> quit") + "\r\n");
+        this->client->write(tr("Terminate this application") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

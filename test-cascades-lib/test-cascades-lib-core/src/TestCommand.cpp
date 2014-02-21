@@ -57,12 +57,12 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: Element property is null\r\n");
+                        this->client->write(tr("ERROR: Element property is null") + "\r\n");
                     }
                 }
                 else if (not var.isValid())
                 {
-                    this->client->write("ERROR: Element property isn't valid\r\n");
+                    this->client->write(tr("ERROR: Element property isn't valid") + "\r\n");
                 }
                 else
                 {
@@ -73,42 +73,42 @@ namespace cascades
                     }
                     else
                     {
-                        QString data("ERROR: The value is {");
+                        QString data(tr("ERROR: The value is {"));
                         data += actual;
-                        data += "} which is not expected {";
+                        data += tr("} which is not expected {");
                         if (expected)
                         {
                             data += expected;
                         }
                         else
                         {
-                            data += "<null>";
+                            data += tr("<null>");
                         }
-                        data += "}\r\n";
-                        this->client->write(data.trimmed().toUtf8());
+                        data += tr("}") + "\r\n";
+                        this->client->write(data);
                     }
                 }
             }
             else
             {
-                this->client->write("ERROR: The element doesn't exist\r\n");
+                this->client->write(tr("ERROR: The element doesn't exist") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: test <element> <property> <expected value>\r\n");
+            this->client->write(tr("ERROR: test <element> <property> <expected value>") + "\r\n");
         }
         return ret;
     }
 
     void TestCommand::showHelp()
     {
-        this->client->write("> test <object> <property> <value>\r\n");
-        this->client->write("Test if a QT property matches an expected value. "\
-                            "This can be used to check\r\n");
-        this->client->write("that a field on the UI is setup correctly or if a " \
-                            "dialog has been displayed or\r\n");
-        this->client->write("if an image or button is enabled or disabled\r\n");
+        this->client->write(tr("> test <object> <property> <value>") + "\r\n");
+        this->client->write(tr("Test if a QT property matches an expected value. "\
+                            "This can be used to check") + "\r\n");
+        this->client->write(tr("that a field on the UI is setup correctly or if a " \
+                            "dialog has been displayed or") + "\r\n");
+        this->client->write(tr("if an image or button is enabled or disabled") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

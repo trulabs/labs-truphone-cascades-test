@@ -56,6 +56,19 @@ namespace cascades
         return this->serverSocket->startServer(port);
     }
 
+    bool CascadesHarness::loadLocale(const QLocale& locale, const QString& directory)
+    {
+        bool loaded = false;
+        QString filename = QString("test-cascades-lib-core_%1.qm").arg(locale.name());
+        QTranslator translator;
+        if(translator.load(filename, directory))
+        {
+            qApp->installTranslator(&translator);
+            loaded = true;
+        }
+        return loaded;
+    }
+
     void CascadesHarness::handleNewConnection(Connection * connection)
     {
         connect(connection,
@@ -82,7 +95,8 @@ namespace cascades
                     const bool cmdOk = cmd->executeCommand(&tokens);
                     if (cmdOk)
                     {
-                        connection->write("OK\r\n");
+                        // not translated; protocol
+                        connection->write(QString("OK") + "\r\n");
                     }
                     // may not actually clean/delete anything right
                     // now if the command is async
@@ -90,7 +104,7 @@ namespace cascades
                 }
                 else
                 {
-                    connection->write("ERROR: I don't understand that command\r\n");
+                    connection->write(tr("ERROR: I don't understand that command") + "\r\n");
                 }
             }
         }

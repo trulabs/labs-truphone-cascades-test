@@ -7,3 +7,5 @@
 /test-cascades-java/.gradle
 /build-*
 /doc
+/test-cascades-lib/test-cascades-lib-core/*.qm
+/test-cascades-lib/test-cascades-lib-core/*.qm

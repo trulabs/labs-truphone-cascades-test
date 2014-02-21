@@ -75,19 +75,19 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write("ERROR: Need to specify cancel, " \
-                                            "confirm or custom\r\n");
+                        this->client->write(tr("ERROR: Need to specify cancel, " \
+                                            "confirm or custom") + "\r\n");
                     }
                 }
             }
             else
             {
-                this->client->write("ERROR: Failed to find the System dialog\r\n");
+                this->client->write(tr("ERROR: Failed to find the System dialog") + "\r\n");
             }
         }
         else
         {
-            this->client->write("ERROR: sysdialog <name> <action>\r\n");
+            this->client->write(tr("ERROR: sysdialog <name> <action>") + "\r\n");
         }
         return ret;
     }
@@ -117,11 +117,11 @@ namespace cascades
 
     void SystemDialogCommand::showHelp()
     {
-        this->client->write("> sysdialog <dialog> - Closed, no answer\r\n");
-        this->client->write("> sysdialog <dialog> confirm - Confirm the dialog\r\n");
-        this->client->write("> sysdialog <dialog> cancel - Cancel the dialog\r\n");
-        this->client->write("> sysdialog <dialog> button - (Appended) Button to close dialog\r\n");
-        this->client->write("> sysdialog <dialog> custom - Close with custom button\r\n");
+        this->client->write(tr("> sysdialog <dialog> - Closed, no answer") + "\r\n");
+        this->client->write(tr("> sysdialog <dialog> confirm - Confirm the dialog") + "\r\n");
+        this->client->write(tr("> sysdialog <dialog> cancel - Cancel the dialog") + "\r\n");
+        this->client->write(tr("> sysdialog <dialog> button - (Appended) Button to close dialog") + "\r\n");
+        this->client->write(tr("> sysdialog <dialog> custom - Close with custom button") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test
