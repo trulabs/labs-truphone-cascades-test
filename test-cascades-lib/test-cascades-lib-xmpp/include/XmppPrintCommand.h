@@ -75,12 +75,14 @@ namespace cascades
         /*!
          * \brief printMessage Print an XMPP XML message out to the stream.
          *
-         * \param connection The connection to write to
+         * \param tx @c True if transmit, @c False if receive
          * \param message The message to debug
          *
          * @since test-cascades 1.1.0
          */
-        static void printMessage(const QXmppStanza& message);
+        static void printMessage(
+                const bool tx,
+                const QXmppStanza& message);
     private:
         /*!
          * \brief CMD_NAME The name of this command

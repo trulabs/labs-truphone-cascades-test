@@ -60,7 +60,8 @@ namespace cascades
                 if (XMPPDebugCommand::isDebugEnabled())
                 {
                     XMPPPrintCommand::printMessage(
-                        chatMessage);
+                                true,
+                                chatMessage);
                 }
                 ret = client->sendPacket(chatMessage);
                 if (not ret)

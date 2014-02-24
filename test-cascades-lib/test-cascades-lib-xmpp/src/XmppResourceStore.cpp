@@ -72,7 +72,8 @@ namespace cascades
             if (XMPPDebugCommand::isDebugEnabled())
             {
                 XMPPPrintCommand::printMessage(
-                    message);
+                            false,
+                            message);
             }
         }
     }

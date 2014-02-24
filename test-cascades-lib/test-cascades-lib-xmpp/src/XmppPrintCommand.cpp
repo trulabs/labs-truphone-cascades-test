@@ -46,24 +46,26 @@ namespace cascades
             if (client)
             {
                 const QString direction = arguments->first();
-                bool ok = false;
                 QXmppMessage message;
                 if (direction == "rx")
                 {
-                    ok = XMPPResourceStore::instance()->getLastMessageReceived(client, message);
+                    ret = XMPPResourceStore::instance()->getLastMessageReceived(
+                                client,
+                                message);
                 }
                 else if (direction == "tx")
                 {
-                    ok = XMPPResourceStore::instance()->getLastMessageSent(client, message);
+                    ret = XMPPResourceStore::instance()->getLastMessageSent(
+                                client,
+                                message);
                 }
                 else
                 {
                     this->client->write(tr("ERROR: Unknown direction") + "\r\n");
                 }
-                if (ok)
+                if (ret)
                 {
-                    printMessage(message);
-                    ret = ok;
+                    printMessage(direction=="rx", message);
                 }
                 else
                 {
@@ -79,15 +81,20 @@ namespace cascades
     }
 
     void XMPPPrintCommand::printMessage(
+            const bool tx,
             const QXmppStanza& message)
     {
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);
         QXmlStreamWriter writer(&buffer);
         message.toXml(&writer);
+
+        QString xmlMessage(tr("----XMPP ") + ((tx) ? tr("TX") : tr("RX")) + "----\r\n"
+                           + buffer.data()
+                           + "\r\n----\r\n");
         Q_FOREACH(Connection * const conn, XMPPDebugCommand::debugClients())
         {
-            conn->write(QString(buffer.data()));
+            conn->write(xmlMessage);
         }
     }
 
