@@ -343,6 +343,7 @@ It supports the following commands:
     xmppHelp         # overview of the extension
     xmppMessage      # send a message to a client
     xmppPresence     # online/offline/dnd etc & status message
+    xmppPrint        # print out the xml for the last message (tx or rx)
     xmppReachability # telephone/address information
     xmppTest         # test variables of last received message
 
