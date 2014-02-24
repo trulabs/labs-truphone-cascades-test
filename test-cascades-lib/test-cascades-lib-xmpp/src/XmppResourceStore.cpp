@@ -5,6 +5,9 @@
 
 #include <QXmppClient.h>
 
+#include "XmppDebugCommand.h"
+#include "XmppPrintCommand.h"
+
 namespace truphone
 {
 namespace test
@@ -66,6 +69,12 @@ namespace cascades
         if (client)
         {
             this->lastMsgReceivedMap[client] = message;
+            if (XMPPDebugCommand::isDebugEnabled())
+            {
+                XMPPPrintCommand::printMessage(
+                    client,
+                    message);
+            }
         }
     }
     bool XMPPResourceStore::getLastMessageSent(QXmppClient * const client, QXmppMessage& message)

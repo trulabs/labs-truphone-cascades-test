@@ -11,6 +11,8 @@
 
 #include "Connection.h"
 #include "XmppResourceStore.h"
+#include "XmppDebugCommand.h"
+#include "XmppPrintCommand.h"
 
 namespace truphone
 {
@@ -64,6 +66,12 @@ namespace cascades
                 item.setContents(reachAddr.toQXmppElement());
                 listItems.append(item);
                 publish.setItems(listItems);
+                if (XMPPDebugCommand::isDebugEnabled())
+                {
+                    XMPPPrintCommand::printMessage(
+                        this->client,
+                        publish);
+                }
                 ret = client->sendPacket(publish);
                 if (not ret)
                 {

@@ -10,6 +10,8 @@
 
 #include "Connection.h"
 #include "XmppResourceStore.h"
+#include "XmppDebugCommand.h"
+#include "XmppPrintCommand.h"
 
 namespace truphone
 {
@@ -86,6 +88,12 @@ namespace cascades
                     chatMessage.setMarkable(false);
                     chatMessage.setTo(toJid);
                     chatMessage.setState(msgState);
+                    if (XMPPDebugCommand::isDebugEnabled())
+                    {
+                        XMPPPrintCommand::printMessage(
+                                    this->client,
+                                    chatMessage);
+                    }
                     ret = client->sendPacket(chatMessage);
                     if (not ret)
                     {

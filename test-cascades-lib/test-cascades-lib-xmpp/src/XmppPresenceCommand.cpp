@@ -10,6 +10,8 @@
 
 #include "Connection.h"
 #include "XmppResourceStore.h"
+#include "XmppDebugCommand.h"
+#include "XmppPrintCommand.h"
 
 namespace truphone
 {
@@ -93,6 +95,12 @@ namespace cascades
                     {
                         const QString message = arguments->join(" ");
                         presence.setStatusText(message);
+                        if (XMPPDebugCommand::isDebugEnabled())
+                        {
+                            XMPPPrintCommand::printMessage(
+                                this->client,
+                                presence);
+                        }
                         ret = client->sendPacket(presence);
                         if (not ret)
                         {

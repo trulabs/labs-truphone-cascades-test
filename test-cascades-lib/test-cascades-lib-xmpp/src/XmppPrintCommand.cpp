@@ -79,7 +79,7 @@ namespace cascades
 
     void XMPPPrintCommand::printMessage(
             Connection * const connection,
-            const QXmppMessage& message)
+            const QXmppStanza& message)
     {
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);

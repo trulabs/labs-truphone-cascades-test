@@ -10,6 +10,8 @@
 
 #include "Connection.h"
 #include "XmppResourceStore.h"
+#include "XmppDebugCommand.h"
+#include "XmppPrintCommand.h"
 
 namespace truphone
 {
@@ -84,6 +86,12 @@ namespace cascades
                             markerMessage.setTo(lastMsg.from());
                             markerMessage.setMarker(msgMarker, lastMsg.id());
                             markerMessage.addHint(QXmppMessage::AllowPermantStorage);
+                            if (XMPPDebugCommand::isDebugEnabled())
+                            {
+                                XMPPPrintCommand::printMessage(
+                                            this->client,
+                                            markerMessage);
+                            }
                             ret = client->sendPacket(markerMessage);
                             if (not ret)
                             {

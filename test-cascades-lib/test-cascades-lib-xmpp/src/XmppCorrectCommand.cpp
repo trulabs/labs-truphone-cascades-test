@@ -10,6 +10,8 @@
 
 #include "Connection.h"
 #include "XmppResourceStore.h"
+#include "XmppDebugCommand.h"
+#include "XmppPrintCommand.h"
 
 namespace truphone
 {
@@ -63,6 +65,12 @@ namespace cascades
                         correctedMessage.setThread("");
                         correctedMessage.setState(QXmppMessage::Active);
                         correctedMessage.addHint(QXmppMessage::AllowPermantStorage);
+                        if (XMPPDebugCommand::isDebugEnabled())
+                        {
+                            XMPPPrintCommand::printMessage(
+                                this->client,
+                                correctedMessage);
+                        }
                         ret = client->sendPacket(correctedMessage);
                         if (not ret)
                         {
