@@ -80,8 +80,7 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        static void printMessage(class Connection * const connection,
-                                 const QXmppStanza& message);
+        static void printMessage(const QXmppStanza& message);
     private:
         /*!
          * \brief CMD_NAME The name of this command

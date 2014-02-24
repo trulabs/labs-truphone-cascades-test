@@ -17,6 +17,7 @@ namespace test
 namespace cascades
 {
     bool XMPPDebugCommand::debuggingEnabled = false;
+    QList<class Connection*> XMPPDebugCommand::debugClientList;
 
     const QString XMPPDebugCommand::CMD_NAME = "xmppDebug";
 
@@ -43,11 +44,13 @@ namespace cascades
             const QString enabled = arguments->first();
             if (enabled == "on")
             {
+                debugClientList.append(this->client);
                 debuggingEnabled = true;
                 ret = true;
             }
             else if (enabled == "off")
             {
+                debugClientList.removeAll(this->client);
                 debuggingEnabled = false;
                 ret = true;
             }

@@ -89,7 +89,6 @@ namespace cascades
                             if (XMPPDebugCommand::isDebugEnabled())
                             {
                                 XMPPPrintCommand::printMessage(
-                                            this->client,
                                             markerMessage);
                             }
                             ret = client->sendPacket(markerMessage);

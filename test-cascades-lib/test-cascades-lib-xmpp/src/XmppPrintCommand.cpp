@@ -10,6 +10,7 @@
 
 #include "Connection.h"
 #include "XmppResourceStore.h"
+#include "XmppDebugCommand.h"
 
 namespace truphone
 {
@@ -61,7 +62,7 @@ namespace cascades
                 }
                 if (ok)
                 {
-                    printMessage(this->client, message);
+                    printMessage(message);
                     ret = ok;
                 }
                 else
@@ -78,14 +79,16 @@ namespace cascades
     }
 
     void XMPPPrintCommand::printMessage(
-            Connection * const connection,
             const QXmppStanza& message)
     {
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);
         QXmlStreamWriter writer(&buffer);
         message.toXml(&writer);
-        connection->write(QString(buffer.data()));
+        Q_FOREACH(Connection * const conn, XMPPDebugCommand::debugClients())
+        {
+            conn->write(QString(buffer.data()));
+        }
     }
 
     void XMPPPrintCommand::showHelp()

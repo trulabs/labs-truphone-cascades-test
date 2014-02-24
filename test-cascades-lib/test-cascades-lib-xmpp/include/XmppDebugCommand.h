@@ -81,6 +81,7 @@ namespace cascades
          * @since test-cascades 1.1.0
          */
         static bool isDebugEnabled();
+        static QList<class Connection*> debugClients();
     private:
         /*!
          * \brief CMD_NAME The name of this command
@@ -94,6 +95,7 @@ namespace cascades
          * \brief debuggingEnabled Enable or disable debugging
          */
         static bool debuggingEnabled;
+        static QList<class Connection*> debugClientList;
     };
 }  // namespace cascades
 }  // namespace test
