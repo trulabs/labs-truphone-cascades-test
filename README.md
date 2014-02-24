@@ -49,7 +49,8 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
 #### v1.1.0
-* Initial XMPP work
+* Change the project structure to support extensions
+* Add an XMPP extension (requires QXmpp - provided)
 
 ## Prerequisites
 - Qt4 (sdk) & make
@@ -58,7 +59,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 ## ToDo
 
-- [x] Look at integrating the new Automatic Input Control (_sys_inject_events)
+- [ ] Look at integrating the new Automatic Input Control (_sys_inject_events)
 * Without the above:
 - [ ] Add lots of other support (hopefully AIC will mean we don't have to)
 
