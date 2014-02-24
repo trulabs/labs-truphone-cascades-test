@@ -67,6 +67,11 @@ namespace cascades
         return debuggingEnabled;
     }
 
+    QList<class Connection*> XMPPDebugCommand::debugClients()
+    {
+        return debugClientList;
+    }
+
     void XMPPDebugCommand::showHelp()
     {
         this->client->write(tr("> xmppDebug <on | off>") + "\r\n");

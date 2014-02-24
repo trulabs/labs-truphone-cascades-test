@@ -81,6 +81,13 @@ namespace cascades
          * @since test-cascades 1.1.0
          */
         static bool isDebugEnabled();
+        /*!
+         * \brief debugClients Get a list of clients with debugging enabled
+         *
+         * \return A list of debug connections
+         *
+         * @since test-cascades 1.1.0
+         */
         static QList<class Connection*> debugClients();
     private:
         /*!
