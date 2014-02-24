@@ -61,11 +61,8 @@ namespace cascades
                 }
                 if (ok)
                 {
-                    QBuffer buffer;
-                    buffer.open(QIODevice::ReadWrite);
-                    QXmlStreamWriter writer(&buffer);
-                    message.toXml(&writer);
-                    this->client->write(QString(buffer.data()));
+                    printMessage(this->client, message);
+                    ret = ok;
                 }
                 else
                 {
@@ -78,6 +75,17 @@ namespace cascades
             }
         }
         return ret;
+    }
+
+    void XMPPPrintCommand::printMessage(
+            Connection * const connection,
+            const QXmppMessage& message)
+    {
+        QBuffer buffer;
+        buffer.open(QIODevice::ReadWrite);
+        QXmlStreamWriter writer(&buffer);
+        message.toXml(&writer);
+        connection->write(QString(buffer.data()));
     }
 
     void XMPPPrintCommand::showHelp()

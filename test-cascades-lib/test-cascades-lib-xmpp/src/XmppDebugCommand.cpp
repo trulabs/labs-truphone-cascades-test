@@ -44,10 +44,12 @@ namespace cascades
             if (enabled == "on")
             {
                 debuggingEnabled = true;
+                ret = true;
             }
             else if (enabled == "off")
             {
                 debuggingEnabled = false;
+                ret = true;
             }
             else
             {

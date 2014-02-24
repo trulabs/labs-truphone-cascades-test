@@ -6,6 +6,7 @@
 
 #include <QObject>
 #include "Command.h"
+#include <QXmppMessage.h>
 
 namespace truphone
 {
@@ -71,6 +72,16 @@ namespace cascades
          * See super
          */
         void showHelp(void);
+        /*!
+         * \brief printMessage Print an XMPP XML message out to the stream.
+         *
+         * \param connection The connection to write to
+         * \param message The message to debug
+         *
+         * @since test-cascades 1.1.0
+         */
+        static void printMessage(class Connection * const connection,
+                                 const QXmppMessage& message);
     private:
         /*!
          * \brief CMD_NAME The name of this command
