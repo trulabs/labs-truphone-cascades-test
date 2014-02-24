@@ -41,7 +41,7 @@ scripts are simply the commands you would type but with
 added built-in flow-control and XML output.
 
 The Java library can be integrated into BDD/TDD environments
-like easyB or JBehave
+like easyB or JBehave.
 
 ## License
 
@@ -107,7 +107,7 @@ The test-cascades-java will be built using Gradle.
 
 As these are Qt projects you can use the qmake on the CLI assuming that
 you have sourced the bbndk-env.sh file to setup the associated
-development environment variables
+development environment variables.
 
 ## Target Library for BlackBerry
 
@@ -184,7 +184,7 @@ to ensure development mode is enabled.
 
 The list of available commands will change as the BlackBerry 10 NDK
 adds more functionality and we add more so it's best to simply
-execute the help command (or read the code)
+execute the help command (or read the code).
 
 Here is a list:
 
