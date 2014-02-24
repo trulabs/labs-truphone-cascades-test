@@ -65,7 +65,7 @@ namespace cascades
                 }
                 if (ret)
                 {
-                    printMessage(direction=="tx", message);
+                    printMessage(direction=="tx", message, this->client);
                 }
                 else
                 {
@@ -82,7 +82,8 @@ namespace cascades
 
     void XMPPPrintCommand::printMessage(
             const bool tx,
-            const QXmppStanza& message)
+            const QXmppStanza& message,
+            Connection * const connection)
     {
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);
@@ -92,9 +93,16 @@ namespace cascades
         QString xmlMessage(tr("----XMPP ") + ((tx) ? tr("TX") : tr("RX")) + "----\r\n"
                            + buffer.data()
                            + "\r\n----\r\n");
-        Q_FOREACH(Connection * const conn, XMPPDebugCommand::debugClients())
+        if (connection)
         {
-            conn->write(xmlMessage);
+            connection->write(xmlMessage);
+        }
+        else
+        {
+            Q_FOREACH(Connection * const conn, XMPPDebugCommand::debugClients())
+            {
+                conn->write(xmlMessage);
+            }
         }
     }
 

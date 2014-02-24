@@ -82,7 +82,8 @@ namespace cascades
          */
         static void printMessage(
                 const bool tx,
-                const QXmppStanza& message);
+                const QXmppStanza& message,
+                class Connection * const connection = 0);
     private:
         /*!
          * \brief CMD_NAME The name of this command
