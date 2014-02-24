@@ -26,7 +26,8 @@ HEADERS +=\
     include/XmppReachabilityCommand.h \
     include/XmppCorrectCommand.h \
     include/XmppTestCommand.h \
-    include/XmppPrintCommand.h
+    include/XmppPrintCommand.h \
+    include/XmppDebugCommand.h
 
 SOURCES += \
     src/XmppHarness.cpp \
@@ -41,7 +42,8 @@ SOURCES += \
     src/XmppReachabilityCommand.cpp \
     src/XmppCorrectCommand.cpp \
     src/XmppTestCommand.cpp \
-    src/XmppPrintCommand.cpp
+    src/XmppPrintCommand.cpp \
+    src/XmppDebugCommand.cpp
 
 unix:!symbian {
     maemo5 {
