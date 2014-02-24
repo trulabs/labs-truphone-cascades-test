@@ -65,7 +65,7 @@ namespace cascades
                 }
                 if (ret)
                 {
-                    printMessage(direction=="rx", message);
+                    printMessage(direction=="tx", message);
                 }
                 else
                 {
