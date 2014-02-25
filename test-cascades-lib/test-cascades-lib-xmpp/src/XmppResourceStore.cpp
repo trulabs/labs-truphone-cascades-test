@@ -114,8 +114,12 @@ namespace cascades
         Q_ASSERT(client);
         if (this->lastMsgReceivedMap.contains(client) and message)
         {
-            *message = (const QXmppStanza*)(this->lastMsgReceivedMap[client].getStanza());
-            ret = true;
+            *message = dynamic_cast<const QXmppStanza*>
+                    (this->lastMsgReceivedMap[client].getStanza());
+            if (*message)
+            {
+                ret = true;
+            }
         }
         return ret;
     }
@@ -145,7 +149,10 @@ namespace cascades
         if (this->lastMsgSentMap.contains(client) and message)
         {
             *message = this->lastMsgSentMap[client].getStanza();
-            ret = true;
+            if (*message)
+            {
+                ret = true;
+            }
         }
         return ret;
     }
