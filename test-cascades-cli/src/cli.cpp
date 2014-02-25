@@ -14,8 +14,6 @@
 #include <QStack>
 #include <QTcpSocket>
 
-#define QT_DEBUG
-
 namespace truphone
 {
 namespace test
