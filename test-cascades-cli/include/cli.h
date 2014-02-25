@@ -69,6 +69,12 @@ namespace cli
          */
         void disconnected(void);
         /*!
+         * \brief connected Slot for connection
+         *
+         * @since test-cascades 1.1.0
+         */
+        void connected(void);
+        /*!
          * \brief dataReady Slot for data being received from the target
          *
          * @since test-cascades 1.0.0
@@ -81,6 +87,12 @@ namespace cli
          * @since test-cascades 1.0.9
          */
         void retryTimeoutExpired(void);
+        /*!
+         * \brief connectionTimeout Occurs when the TCP connection fails
+         *
+         * @since test-cascades 1.1.0
+         */
+        void connectionTimeout(void);
     };
 }  // namespace cli
 }  // namespace cascades

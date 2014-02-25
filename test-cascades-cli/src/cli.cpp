@@ -14,6 +14,8 @@
 #include <QStack>
 #include <QTcpSocket>
 
+#define QT_DEBUG
+
 namespace truphone
 {
 namespace test
@@ -237,6 +239,10 @@ namespace cli
          */
         QTimer * const retryTimer;
         /*!
+         * \brief connectionTimer Initial connection timer
+         */
+        QTimer * const connectionTimer;
+        /*!
          * \brief retryCount The current number of retries
          */
         uint retryCount;
@@ -384,6 +390,7 @@ namespace cli
           inputFiles(new QStack<QFile*>()),
           settings(new QMap<QString, QVariant>()),
           retryTimer(new QTimer(this)),
+          connectionTimer(new QTimer(this)),
           retryCount(0),
           qOut(stdout)
     {
@@ -399,34 +406,50 @@ namespace cli
         : QObject(parent),
           pData(new HarnessCliPrviate(isRecord, inFile, outFile, this))
     {
-        connect(pData->retryTimer, SIGNAL(timeout()), SLOT(retryTimeoutExpired()));
-        if (this->pData->stream)
+        bool failed = (this->pData->stream == NULL);
+
+        failed |= not connect(
+                    this->pData->stream,
+                    SIGNAL(disconnected()),
+                    this,
+                    SLOT(disconnected()));
+
+        failed |= not connect(
+                    this->pData->stream,
+                    SIGNAL(connected()),
+                    SLOT(connected()));
+
+        failed |= not connect(
+                    this->pData->stream,
+                    SIGNAL(readyRead()),
+                    this,
+                    SLOT(dataReady()));
+
+        failed |= not connect(
+                    this->pData->connectionTimer,
+                    SIGNAL(timeout()),
+                    SLOT(connectionTimeout()));
+
+        failed |= not connect(
+                    pData->retryTimer,
+                    SIGNAL(timeout()),
+                    SLOT(retryTimeoutExpired()));
+        if (not failed)
         {
-            bool ok;
-
-            ok = connect(this->pData->stream,
-                         SIGNAL(disconnected()),
-                         this,
-                         SLOT(disconnected()));
-            if (ok)
+            this->pData->connectionTimer->setInterval(30 * 1000);
+            this->pData->connectionTimer->setSingleShot(true);
+            this->pData->connectionTimer->start();
+            this->pData->stream->connectToHost(host, port);
+            if (not this->pData->recordingMode)
             {
-                const bool ok = connect(
-                            this->pData->stream,
-                            SIGNAL(readyRead()),
-                            this,
-                            SLOT(dataReady()));
-                if (ok)
-                {
-                    this->pData->stream->connectToHost(host, port);
-
-                    if (not this->pData->recordingMode)
-                    {
-                        this->pData->outputFile->write(
-                                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
-                        this->pData->outputFile->write("<results>\r\n");
-                    }
-                }
+                this->pData->outputFile->write(
+                            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n");
+                this->pData->outputFile->write("<results>\r\n");
             }
+        }
+        else
+        {
+            qFatal("Failed to connect the disconnection signal");
         }
     }
 
@@ -505,10 +528,10 @@ namespace cli
                 }
                 break;
             case ERROR:
-                this->shutdown(1);
+                this->shutdown(EXIT_FAILURE);
                 break;
             case DISCONNECT:
-                this->shutdown();
+                this->shutdown(EXIT_FAILURE);
                 break;
             default:
                 this->unexpectedTransition(event);
@@ -523,14 +546,14 @@ namespace cli
                 this->transmitNextCommand();
                 break;
             case NO_MORE_COMMANDS_TO_PLAY:
-                this->shutdown();
+                this->shutdown(EXIT_SUCCESS);
                 break;
             case ERROR:
-                this->shutdown(1);
+                this->shutdown(EXIT_FAILURE);
                 break;
             case DISCONNECT:
                 this->outputFile->write("\t\t<fail terminated=\"true\"/>\r\n");
-                this->shutdown();
+                this->shutdown(EXIT_FAILURE);
                 break;
             default:
                 this->unexpectedTransition(event);
@@ -545,7 +568,7 @@ namespace cli
                 this->waitForCommandToRecord();
                 break;
             case DISCONNECT:
-                this->shutdown();
+                this->shutdown(EXIT_FAILURE);
                 break;
             default:
                 this->unexpectedTransition(event);
@@ -560,7 +583,7 @@ namespace cli
                 this->waitForCommandToRecord();
                 break;
             case DISCONNECT:
-                this->shutdown();
+                this->shutdown(EXIT_FAILURE);
                 break;
             default:
                 this->unexpectedTransition(event);
@@ -712,6 +735,11 @@ namespace cli
         this->pData->disconnected();
     }
 
+    void HarnessCli::connected(void)
+    {
+        this->pData->connectionTimer->stop();
+    }
+
     void HarnessCliPrviate::disconnected(void)
     {
         this->postEventToStateMachine(HarnessCliPrviate::DISCONNECT);
@@ -746,6 +774,11 @@ namespace cli
     void HarnessCli::retryTimeoutExpired(void)
     {
         this->pData->retryTimeoutExpired();
+    }
+
+    void HarnessCli::connectionTimeout(void)
+    {
+        qFatal("Failed to connect to the host");
     }
 
     void HarnessCliPrviate::retryTimeoutExpired(void)
@@ -838,7 +871,8 @@ namespace cli
                         {
                             if (not recordingMode and acceptFailure)
                             {
-                                this->outputFile->write("<warning reason=\"accepted-failure\"/>\r\n");
+                                this->outputFile->write("<warning reason=\"accepted-failure\"/>"\
+                                                        "\r\n");
                             }
 
                             this->postEventToStateMachine(RECEIVED_COMMAND_REPLY);
