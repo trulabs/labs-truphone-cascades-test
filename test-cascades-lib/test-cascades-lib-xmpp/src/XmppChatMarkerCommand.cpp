@@ -21,8 +21,9 @@ namespace cascades
 {
     const QString XMPPChatMarkerCommand::CMD_NAME = "xmppChatMarker";
 
-    XMPPChatMarkerCommand::XMPPChatMarkerCommand(Connection * const socket,
-                                             QObject* parent)
+    XMPPChatMarkerCommand::XMPPChatMarkerCommand(
+            Connection * const socket,
+            QObject* parent)
         : Command(parent),
           client(socket)
     {

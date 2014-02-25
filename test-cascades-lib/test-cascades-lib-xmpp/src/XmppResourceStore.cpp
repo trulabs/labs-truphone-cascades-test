@@ -27,6 +27,13 @@ namespace cascades
         {
         }
 
+        XMPPResourceStorePrivate(const XMPPResourceStorePrivate &other)
+            : message(other.message),
+              presence(other.presence),
+              pubSub(other.pubSub)
+        {
+        }
+
         XMPPResourceStorePrivate(const QXmppMessage& stanza)
             : message(new QXmppMessage(stanza)),
               presence(NULL),
