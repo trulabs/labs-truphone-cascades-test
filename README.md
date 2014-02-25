@@ -48,6 +48,9 @@ like easyB or JBehave
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
+#### v1.0.19.2
+* CLI detects connection timeouts and disconnects
+
 #### v1.0.19.1
 * Bug fixes
 
