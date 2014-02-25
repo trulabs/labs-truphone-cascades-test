@@ -44,10 +44,16 @@ namespace cascades
             arguments->removeFirst();
             if (client)
             {
-                QXmppMessage lastMessageRecieved;
+                const QXmppStanza * lastRecievedStanza = NULL;
                 const bool lastMsgOk = XMPPResourceStore::instance()->getLastMessageReceived(
-                            client, lastMessageRecieved);
-                if (lastMsgOk)
+                            client,
+                            &lastRecievedStanza);
+                const QXmppMessage * lastReceivedMessage = NULL;
+                if (lastMsgOk and lastRecievedStanza)
+                {
+                    lastReceivedMessage = dynamic_cast<const QXmppMessage*>(lastRecievedStanza);
+                }
+                if (lastMsgOk and lastReceivedMessage)
                 {
                     bool propertyOk = true;
                     const QString property = arguments->first();
@@ -57,87 +63,95 @@ namespace cascades
                     // It didn't work - might use reflection on function calls later
                     if (property == "body")
                     {
-                        value = lastMessageRecieved.body();
+                        value = lastReceivedMessage->body();
                     }
                     else if (property == "attentionRequired")
                     {
-                        value = lastMessageRecieved.isAttentionRequested();
+                        value = lastReceivedMessage->isAttentionRequested();
                     }
                     else if (property == "mucInvitationJid")
                     {
-                        value = lastMessageRecieved.mucInvitationJid();
+                        value = lastReceivedMessage->mucInvitationJid();
                     }
                     else if (property == "mucInvitationPassword")
                     {
-                        value = lastMessageRecieved.mucInvitationPassword();
+                        value = lastReceivedMessage->mucInvitationPassword();
                     }
                     else if (property == "mucInvitationReason")
                     {
-                        value = lastMessageRecieved.mucInvitationReason();
+                        value = lastReceivedMessage->mucInvitationReason();
                     }
                     else if (property == "receiptId")
                     {
-                        value = lastMessageRecieved.receiptId();
+                        value = lastReceivedMessage->receiptId();
                     }
                     else if (property == "stamp")
                     {
-                        value = lastMessageRecieved.stamp();
+                        value = lastReceivedMessage->stamp();
                     }
                     else if (property == "state")
                     {
-                        value = lastMessageRecieved.state();
+                        value = lastReceivedMessage->state();
                     }
                     else if (property == "subject")
                     {
-                        value = lastMessageRecieved.subject();
+                        value = lastReceivedMessage->subject();
                     }
                     else if (property == "thread")
                     {
-                        value = lastMessageRecieved.thread();
+                        value = lastReceivedMessage->thread();
                     }
                     else if (property == "type")
                     {
-                        value = lastMessageRecieved.type();
+                        value = lastReceivedMessage->type();
                     }
                     else if (property == "hasForward")
                     {
-                        value = lastMessageRecieved.hasForwarded();
+                        value = lastReceivedMessage->hasForwarded();
                     }
                     else if (property == "forwardBody")
                     {
-                        value = lastMessageRecieved.forwarded().body();
+                        value = lastReceivedMessage->forwarded().body();
                     }
                     else if (property == "hasCarbon")
                     {
-                        value = lastMessageRecieved.hasMessageCarbon();
+                        value = lastReceivedMessage->hasMessageCarbon();
                     }
                     else if (property == "carbonBody")
                     {
-                        value = lastMessageRecieved.carbonMessage().body();
+                        value = lastReceivedMessage->carbonMessage().body();
                     }
                     else if (property == "markable")
                     {
-                        value = lastMessageRecieved.isMarkable();
+                        value = lastReceivedMessage->isMarkable();
                     }
                     else if (property == "marker")
                     {
-                        value = lastMessageRecieved.marker();
+                        value = lastReceivedMessage->marker();
                     }
                     else if (property == "markedId")
                     {
-                        value = lastMessageRecieved.markedId();
+                        value = lastReceivedMessage->markedId();
                     }
                     else if (property == "markedThread")
                     {
-                        value = lastMessageRecieved.markedThread();
+                        value = lastReceivedMessage->markedThread();
                     }
                     else if (property == "isReplace")
                     {
-                        value = lastMessageRecieved.isReplace();
+                        value = lastReceivedMessage->isReplace();
                     }
                     else if (property == "replaceId")
                     {
-                        value = lastMessageRecieved.replaceId();
+                        value = lastReceivedMessage->replaceId();
+                    }
+                    else if (property == "from")
+                    {
+                        value = lastReceivedMessage->from();
+                    }
+                    else if (property == "to")
+                    {
+                        value = lastReceivedMessage->to();
                     }
                     else
                     {
@@ -212,6 +226,8 @@ namespace cascades
         this->client->write("\t" + tr("markedThread") + "\r\n");
         this->client->write("\t" + tr("isReplace") + "\r\n");
         this->client->write("\t" + tr("replaceId") + "\r\n");
+        this->client->write("\t" + tr("from") + "\r\n");
+        this->client->write("\t" + tr("to") + "\r\n");
 
 
     }

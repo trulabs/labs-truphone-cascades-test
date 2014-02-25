@@ -70,12 +70,18 @@ namespace cascades
                 {
                     XMPPPrintCommand::printMessage(
                                 true,
-                                publish);
+                                &publish);
                 }
                 ret = client->sendPacket(publish);
                 if (not ret)
                 {
                     this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
+                }
+                else
+                {
+                    XMPPResourceStore::instance()->setLastMessageSent(
+                                client,
+                                publish);
                 }
             }
             else

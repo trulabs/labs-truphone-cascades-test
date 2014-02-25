@@ -47,13 +47,14 @@ namespace cascades
             arguments->removeFirst();
             if (client)
             {
-                QXmppMessage lastMsg;
+                const QXmppStanza * lastStanza = NULL;
                 const bool lastMsgOk = XMPPResourceStore::instance()->getLastMessageReceived(
                             client,
-                            lastMsg);
+                            &lastStanza);
                 if (lastMsgOk)
                 {
-                    if (lastMsg.isMarkable())
+                    const QXmppMessage * const lastMsg = dynamic_cast<const QXmppMessage*>(lastStanza);
+                    if (lastMsg and lastMsg->isMarkable())
                     {
                         bool markerOk = true;
                         QXmppMessage::Marker msgMarker;
@@ -83,19 +84,25 @@ namespace cascades
                             markerMessage.setId(QUuid::createUuid().toString());
                             markerMessage.setThread("");
                             markerMessage.setMarkable(false);
-                            markerMessage.setTo(lastMsg.from());
-                            markerMessage.setMarker(msgMarker, lastMsg.id());
+                            markerMessage.setTo(lastMsg->from());
+                            markerMessage.setMarker(msgMarker, lastMsg->id());
                             markerMessage.addHint(QXmppMessage::AllowPermantStorage);
                             if (XMPPDebugCommand::isDebugEnabled())
                             {
                                 XMPPPrintCommand::printMessage(
                                             true,
-                                            markerMessage);
+                                            &markerMessage);
                             }
                             ret = client->sendPacket(markerMessage);
                             if (not ret)
                             {
                                 this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
+                            }
+                            else
+                            {
+                                XMPPResourceStore::instance()->setLastMessageSent(
+                                            client,
+                                            markerMessage);
                             }
                         }
                         else

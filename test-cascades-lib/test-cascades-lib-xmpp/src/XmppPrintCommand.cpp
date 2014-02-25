@@ -46,18 +46,18 @@ namespace cascades
             if (client)
             {
                 const QString direction = arguments->first();
-                QXmppMessage message;
+                const QXmppStanza * message = NULL;
                 if (direction == "rx")
                 {
                     ret = XMPPResourceStore::instance()->getLastMessageReceived(
                                 client,
-                                message);
+                                &message);
                 }
                 else if (direction == "tx")
                 {
                     ret = XMPPResourceStore::instance()->getLastMessageSent(
                                 client,
-                                message);
+                                &message);
                 }
                 else
                 {
@@ -82,15 +82,15 @@ namespace cascades
 
     void XMPPPrintCommand::printMessage(
             const bool tx,
-            const QXmppStanza& message,
+            const QXmppStanza * const message,
             Connection * const connection)
     {
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);
         QXmlStreamWriter writer(&buffer);
-        message.toXml(&writer);
+        message->toXml(&writer);
 
-        QString xmlMessage(tr("----XMPP ") + ((tx) ? tr("TX") : tr("RX")) + "----\r\n"
+        const QString xmlMessage(tr("----XMPP ") + ((tx) ? tr("TX") : tr("RX")) + "----\r\n"
                            + buffer.data()
                            + "\r\n----\r\n");
         if (connection)

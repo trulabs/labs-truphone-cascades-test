@@ -82,7 +82,7 @@ namespace cascades
          */
         static void printMessage(
                 const bool tx,
-                const QXmppStanza& message,
+                const QXmppStanza * const message,
                 class Connection * const connection = 0);
     private:
         /*!

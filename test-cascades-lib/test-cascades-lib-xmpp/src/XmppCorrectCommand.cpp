@@ -46,20 +46,23 @@ namespace cascades
             arguments->removeFirst();
             if (client)
             {
-                QXmppMessage lastSentMessage;
+                const QXmppStanza * lastSentStanza = NULL;
                 const bool lastMsgOk = XMPPResourceStore::instance()->getLastMessageSent(
-                            client, lastSentMessage);
-                if (lastMsgOk)
+                            client,
+                            &lastSentStanza);
+                if (lastMsgOk and lastSentStanza)
                 {
-                    if (not (lastSentMessage.body().isNull()
-                          or lastSentMessage.body().isEmpty()))
+                    const QXmppMessage * const lastSentMessage =
+                            dynamic_cast<const QXmppMessage*>(lastSentStanza);
+                    if (not (lastSentMessage->body().isNull()
+                          or lastSentMessage->body().isEmpty()))
                     {
                         QXmppMessage correctedMessage;
                         // correction fields
-                        correctedMessage.setReceiptId(lastSentMessage.id());
-                        correctedMessage.setReplace(lastSentMessage.id());
+                        correctedMessage.setReceiptId(lastSentMessage->id());
+                        correctedMessage.setReplace(lastSentMessage->id());
                         correctedMessage.setBody(arguments->join(" "));
-                        correctedMessage.setTo(lastSentMessage.to());
+                        correctedMessage.setTo(lastSentMessage->to());
                         // normal messaging
                         correctedMessage.setId(QUuid::createUuid().toString());
                         correctedMessage.setThread("");
@@ -69,7 +72,7 @@ namespace cascades
                         {
                             XMPPPrintCommand::printMessage(
                                         true,
-                                        correctedMessage);
+                                        &correctedMessage);
                         }
                         ret = client->sendPacket(correctedMessage);
                         if (not ret)

@@ -9,6 +9,8 @@
 
 class QXmppClient;
 #include <QXmppMessage.h>
+class QXmppPresence;
+class QXmppPubSubIq;
 
 namespace truphone
 {
@@ -16,6 +18,10 @@ namespace test
 {
 namespace cascades
 {
+    /*!
+     * Forward for storage class
+     */
+    class XMPPResourceStorePrivate;
     /*!
      * \brief The XMPPResourceStore class is used to store resources/connections as
      * a map so that all commands can access the connections.
@@ -81,7 +87,9 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        bool getLastMessageReceived(QXmppClient * const client, QXmppMessage& message);
+        bool getLastMessageReceived(
+                QXmppClient * const client,
+                const QXmppStanza  ** message);
         /*!
          * \brief getLastMessageSent Gets the latest message that was
          * sent by the client.
@@ -93,7 +101,9 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        bool getLastMessageSent(QXmppClient * const client, QXmppMessage& message);
+        bool getLastMessageSent(
+                QXmppClient * const client,
+                const QXmppStanza ** message);
         /*!
          * \brief setLastMessageSent Sets the latest message that was
          * sent by the client.
@@ -103,7 +113,27 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        void setLastMessageSent(QXmppClient * const client, QXmppMessage& message);
+        void setLastMessageSent(QXmppClient * const client, const QXmppMessage& message);
+        /*!
+         * \brief setLastMessageSent Sets the latest message that was
+         * sent by the client.
+         *
+         * \param client The client that sent the message.
+         * \param message A reference to the message
+         *
+         * @since test-cascades 1.1.0
+         */
+        void setLastMessageSent(QXmppClient * const client, const QXmppPresence& presence);
+        /*!
+         * \brief setLastMessageSent Sets the latest message that was
+         * sent by the client.
+         *
+         * \param client The client that sent the message.
+         * \param message A reference to the message
+         *
+         * @since test-cascades 1.1.0
+         */
+        void setLastMessageSent(QXmppClient * const client, const QXmppPubSubIq& pubsub);
     private slots:
         /*!
          * \brief messageReceived Event that occurs when we receive a message.
@@ -140,12 +170,12 @@ namespace cascades
          * \brief lastMsgMap Contains the last message received
          * from each client.
          */
-        QMap<QXmppClient*, QXmppMessage> lastMsgReceivedMap;
+        QMap<QXmppClient*, XMPPResourceStorePrivate> lastMsgReceivedMap;
         /*!
          * \brief lastMsgMap Contains the last message sent
          * from each client.
          */
-        QMap<QXmppClient*, QXmppMessage> lastMsgSentMap;
+        QMap<QXmppClient*, XMPPResourceStorePrivate> lastMsgSentMap;
     };
 }  // namespace cascades
 }  // namespace test

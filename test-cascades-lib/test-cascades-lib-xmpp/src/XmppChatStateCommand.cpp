@@ -92,12 +92,18 @@ namespace cascades
                     {
                         XMPPPrintCommand::printMessage(
                                     true,
-                                    chatMessage);
+                                    &chatMessage);
                     }
                     ret = client->sendPacket(chatMessage);
                     if (not ret)
                     {
                         this->client->write(tr("ERROR: Failed to send packet") + "\r\n");
+                    }
+                    else
+                    {
+                        XMPPResourceStore::instance()->setLastMessageSent(
+                                    client,
+                                    chatMessage);
                     }
                 }
                 else

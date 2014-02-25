@@ -61,7 +61,7 @@ namespace cascades
                 {
                     XMPPPrintCommand::printMessage(
                                 true,
-                                chatMessage);
+                                &chatMessage);
                 }
                 ret = client->sendPacket(chatMessage);
                 if (not ret)
