@@ -88,7 +88,8 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write(tr("ERROR: The method doesn't exist for that object") + "\r\n");
+                        this->client->write(tr("ERROR: The method doesn't exist for that object")
+                                            + "\r\n");
                     }
                 }
                 else

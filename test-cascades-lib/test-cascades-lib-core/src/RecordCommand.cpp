@@ -607,8 +607,10 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write(tr("ERROR: ") + QString(parent->metaObject()->className())
-                                            + tr(" is not a supported action parent") + "\r\n");
+                        this->client->write(tr("ERROR: ")
+                                            + QString(parent->metaObject()->className())
+                                            + tr(" is not a supported action parent")
+                                            + "\r\n");
                     }
                 }
             }
@@ -624,7 +626,8 @@ namespace cascades
         this->client->write(tr("> record") + "\r\n");
         this->client->write(tr("Record events - to stop listening you will have to " \
                             "terminate the connection") + "\r\n");
-        this->client->write(tr("- it's really for debugging rather than for use in scripts") + "\r\n");
+        this->client->write(tr("- it's really for debugging rather than for use in scripts")
+                            + "\r\n");
     }
 
     RecordCommand::StopRecordingCommand::StopRecordingCommand(

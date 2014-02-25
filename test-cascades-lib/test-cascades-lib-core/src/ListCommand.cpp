@@ -76,7 +76,8 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write(tr("ERROR: Expected list size wasn't an integer") + "\r\n");
+                        this->client->write(tr("ERROR: Expected list size wasn't an integer")
+                                            + "\r\n");
                     }
                 }
                 // check an element by index
@@ -98,7 +99,8 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write(tr("ERROR: Failed to convert index to indexPath") + "\r\n");
+                        this->client->write(tr("ERROR: Failed to convert index to indexPath")
+                                            + "\r\n");
                     }
                 }
                 // check an element by named index
@@ -113,7 +115,8 @@ namespace cascades
                     }
                     else
                     {
-                        this->client->write(tr("ERROR: Failed to convert named index to indexPath") + "\r\n");
+                        this->client->write(tr("ERROR: Failed to convert named index to indexPath")
+                                            + "\r\n");
                     }
                 }
                 else if (command == "select")
@@ -568,22 +571,26 @@ namespace cascades
                         }
                         else
                         {
-                            this->client->write(tr("ERROR: You didn't enter a key=value pair") + "\r\n");
+                            this->client->write(tr("ERROR: You didn't enter a key=value pair")
+                                                + "\r\n");
                         }
                     }
                     else
                     {
-                        this->client->write(tr("ERROR: You didn't enter a key=value pair") + "\r\n");
+                        this->client->write(tr("ERROR: You didn't enter a key=value pair")
+                                            + "\r\n");
                     }
                 }
                 else
                 {
-                    this->client->write(tr("ERROR: Unsupported list element type") + "\r\n");
+                    this->client->write(tr("ERROR: Unsupported list element type")
+                                        + "\r\n");
                 }
             }
             else
             {
-                this->client->write(tr("ERROR: Element is null or non-valid type") + "\r\n");
+                this->client->write(tr("ERROR: Element is null or non-valid type")
+                                    + "\r\n");
             }
         }
 
@@ -595,37 +602,50 @@ namespace cascades
         this->client->write(tr("> list <list> count <expectedSize>") + "\r\n");
         this->client->write(tr("> list <list> index <index> <expected value> - " \
                             "check string values") + "\r\n");
-        this->client->write(tr("e.g. list someList index 0~1~2 /etc/files/file") + "\r\n");
+        this->client->write(tr("e.g. list someList index 0~1~2 /etc/files/file")
+                            + "\r\n");
         this->client->write(tr("> list <list> index <index> <key>=<expected value>" \
                             " - check QVarientMap values") + "\r\n");
         this->client->write(tr("e.g. list someList 0~1~2 filename=/etc/files/file") + "\r\n");
-        this->client->write(tr("> list <list> name <name> <expected value> - check string values") + "\r\n");
+        this->client->write(tr("> list <list> name <name> <expected value> - check string values")
+                            + "\r\n");
         this->client->write(tr("e.g. list someList /~etc~files^ /etc/files/file") + "\r\n");
         this->client->write(tr("> list <list> name <name> <key>=<expected value>"
                             " - check QVarientMap values") + "\r\n");
-        this->client->write(tr("e.g. list someList /~etc~files^ filename=/etc/files/file") + "\r\n");
+        this->client->write(tr("e.g. list someList /~etc~files^ filename=/etc/files/file")
+                            + "\r\n");
         this->client->write(tr("> list <list> select index <index> - select an index") + "\r\n");
-        this->client->write(tr("> list <list> select name <name> - select a named index") + "\r\n");
-        this->client->write(tr("> list <list> unselect index <index> - unselect an index") + "\r\n");
-        this->client->write(tr("> list <list> unselect name <name> - unselect a named index") + "\r\n");
-        this->client->write(tr("> list <list> scroll index <index> - scroll to an index") + "\r\n");
-        this->client->write(tr("> list <list> scroll name <name> - scroll to a named index") + "\r\n");
-        this->client->write(tr("> list <list> key index <index> - list the keys in Map for index") + "\r\n");
+        this->client->write(tr("> list <list> select name <name> - select a named index")
+                            + "\r\n");
+        this->client->write(tr("> list <list> unselect index <index> - unselect an index")
+                            + "\r\n");
+        this->client->write(tr("> list <list> unselect name <name> - unselect a named index")
+                            + "\r\n");
+        this->client->write(tr("> list <list> scroll index <index> - scroll to an index")
+                            + "\r\n");
+        this->client->write(tr("> list <list> scroll name <name> - scroll to a named index")
+                            + "\r\n");
+        this->client->write(tr("> list <list> key index <index> - list the keys in Map for index")
+                            + "\r\n");
         this->client->write(tr("> list <list> key name <name> - list the keys in Map " \
                             "for named index") + "\r\n");
         this->client->write(tr("> list <list> hold index <index> - open multiselect") + "\r\n");
         this->client->write(tr("> list <list> hold name <name> - open multiselect") + "\r\n");
         this->client->write(tr("> list <list> release - close multiselect") + "\r\n");
         this->client->write(tr("> list <list> release - close multiselect") + "\r\n");
-        this->client->write(tr("> list <list> tap index <index> - tap and open a list item") + "\r\n");
-        this->client->write(tr("> list <list> tap name <index> - tap and open a list item") + "\r\n");
+        this->client->write(tr("> list <list> tap index <index> - tap and open a list item")
+                            + "\r\n");
+        this->client->write(tr("> list <list> tap name <index> - tap and open a list item")
+                            + "\r\n");
         this->client->write(tr("e.g. list contacts scroll name J~Name=John Smith^") + "\r\n");
         this->client->write(tr("e.g. list contacts select index 0~1") + "\r\n");
         this->client->write(tr("> list <list> clear") + "\r\n");
         this->client->write(tr(">") + "\r\n");
-        this->client->write(tr("> <index> should be numerical and separated by ~ (i.e. 0~1~2)") + "\r\n");
+        this->client->write(tr("> <index> should be numerical and separated by ~ (i.e. 0~1~2)")
+                            + "\r\n");
         this->client->write(tr("> <index> can also support \"last\" i.e. 0~1~last") + "\r\n");
-        this->client->write(tr("> <name> should be text and separated by ~ and terminated by ^") + "\r\n");
+        this->client->write(tr("> <name> should be text and separated by ~ and terminated by ^")
+                            + "\r\n");
         this->client->write("\t" + tr("level 1~level 2~level 3^") + "\r\n");
     }
 }  // namespace cascades

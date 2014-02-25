@@ -185,7 +185,8 @@ namespace cascades
                             }
                             else
                             {
-                                this->client->write(tr("ERROR: Unable to find the named action") + "\r\n");
+                                this->client->write(
+                                            tr("ERROR: Unable to find the named action") + "\r\n");
                             }
                         }
                     }

@@ -120,7 +120,8 @@ namespace cascades
         this->client->write(tr("> sysdialog <dialog> - Closed, no answer") + "\r\n");
         this->client->write(tr("> sysdialog <dialog> confirm - Confirm the dialog") + "\r\n");
         this->client->write(tr("> sysdialog <dialog> cancel - Cancel the dialog") + "\r\n");
-        this->client->write(tr("> sysdialog <dialog> button - (Appended) Button to close dialog") + "\r\n");
+        this->client->write(tr("> sysdialog <dialog> button - (Appended) Button to close dialog")
+                            + "\r\n");
         this->client->write(tr("> sysdialog <dialog> custom - Close with custom button") + "\r\n");
     }
 }  // namespace cascades

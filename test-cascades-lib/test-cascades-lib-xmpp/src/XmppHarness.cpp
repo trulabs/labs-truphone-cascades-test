@@ -78,7 +78,7 @@ namespace cascades
         bool loaded = false;
         QString filename = QString("test-cascades-lib-xmpp_%1.qm").arg(locale.name());
         QTranslator translator;
-        if(translator.load(filename, directory))
+        if (translator.load(filename, directory))
         {
             qApp->installTranslator(&translator);
             loaded = true;

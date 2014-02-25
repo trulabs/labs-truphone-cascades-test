@@ -122,8 +122,10 @@ namespace cascades
         this->connection->write(tr("You can 'create' and 'delete' contacts") + "\r\n");
         this->connection->write(tr("You can also modify existing contacts") + "\r\n");
         this->connection->write(tr("The format is as such:") + "\r\n");
-        this->connection->write(tr("> contacts create forename=x, mobile=y, email=z, home=oops") + "\r\n");
-        this->connection->write(tr("> contacts modify x, mobile=90210, email=me@email.com, home") + "\r\n");
+        this->connection->write(tr("> contacts create forename=x, mobile=y,"\
+                                   " email=z, home=oops") + "\r\n");
+        this->connection->write(tr("> contacts modify x, mobile=90210,"\
+                                   " email=me@email.com, home") + "\r\n");
         this->connection->write(tr("> contacts delete x") + "\r\n");
         this->connection->write(tr("> contacts removeAll yesImSure") + "\r\n");
         this->connection->write(tr("(Empty modify variables unset the variable)") + "\r\n");
@@ -214,7 +216,8 @@ namespace cascades
                     else
                     {
                         add = false;
-                        connection->write(tr("ERROR: ") + varName + tr(" isn't supported") + "\r\n");
+                        connection->write(tr("ERROR: ") + varName
+                                          + tr(" isn't supported") + "\r\n");
                     }
 
                     attrs++;
@@ -222,8 +225,9 @@ namespace cascades
                 else
                 {
                     add = false;
-                    connection->write(tr("ERROR: Parameter ") + QString::number(attrs + 1) +
-                                              tr(" needs to be x=y") + "\r\n");
+                    connection->write(tr("ERROR: Parameter ")
+                                      + QString::number(attrs + 1)
+                                      + tr(" needs to be x=y") + "\r\n");
                     break;
                 }
             }
@@ -241,18 +245,21 @@ namespace cascades
                     }
                     else
                     {
-                        connection->write(tr("ERROR: Failed to add the contact to the address book") + "\r\n");
+                        connection->write(tr("ERROR: Failed to add the contact to the address book")
+                                          + "\r\n");
                     }
                 }
                 else
                 {
-                    connection->write(tr("ERROR: Didn't parse any parameters for the new contact") + "\r\n");
+                    connection->write(tr("ERROR: Didn't parse any parameters for the new contact")
+                                      + "\r\n");
                 }
             }
         }
         else
         {
-            connection->write(tr("ERROR: No arguments specified") + "\r\n");
+            connection->write(tr("ERROR: No arguments specified")
+                              + "\r\n");
         }
 
         return ret;
@@ -367,7 +374,10 @@ namespace cascades
                         else
                         {
                             modify = false;
-                            connection->write(tr("ERROR: ") + varName + tr(" isn't supported") + "\r\n");
+                            connection->write(tr("ERROR: ")
+                                              + varName
+                                              + tr(" isn't supported")
+                                              + "\r\n");
                         }
                     }
                     else if (params.size() == 3)
@@ -446,7 +456,10 @@ namespace cascades
                         else
                         {
                             modify = false;
-                            connection->write(tr("ERROR: ") + varName + tr(" isn't supported") + "\r\n");
+                            connection->write(tr("ERROR: ")
+                                              + varName
+                                              + tr(" isn't supported")
+                                              + "\r\n");
                         }
                     }
                     else

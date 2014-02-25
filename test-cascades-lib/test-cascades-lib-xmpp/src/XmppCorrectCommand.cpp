@@ -107,8 +107,10 @@ namespace cascades
     void XMPPCorrectCommand::showHelp()
     {
         this->client->write(tr("> xmppCorrect <resource> <optional: message>") + "\r\n");
-        this->client->write(tr("Corrects the last message sent. If <message> is missing") + "\r\n");
-        this->client->write(tr("then it's treated as a deletion of the previous message.") + "\r\n");
+        this->client->write(tr("Corrects the last message sent. If <message> is missing")
+                            + "\r\n");
+        this->client->write(tr("then it's treated as a deletion of the previous message.")
+                            + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

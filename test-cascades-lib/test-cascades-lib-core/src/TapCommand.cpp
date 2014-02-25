@@ -99,7 +99,8 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write(tr("ERROR: The object in question isn't a visual element") + "\r\n");
+                    this->client->write(tr("ERROR: The object in question isn't a visual element")
+                                        + "\r\n");
                 }
             }
             else

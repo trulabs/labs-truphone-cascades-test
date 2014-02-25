@@ -226,7 +226,8 @@ namespace cascades
 
     void TouchCommand::showHelp()
     {
-        this->client->write(tr("> touch <sx> <sy> <wx> <wy> <lx> <ly> <type> <receiver> <target>") + "\r\n");
+        this->client->write(tr("> touch <sx> <sy> <wx> <wy> <lx> <ly> <type> <receiver> <target>")
+                            + "\r\n");
         this->client->write(tr("<type> should be 0=Down,1=Move,2=Up,3=Cancel") + "\r\n");
         this->client->write(tr("<target> can be omitted if <receiver> is the target") + "\r\n");
         this->client->write(tr("Simulate a touch event on a UI object") + "\r\n");

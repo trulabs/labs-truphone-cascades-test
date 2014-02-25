@@ -84,7 +84,9 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write(tr("ERROR: Invalid selection method, use index or option") + "\r\n");
+                    this->client->write(tr("ERROR: Invalid selection method," \
+                                           " use index or option")
+                                        + "\r\n");
                 }
             }
             else

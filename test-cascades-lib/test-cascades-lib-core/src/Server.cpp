@@ -66,7 +66,8 @@ namespace cascades
             }
             else
             {
-                socket->write((tr("ERROR: Failed to create a Harness for the new TCP Client") + "\r\n")
+                socket->write((tr("ERROR: Failed to create a Harness for the new TCP Client")
+                               + "\r\n")
                               .toUtf8().constData());
                 client->close();  // will disconnect and call connectionDied
             }

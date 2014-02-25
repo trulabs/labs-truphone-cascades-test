@@ -54,15 +54,15 @@ namespace cascades
         }
         ~XMPPResourceStorePrivate()
         {
-            if (message) delete message;
-            if (presence) delete presence;
-            if (pubSub) delete pubSub;
+            if (message) { delete message; }
+            if (presence) { delete presence; }
+            if (pubSub) { delete pubSub; }
         }
         const QXmppStanza* getStanza()
         {
-            if (message) return message;
-            if (presence) return presence;
-            if (pubSub) return pubSub;
+            if (message) { return message; }
+            if (presence) { return presence; }
+            if (pubSub) { return pubSub; }
             return NULL;
         }
     private:

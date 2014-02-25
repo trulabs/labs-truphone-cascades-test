@@ -37,7 +37,8 @@ namespace cascades
         bool ret = false;
         if (arguments->length() < 4)
         {
-            this->client->write(tr("ERROR: xmppPresence <resource> <priority> <status> <message>") + "\r\n");
+            this->client->write(tr("ERROR: xmppPresence <resource> <priority> <status> <message>")
+                                + "\r\n");
         }
         else
         {
@@ -126,7 +127,8 @@ namespace cascades
     void XMPPPresenceCommand::showHelp()
     {
         this->client->write(tr("> xmppPresence <resource> <priority> <status> <message>") + "\r\n");
-        this->client->write(tr("Set your XMPP status (online, away, xa, dnd, chat, invisible)") + "\r\n");
+        this->client->write(tr("Set your XMPP status (online, away, xa, dnd, chat, invisible)")
+                            + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test

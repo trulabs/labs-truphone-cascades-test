@@ -54,7 +54,8 @@ namespace cascades
                             &lastStanza);
                 if (lastMsgOk)
                 {
-                    const QXmppMessage * const lastMsg = dynamic_cast<const QXmppMessage*>(lastStanza);
+                    const QXmppMessage * const lastMsg
+                            = dynamic_cast<const QXmppMessage*>(lastStanza);
                     if (lastMsg and lastMsg->isMarkable())
                     {
                         bool markerOk = true;
@@ -118,7 +119,8 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write(tr("ERROR: Can't find the last message received to mark") + "\r\n");
+                    this->client->write(tr("ERROR: Can't find the last message received to mark")
+                                        + "\r\n");
                 }
             }
             else

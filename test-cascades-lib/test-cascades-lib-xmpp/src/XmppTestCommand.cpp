@@ -35,7 +35,8 @@ namespace cascades
         bool ret = false;
         if (arguments->length() < 2)
         {
-            this->client->write(tr("ERROR: xmppTest <resource> <field> <optional: value>") + "\r\n");
+            this->client->write(tr("ERROR: xmppTest <resource> <field> <optional: value>")
+                                + "\r\n");
         }
         else
         {
@@ -188,7 +189,8 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write(tr("ERROR: Couldn't find the last received message") + "\r\n");
+                    this->client->write(tr("ERROR: Couldn't find the last received message")
+                                        + "\r\n");
                 }
             }
             else

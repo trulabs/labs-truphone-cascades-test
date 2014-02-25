@@ -50,7 +50,8 @@ namespace cascades
                 }
                 else
                 {
-                    this->client->write(tr("ERROR: The Toast has an unexpected visiblity value") + "\r\n");
+                    this->client->write(tr("ERROR: The Toast has an unexpected visiblity value")
+                                        + "\r\n");
                 }
             }
             else
@@ -128,8 +129,10 @@ namespace cascades
     void ToastCommand::showHelp()
     {
         this->client->write(tr("> toast <true|false/toast text>") + "\r\n");
-        this->client->write(tr("toast true|false will check if a toast is visible otherswise") + "\r\n");
-        this->client->write(tr("it will assert that the parameters match the current toast.") + "\r\n");
+        this->client->write(tr("toast true|false will check if a toast is visible otherswise")
+                            + "\r\n");
+        this->client->write(tr("it will assert that the parameters match the current toast.")
+                            + "\r\n");
         this->client->write(tr("if no toast is visible then the test will fail") + "\r\n");
     }
 }  // namespace cascades

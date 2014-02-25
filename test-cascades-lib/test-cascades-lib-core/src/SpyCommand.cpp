@@ -311,7 +311,8 @@ namespace cascades
                     if (not ret)
                     {
                         this->client->write
-                                (tr("ERROR: Couldn't connect to the signal on that object") + "\r\n");
+                                (tr("ERROR: Couldn't connect to the signal on that object")
+                                 + "\r\n");
                     }
                 }
                 else
@@ -330,14 +331,16 @@ namespace cascades
                     const int expectedCount = arguments->first().toInt(&countOk);
                     if (not countOk)
                     {
-                        this->client->write(tr("ERROR: The expected count number isn't a number") + "\r\n");
+                        this->client->write(tr("ERROR: The expected count number isn't a number")
+                                            + "\r\n");
                     }
                     else
                     {
                         const Spy * const spy = this->spyPrivate->getSpy(name);
                         if (not spy)
                         {
-                            this->client->write(tr("ERROR: Couldn't find a spy with that name") + "\r\n");
+                            this->client->write(tr("ERROR: Couldn't find a spy with that name")
+                                                + "\r\n");
                         }
                         else
                         {
@@ -395,7 +398,8 @@ namespace cascades
 
     void SpyCommand::showHelp()
     {
-        this->client->write(tr("> spy create <spyName> <object> <signal> - create a new Spy") + "\r\n");
+        this->client->write(tr("> spy create <spyName> <object> <signal> - create a new Spy")
+                            + "\r\n");
         this->client->write(tr("> spy count <spyName> <count> - check that the signal count for " \
                             "a spy is <count>") + "\r\n");
         this->client->write(tr("> spy kill <spyName> - remove a spy") + "\r\n");
