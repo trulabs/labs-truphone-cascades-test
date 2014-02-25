@@ -41,36 +41,39 @@ namespace cascades
 
         for (int param = 0 ; param < 6 ; param++)
         {
-            bool ok = false;
-            switch (param)
+            if (not arguments->isEmpty())
             {
-            case 0:
-                theKey = QString(arguments->first()).toInt(&ok);
-                break;
-            case 1:
-                isPressed = QString(arguments->first()).toInt(&ok);
-                break;
-            case 2:
-                isAlt = QString(arguments->first()).toInt(&ok);
-                break;
-            case 3:
-                isShift = QString(arguments->first()).toInt(&ok);
-                break;
-            case 4:
-                isCtrl = QString(arguments->first()).toInt(&ok);
-                break;
-            case 5:
-                target = arguments->first();
-                ok = not target.isNull() and not target.isEmpty();
-                break;
-            default:
-                break;
+                bool ok = false;
+                switch (param)
+                {
+                case 0:
+                    theKey = QString(arguments->first()).toInt(&ok);
+                    break;
+                case 1:
+                    isPressed = QString(arguments->first()).toInt(&ok);
+                    break;
+                case 2:
+                    isAlt = QString(arguments->first()).toInt(&ok);
+                    break;
+                case 3:
+                    isShift = QString(arguments->first()).toInt(&ok);
+                    break;
+                case 4:
+                    isCtrl = QString(arguments->first()).toInt(&ok);
+                    break;
+                case 5:
+                    target = arguments->first();
+                    ok = not target.isNull() and not target.isEmpty();
+                    break;
+                default:
+                    break;
+                }
+                if (ok)
+                {
+                    processed++;
+                }
+                arguments->removeFirst();
             }
-            if (ok)
-            {
-                processed++;
-            }
-            arguments->removeFirst();
         }
 
         Q_UNUSED(isAlt);
