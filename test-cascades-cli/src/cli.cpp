@@ -14,6 +14,8 @@
 #include <QStack>
 #include <QTcpSocket>
 
+#define QT_DEBUG
+
 namespace truphone
 {
 namespace test
@@ -529,7 +531,7 @@ namespace cli
                 this->shutdown(EXIT_FAILURE);
                 break;
             case DISCONNECT:
-                this->shutdown();
+                this->shutdown(EXIT_FAILURE);
                 break;
             default:
                 this->unexpectedTransition(event);
@@ -544,7 +546,7 @@ namespace cli
                 this->transmitNextCommand();
                 break;
             case NO_MORE_COMMANDS_TO_PLAY:
-                this->shutdown();
+                this->shutdown(EXIT_SUCCESS);
                 break;
             case ERROR:
                 this->shutdown(EXIT_FAILURE);
