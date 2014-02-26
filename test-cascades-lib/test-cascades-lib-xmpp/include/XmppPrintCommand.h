@@ -77,6 +77,7 @@ namespace cascades
          *
          * \param tx @c True if transmit, @c False if receive
          * \param message The message to debug
+         * \param connection The connection to write the message to
          *
          * @since test-cascades 1.1.0
          */

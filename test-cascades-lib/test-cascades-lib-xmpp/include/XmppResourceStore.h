@@ -197,7 +197,7 @@ namespace cascades
          * sent by the client.
          *
          * \param client The client that sent the message.
-         * \param message A reference to the message
+         * \param presence A reference to the presence
          *
          * @since test-cascades 1.1.0
          */
@@ -207,7 +207,7 @@ namespace cascades
          * sent by the client.
          *
          * \param client The client that sent the message.
-         * \param message A reference to the message
+         * \param pubsub A reference to the pubsub
          *
          * @since test-cascades 1.1.0
          */
