@@ -46,26 +46,26 @@ namespace cascades
             if (client)
             {
                 const QString direction = arguments->first();
-                const QXmppStanza * message = NULL;
+                const XMPPResourceStoreItem * message = NULL;
                 if (direction == "rx")
                 {
-                    ret = XMPPResourceStore::instance()->getLastMessageReceived(
-                                client,
-                                &message);
+                    message = XMPPResourceStore::instance()->getLastMessageReceived(
+                                client);
                 }
                 else if (direction == "tx")
                 {
-                    ret = XMPPResourceStore::instance()->getLastMessageSent(
-                                client,
-                                &message);
+                    message = XMPPResourceStore::instance()->getLastMessageSent(
+                                client);
                 }
                 else
                 {
                     this->client->write(tr("ERROR: Unknown direction") + "\r\n");
                 }
-                if (ret)
+                if (message)
                 {
-                    printMessage(direction=="tx", message, this->client);
+                    printMessage(direction=="tx", message->getStanza(), this->client);
+                    ret = true;
+                    delete message;
                 }
                 else
                 {

@@ -17,59 +17,60 @@ namespace cascades
 {
     XMPPResourceStore * XMPPResourceStore::INSTANCE = 0;
 
-    class XMPPResourceStorePrivate
+    XMPPResourceStoreItem::XMPPResourceStoreItem(QObject * const parent)
+        : QObject(parent),
+          message(NULL),
+          presence(NULL),
+          pubSub(NULL)
     {
-    public:
-        XMPPResourceStorePrivate()
-            : message(NULL),
-              presence(NULL),
-              pubSub(NULL)
-        {
-        }
+    }
 
-        XMPPResourceStorePrivate(const XMPPResourceStorePrivate &other)
-            : message(other.message),
-              presence(other.presence),
-              pubSub(other.pubSub)
-        {
-        }
+    XMPPResourceStoreItem::XMPPResourceStoreItem(const XMPPResourceStoreItem &other,
+                                                 QObject * const parent)
+        : QObject(parent),
+          message(other.message not_eq NULL ? new QXmppMessage(*other.message) : NULL),
+          presence(other.presence not_eq NULL ? new QXmppPresence(*other.presence) : NULL),
+          pubSub(other.pubSub not_eq NULL ? new QXmppPubSubIq(*other.pubSub) : NULL)
+    {
+    }
 
-        XMPPResourceStorePrivate(const QXmppMessage& stanza)
-            : message(new QXmppMessage(stanza)),
-              presence(NULL),
-              pubSub(NULL)
-        {
-        }
-        XMPPResourceStorePrivate(const QXmppPresence& stanza)
-            : message(NULL),
-              presence(new QXmppPresence(stanza)),
-              pubSub(NULL)
-        {
-        }
-        XMPPResourceStorePrivate(const QXmppPubSubIq& stanza)
-            : message(NULL),
-              presence(NULL),
-              pubSub(new QXmppPubSubIq(stanza))
-        {
-        }
-        ~XMPPResourceStorePrivate()
-        {
-            if (message) { delete message; }
-            if (presence) { delete presence; }
-            if (pubSub) { delete pubSub; }
-        }
-        const QXmppStanza* getStanza()
-        {
-            if (message) { return message; }
-            if (presence) { return presence; }
-            if (pubSub) { return pubSub; }
-            return NULL;
-        }
-    private:
-        const QXmppMessage * message;
-        const QXmppPresence * presence;
-        const QXmppPubSubIq * pubSub;
-    };
+    XMPPResourceStoreItem::XMPPResourceStoreItem(const QXmppMessage& stanza,
+                                                 QObject * const parent)
+        : QObject(parent),
+          message(new QXmppMessage(stanza)),
+          presence(NULL),
+          pubSub(NULL)
+    {
+    }
+    XMPPResourceStoreItem::XMPPResourceStoreItem(const QXmppPresence& stanza,
+                                                 QObject * const parent)
+        : QObject(parent),
+          message(NULL),
+          presence(new QXmppPresence(stanza)),
+          pubSub(NULL)
+    {
+    }
+    XMPPResourceStoreItem::XMPPResourceStoreItem(const QXmppPubSubIq& stanza,
+                                                 QObject * const parent)
+        : QObject(parent),
+          message(NULL),
+          presence(NULL),
+          pubSub(new QXmppPubSubIq(stanza))
+    {
+    }
+    XMPPResourceStoreItem::~XMPPResourceStoreItem()
+    {
+        if (message) { delete message; }
+        if (presence) { delete presence; }
+        if (pubSub) { delete pubSub; }
+    }
+    const QXmppStanza* XMPPResourceStoreItem::getStanza() const
+    {
+        if (message) { return message; }
+        if (presence) { return presence; }
+        if (pubSub) { return pubSub; }
+        return NULL;
+    }
 
     XMPPResourceStore::XMPPResourceStore(QObject *parent)
         : QObject(parent)
@@ -113,20 +114,14 @@ namespace cascades
         this->map.remove(resource);
     }
 
-    bool XMPPResourceStore::getLastMessageReceived(
-            QXmppClient * const client,
-            const QXmppStanza ** message)
+    const XMPPResourceStoreItem* XMPPResourceStore::getLastMessageReceived(
+            QXmppClient * const client)
     {
-        bool ret = false;
+        XMPPResourceStoreItem * ret = NULL;
         Q_ASSERT(client);
-        if (this->lastMsgReceivedMap.contains(client) and message)
+        if (this->lastMsgReceivedMap.contains(client))
         {
-            *message = dynamic_cast<const QXmppStanza*>
-                    (this->lastMsgReceivedMap[client].getStanza());
-            if (*message)
-            {
-                ret = true;
-            }
+            ret = new XMPPResourceStoreItem(*this->lastMsgReceivedMap[client].data());
         }
         return ret;
     }
@@ -137,8 +132,9 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgReceivedMap[client] = XMPPResourceStorePrivate(
-                        message);
+            this->lastMsgReceivedMap[client] = QSharedPointer<XMPPResourceStoreItem>
+                    (new XMPPResourceStoreItem(
+                        message));
             if (XMPPDebugCommand::isDebugEnabled())
             {
                 XMPPPrintCommand::printMessage(
@@ -148,18 +144,13 @@ namespace cascades
         }
     }
 
-    bool XMPPResourceStore::getLastMessageSent(
-            QXmppClient * const client,
-            const QXmppStanza ** message)
+    const XMPPResourceStoreItem* XMPPResourceStore::getLastMessageSent(
+            QXmppClient * const client)
     {
-        bool ret = false;
-        if (this->lastMsgSentMap.contains(client) and message)
+        XMPPResourceStoreItem * ret = NULL;
+        if (this->lastMsgSentMap.contains(client))
         {
-            *message = this->lastMsgSentMap[client].getStanza();
-            if (*message)
-            {
-                ret = true;
-            }
+            ret = new XMPPResourceStoreItem(this->lastMsgSentMap[client].data());
         }
         return ret;
     }
@@ -171,7 +162,8 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgSentMap[client] = XMPPResourceStorePrivate(message);
+            this->lastMsgSentMap[client] = QSharedPointer<XMPPResourceStoreItem>
+                    (new XMPPResourceStoreItem(message));
         }
     }
 
@@ -182,7 +174,8 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgSentMap[client] = XMPPResourceStorePrivate(pubsub);
+            this->lastMsgSentMap[client] = QSharedPointer<XMPPResourceStoreItem>
+                    (new XMPPResourceStoreItem(pubsub));
         }
     }
 
@@ -193,7 +186,8 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgSentMap[client] = XMPPResourceStorePrivate(presence);
+            this->lastMsgSentMap[client] = QSharedPointer<XMPPResourceStoreItem>
+                    (new XMPPResourceStoreItem(presence));
         }
     }
 }  // namespace cascades

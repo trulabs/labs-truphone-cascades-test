@@ -19,9 +19,91 @@ namespace test
 namespace cascades
 {
     /*!
-     * Forward for storage class
+     * \brief The XMPPResourceStoreItem class is used to store
+     * previously sent and received messages.
+     *
+     * @since test-cascades 1.1.0
      */
-    class XMPPResourceStorePrivate;
+    class XMPPResourceStoreItem : public QObject
+    {
+    public:
+        /*!
+         * \brief XMPPResourceStoreItem Empty constructor
+         *
+         * \param parent
+         *
+         * @since test-cascades 1.1.0
+         */
+        XMPPResourceStoreItem(QObject * const parent = 0);
+        /*!
+         * \brief XMPPResourceStoreItem Copy constructor
+         *
+         * \param other The other item
+         * \param parent The parent item
+         *
+         * @since test-cascades 1.1.0
+         */
+        XMPPResourceStoreItem(const XMPPResourceStoreItem &other,
+                              QObject * const parent = 0);
+        /*!
+         * \brief XMPPResourceStoreItem Create storage for a message
+         *
+         * \param stanza The message
+         * \param parent The parent
+         *
+         * @since test-cascades 1.1.0
+         */
+        XMPPResourceStoreItem(const QXmppMessage& stanza,
+                              QObject * const parent = 0);
+        /*!
+         * \brief XMPPResourceStoreItem Create storage for a presence
+         *
+         * \param stanza The message
+         * \param parent The parent
+         *
+         * @since test-cascades 1.1.0
+         */
+        XMPPResourceStoreItem(const QXmppPresence& stanza,
+                              QObject * const parent = 0);
+        /*!
+         * \brief XMPPResourceStoreItem Create storage for a pubsub iq
+         *
+         * \param stanza The message
+         * \param parent The parent
+         *
+         * @since test-cascades 1.1.0
+         */
+        XMPPResourceStoreItem(const QXmppPubSubIq& stanza,
+                              QObject * const parent = 0);
+        /*!
+         * \brief ~XMPPResourceStoreItem Destructor
+         *
+         * @since test-cascades 1.1.0
+         */
+        virtual ~XMPPResourceStoreItem();
+        /*!
+         * \brief getStanza Get a pointer to the stanza
+         *
+         * \return The stanza stored in this message
+         *
+         * @since test-cascades 1.1.0
+         */
+        const QXmppStanza* getStanza() const;
+    private:
+        /*!
+         * \brief message Stored message
+         */
+        const QXmppMessage * message;
+        /*!
+         * \brief presence Stored presence
+         */
+        const QXmppPresence * presence;
+        /*!
+         * \brief pubSub Stored pubsub
+         */
+        const QXmppPubSubIq * pubSub;
+    };
+
     /*!
      * \brief The XMPPResourceStore class is used to store resources/connections as
      * a map so that all commands can access the connections.
@@ -81,29 +163,25 @@ namespace cascades
          * received from the client.
          *
          * \param client The client to query.
-         * \param message A reference to the message
          *
-         * \return @c True if the message is valid
+         * \return @c The message - you need to handle the memory
          *
          * @since test-cascades 1.1.0
          */
-        bool getLastMessageReceived(
-                QXmppClient * const client,
-                const QXmppStanza  ** message);
+        const XMPPResourceStoreItem* getLastMessageReceived(
+                QXmppClient * const client);
         /*!
          * \brief getLastMessageSent Gets the latest message that was
          * sent by the client.
          *
          * \param client The client to query.
-         * \param message A reference to the message
          *
-         * \return @c True if the message is valid
+         * \return @c The message - you need to handle the memory
          *
          * @since test-cascades 1.1.0
          */
-        bool getLastMessageSent(
-                QXmppClient * const client,
-                const QXmppStanza ** message);
+        const XMPPResourceStoreItem* getLastMessageSent(
+                QXmppClient * const client);
         /*!
          * \brief setLastMessageSent Sets the latest message that was
          * sent by the client.
@@ -170,12 +248,12 @@ namespace cascades
          * \brief lastMsgMap Contains the last message received
          * from each client.
          */
-        QMap<QXmppClient*, XMPPResourceStorePrivate> lastMsgReceivedMap;
+        QMap<QXmppClient*, QSharedPointer<XMPPResourceStoreItem> > lastMsgReceivedMap;
         /*!
          * \brief lastMsgMap Contains the last message sent
          * from each client.
          */
-        QMap<QXmppClient*, XMPPResourceStorePrivate> lastMsgSentMap;
+        QMap<QXmppClient*, QSharedPointer<XMPPResourceStoreItem> > lastMsgSentMap;
     };
 }  // namespace cascades
 }  // namespace test

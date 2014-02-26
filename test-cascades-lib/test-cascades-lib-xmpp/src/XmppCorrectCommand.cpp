@@ -46,14 +46,13 @@ namespace cascades
             arguments->removeFirst();
             if (client)
             {
-                const QXmppStanza * lastSentStanza = NULL;
-                const bool lastMsgOk = XMPPResourceStore::instance()->getLastMessageSent(
-                            client,
-                            &lastSentStanza);
-                if (lastMsgOk and lastSentStanza)
+                const XMPPResourceStoreItem * lastSentStanza
+                        = XMPPResourceStore::instance()->getLastMessageSent(
+                            client);
+                if (lastSentStanza)
                 {
                     const QXmppMessage * const lastSentMessage =
-                            dynamic_cast<const QXmppMessage*>(lastSentStanza);
+                            dynamic_cast<const QXmppMessage*>(lastSentStanza->getStanza());
                     if (not (lastSentMessage->body().isNull()
                           or lastSentMessage->body().isEmpty()))
                     {
@@ -90,6 +89,7 @@ namespace cascades
                         this->client->write(tr(
                                     "ERROR: The previous message has no body to correct") + "\r\n");
                     }
+                    delete lastSentStanza;
                 }
                 else
                 {
