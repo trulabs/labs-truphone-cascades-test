@@ -197,6 +197,22 @@ namespace cascades
                 const bool select = true);
 
         /*!
+         * \brief actionPath Execute (selectionChanged) for an item
+         * as if it was being clicked on and held (long-press) for
+         * the context menu action.
+         *
+         * \param arguments The arguments for the tap
+         * \param listView The list view to work on
+         *
+         * \return
+         *
+         * @since test-cascades 1.1.0
+         */
+        bool actionPath(
+                QStringList * const arguments,
+                bb::cascades::ListView * const listView);
+
+        /*!
          * \brief scrollToPath Scrolls to a known path
          *
          * \param arguments The arguments used to scroll to

@@ -10,8 +10,9 @@
 #include <bb/cascades/ListView>
 #include <bb/cascades/DataModel>
 #include <bb/cascades/MultiSelectHandler>
-#include <bb/cascades/MultiSelectActionItem>
-#include <bb/cascades/ContextMenuHandler>
+#include <bb/cascades/Control>
+#include <bb/cascades/ActionSet>
+#include <bb/cascades/AbstractActionItem>
 
 #include "Connection.h"
 #include "Utils.h"
@@ -19,6 +20,9 @@
 using bb::cascades::ListView;
 using bb::cascades::MultiSelectHandler;
 using bb::cascades::DataModel;
+using bb::cascades::Control;
+using bb::cascades::ActionSet;
+using bb::cascades::AbstractActionItem;
 
 namespace truphone
 {
@@ -153,6 +157,10 @@ namespace cascades
                 {
                     ret = tapPath(arguments, listView);
                 }
+                else if (command == "action")
+                {
+                    ret = actionPath(arguments, listView);
+                }
                 else
                 {
                     this->client->write(tr("ERROR: Unknown list command") + "\r\n");
@@ -277,7 +285,8 @@ namespace cascades
         if (ret)
         {
             QVariant element = listView->dataModel()->data(indexPath);
-            if (not element.isNull() and element.isValid())
+            ret = not element.isNull() and element.isValid();
+            if (ret)
             {
                 bb::cascades::Application::processEvents();
                 ret = QMetaObject::invokeMethod(
@@ -293,6 +302,7 @@ namespace cascades
             else
             {
                 this->client->write(tr("ERROR: Tried to tap invalid item") + "\r\n");
+                ret = false;
             }
         }
         else
@@ -344,6 +354,107 @@ namespace cascades
             listView->multiSelectHandler()->setActive(select);
             bb::cascades::Application::processEvents();
             ret = true;
+        }
+        return ret;
+    }
+
+    bool ListCommand::actionPath(
+            QStringList * const arguments,
+            bb::cascades::ListView * const listView)
+    {
+        QVariantList indexPath;
+        bool ret = convertPathToIndex(arguments, listView, indexPath);
+        if (ret)
+        {
+            const QVariant element = listView->dataModel()->data(indexPath);
+            ret = not element.isNull() and element.isValid();
+            if (ret)
+            {
+                bb::cascades::Application::processEvents();
+                // we've got a vald path and item
+                // navigate to the container
+                QList<Control*> controls = listView->findChildren<Control*>();
+                Q_FOREACH (Control * const control, controls)
+                {
+                    ret = false;  // for now...
+                    QString elementType(element.typeName());
+                    if (elementType == "QString")
+                    {
+                        const int pc = control->metaObject()->propertyCount();
+                        for (int pt = 0 ; (pt < pc) and not ret ; pt++)
+                        {
+                            const char * const propertyName =
+                                    control->metaObject()->property(pt).name();
+                            ret = control->property(propertyName).toString()
+                                    == element.toString();
+                        }
+                    }
+                    else if (elementType == "QVariantMap")
+                    {
+                        ret = true;
+                        const QVariantMap elementMap(element.toMap());
+                        Q_FOREACH(QString key, elementMap.keys())
+                        {
+                            const QString property = control->property(key.toUtf8().constData()).toString();
+                            const QString expected = elementMap[key].toString();
+                            if (not (property
+                                    == expected))
+                            {
+                                ret = false;
+                                qDebug() << property << "vs. " << expected << "NO";
+                            }
+                            else
+                            {
+                                qDebug() << property << "vs. " << expected << "OK";
+                            }
+                        }
+                    }
+                    if (ret)
+                    {
+                        for (int asi = 0 ;
+                             asi < control->actionSetCount() and not ret ;
+                             asi++)
+                        {
+                            ActionSet * const actionSet = control->actionSetAt(asi);
+                            if (actionSet)
+                            {
+                                for (int ai = 0 ;
+                                     ai < actionSet->count() and not ret ;
+                                     ai++)
+                                {
+                                    AbstractActionItem * const action =
+                                            actionSet->at(ai);
+                                    if (action)
+                                    {
+                                        if (action->title() == arguments->join(" "))
+                                        {
+                                            ret = QMetaObject::invokeMethod(
+                                                        action,
+                                                        "triggered");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (ret)
+                    {
+                        break;
+                    }
+                }
+                if (not ret)
+                {
+                    this->client->write(tr("ERROR: Couldn't find the control") + "\r\n");
+                }
+            }
+            else
+            {
+                this->client->write(tr("ERROR: Tried to tap invalid item") + "\r\n");
+            }
+        }
+        else
+        {
+            this->client->write(tr("ERROR: failed to convert path to to index") + "\r\n");
         }
         return ret;
     }
