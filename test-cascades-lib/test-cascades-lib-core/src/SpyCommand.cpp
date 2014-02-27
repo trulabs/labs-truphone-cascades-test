@@ -297,13 +297,13 @@ namespace cascades
             arguments->removeFirst();
             if (command == "create")
             {
-                if (arguments->size() == 3)
+                if (arguments->size() >= 3)
                 {
                     const QString name = arguments->first();
                     arguments->removeFirst();;
                     const QString object = arguments->first();
                     arguments->removeFirst();
-                    const QString signal = arguments->first();
+                    const QString signal = arguments->join("");
                     arguments->removeFirst();
                     ret = this->spyPrivate->addSpy(name,
                                                    object,
