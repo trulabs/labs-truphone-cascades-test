@@ -754,7 +754,16 @@ namespace cascades
                             + "\r\n");
         this->client->write(tr("e.g. list contacts scroll name J~Name=John Smith^") + "\r\n");
         this->client->write(tr("e.g. list contacts select index 0~1") + "\r\n");
-        this->client->write(tr("> list <list> clear") + "\r\n");
+        this->client->write(tr("> list <list> clear - clear the selection") + "\r\n");
+        this->client->write(tr(">") + "\r\n");
+        this->client->write(tr("> list <list> action index <index> <x=y> <action>") + "\r\n");
+        this->client->write(tr("> list <list> action name <name> <x=y> <action>") + "\r\n");
+        this->client->write(tr("Execute an ListComponentView action. x=y is the mapping")
+                            + "\r\n");
+        this->client->write(tr("between the ListComponets elements and y is the datamodel element")
+                            + "\r\n");
+        this->client->write(tr("e.g. list contacts action index 0~0 fname=forename Edit User")
+                            + "\r\n");
         this->client->write(tr(">") + "\r\n");
         this->client->write(tr("> <index> should be numerical and separated by ~ (i.e. 0~1~2)")
                             + "\r\n");
