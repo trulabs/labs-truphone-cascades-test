@@ -371,28 +371,53 @@ namespace cascades
             ret = not element.isNull() and element.isValid();
             if (ret)
             {
-                bb::cascades::Application::processEvents();
-                ret = QMetaObject::invokeMethod(
-                            listView,
-                            "activationChanged",
-                            Q_ARG(QVariantList, indexPath),
-                            Q_ARG(bool, true));
-                ret = QMetaObject::invokeMethod(
-                            listView,
-                            "triggered",
-                            Q_ARG(QVariantList, indexPath));
-                bb::cascades::Application::processEvents();
-                QTest::qSleep(1500);
-                bb::cascades::Application::processEvents();
-                ret = QMetaObject::invokeMethod(
-                            listView,
-                            "activationChanged",
-                            Q_ARG(QVariantList, indexPath),
-                            Q_ARG(bool, false));
-                bb::cascades::Application::processEvents();
-                if (not ret)
+                if (not arguments->empty())
                 {
-                    this->client->write(tr("ERROR: Couldn't find the control") + "\r\n");
+                    QStringList mapping = arguments->first().split(assignSep);
+                    arguments->removeFirst();
+                    ret = mapping.size() == 2;
+                    if (ret)
+                    {
+                        const QString listComponentKey = mapping.first().trimmed();
+                        mapping.removeFirst();
+                        const QString dataModelKey = mapping.first().trimmed();
+
+                        Control * actionControl = NULL;
+                        QList<Control*> controls
+                                = listView->findChildren<Control*>();
+                        Q_FOREACH(Control * control, controls)
+                        {
+                            if (control->property(listComponentKey.toUtf8().constData()).toString()
+                                    == element.toMap()[dataModelKey].toString())
+                            {
+                                actionControl = control;
+                                break;
+                            }
+                        }
+                        ret = (actionControl not_eq NULL);
+                        if (ret)
+                        {
+                            ret = executeAction(actionControl, arguments->join(" "));
+                            if (not ret)
+                            {
+                                this->client->write(tr("ERROR: Failed to find action") + "\r\n");
+                            }
+                        }
+                        else
+                        {
+                            this->client->write(tr("ERROR: Couldn't map an element" \
+                                                   "to a ListComponent") + "\r\n");
+                        }
+                    }
+                    else
+                    {
+                        this->client->write(tr("ERROR: Need mapping between " \
+                                               "dataModel and ListViewComponent") + "\r\n");
+                    }
+                }
+                else
+                {
+                    this->client->write(tr("ERROR: Need to specifiy mapping") + "\r\n");
                 }
             }
             else
@@ -403,6 +428,36 @@ namespace cascades
         else
         {
             this->client->write(tr("ERROR: failed to convert path to to index") + "\r\n");
+        }
+        return ret;
+    }
+
+    bool ListCommand::executeAction(
+            bb::cascades::Control * const control,
+            const QString actionName)
+    {
+        bool ret = false;
+        if (control and not actionName.isEmpty())
+        {
+            for (int actionSetIt = 0 ;
+                 actionSetIt < control->actionSetCount() and not ret;
+                 actionSetIt++)
+            {
+                ActionSet * const actionSet = control->actionSetAt(actionSetIt);
+                for (int actionIt = 0 ;
+                     actionIt < actionSet->count() and not ret;
+                     actionIt++)
+                {
+                    AbstractActionItem * const action
+                            = actionSet->at(actionIt);
+                    if (action->title() == actionName)
+                    {
+                        ret = QMetaObject::invokeMethod(
+                                    action,
+                                    "triggered");
+                    }
+                }
+            }
         }
         return ret;
     }

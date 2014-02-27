@@ -9,6 +9,14 @@
 
 #include "Command.h"
 
+namespace bb
+{
+namespace cascades
+{
+class Control;
+}
+}
+
 namespace truphone
 {
 namespace test
@@ -211,6 +219,19 @@ namespace cascades
         bool actionPath(
                 QStringList * const arguments,
                 bb::cascades::ListView * const listView);
+
+        /*!
+         * \brief executeAction Execute an action on a control
+         *
+         * \param control The control to execute the action on
+         * \param actionName The action name
+         *
+         * \return @c true if the action is executed
+         *
+         * @since test-cascades 1.1.0
+         */
+        static bool executeAction(bb::cascades::Control * const control,
+                                  const QString actionName);
 
         /*!
          * \brief scrollToPath Scrolls to a known path
