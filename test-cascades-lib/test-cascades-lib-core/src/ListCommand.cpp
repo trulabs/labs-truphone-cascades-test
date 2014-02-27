@@ -6,6 +6,7 @@
 #include <QString>
 #include <QList>
 #include <QObject>
+#include <QtTest>
 
 #include <bb/cascades/ListView>
 #include <bb/cascades/DataModel>
@@ -371,77 +372,24 @@ namespace cascades
             if (ret)
             {
                 bb::cascades::Application::processEvents();
-                // we've got a vald path and item
-                // navigate to the container
-                QList<Control*> controls = listView->findChildren<Control*>();
-                Q_FOREACH (Control * const control, controls)
-                {
-                    ret = false;  // for now...
-                    QString elementType(element.typeName());
-                    if (elementType == "QString")
-                    {
-                        const int pc = control->metaObject()->propertyCount();
-                        for (int pt = 0 ; (pt < pc) and not ret ; pt++)
-                        {
-                            const char * const propertyName =
-                                    control->metaObject()->property(pt).name();
-                            ret = control->property(propertyName).toString()
-                                    == element.toString();
-                        }
-                    }
-                    else if (elementType == "QVariantMap")
-                    {
-                        ret = true;
-                        const QVariantMap elementMap(element.toMap());
-                        Q_FOREACH(QString key, elementMap.keys())
-                        {
-                            const QString property = control->property(key.toUtf8().constData()).toString();
-                            const QString expected = elementMap[key].toString();
-                            if (not (property
-                                    == expected))
-                            {
-                                ret = false;
-                                qDebug() << property << "vs. " << expected << "NO";
-                            }
-                            else
-                            {
-                                qDebug() << property << "vs. " << expected << "OK";
-                            }
-                        }
-                    }
-                    if (ret)
-                    {
-                        for (int asi = 0 ;
-                             asi < control->actionSetCount() and not ret ;
-                             asi++)
-                        {
-                            ActionSet * const actionSet = control->actionSetAt(asi);
-                            if (actionSet)
-                            {
-                                for (int ai = 0 ;
-                                     ai < actionSet->count() and not ret ;
-                                     ai++)
-                                {
-                                    AbstractActionItem * const action =
-                                            actionSet->at(ai);
-                                    if (action)
-                                    {
-                                        if (action->title() == arguments->join(" "))
-                                        {
-                                            ret = QMetaObject::invokeMethod(
-                                                        action,
-                                                        "triggered");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (ret)
-                    {
-                        break;
-                    }
-                }
+                ret = QMetaObject::invokeMethod(
+                            listView,
+                            "activationChanged",
+                            Q_ARG(QVariantList, indexPath),
+                            Q_ARG(bool, true));
+                ret = QMetaObject::invokeMethod(
+                            listView,
+                            "triggered",
+                            Q_ARG(QVariantList, indexPath));
+                bb::cascades::Application::processEvents();
+                QTest::qSleep(1500);
+                bb::cascades::Application::processEvents();
+                ret = QMetaObject::invokeMethod(
+                            listView,
+                            "activationChanged",
+                            Q_ARG(QVariantList, indexPath),
+                            Q_ARG(bool, false));
+                bb::cascades::Application::processEvents();
                 if (not ret)
                 {
                     this->client->write(tr("ERROR: Couldn't find the control") + "\r\n");
