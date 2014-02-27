@@ -8,6 +8,7 @@
 #include <QObject>
 
 #include <bb/system/SystemDialog>
+#include <bb/system/SystemPrompt>
 #include <bb/system/SystemUiButton>
 #include <bb/system/SystemUiResult>
 #include <bb/system/SystemUiReturnKeyAction>
@@ -16,6 +17,7 @@
 #include "Utils.h"
 
 using bb::system::SystemDialog;
+using bb::system::SystemPrompt;
 using bb::system::SystemUiButton;
 using bb::system::SystemUiResult;
 using bb::system::SystemUiReturnKeyAction;
@@ -44,8 +46,9 @@ namespace cascades
         bool ret = false;
         if (arguments->size() >= 1)
         {
-            SystemDialog * dialog =
-                    qobject_cast<SystemDialog*>(Utils::findObject(arguments->first()));
+            const QString dialogName = arguments->first();
+            SystemDialog * const dialog =
+                    qobject_cast<SystemDialog*>(Utils::findObject(dialogName));
             arguments->removeFirst();
             if (dialog)
             {
@@ -82,7 +85,45 @@ namespace cascades
             }
             else
             {
-                this->client->write(tr("ERROR: Failed to find the System dialog") + "\r\n");
+                SystemPrompt * const prompt =
+                        qobject_cast<SystemPrompt*>(Utils::findObject(dialogName));
+                if (prompt)
+                {
+                    if (arguments->isEmpty())
+                    {
+                        ret = finishButton(prompt, SystemUiResult::None);
+                    }
+                    else
+                    {
+                        const QString action = arguments->first();
+                        arguments->removeFirst();
+                        if (action == "confirm")
+                        {
+                            ret = finishButton(prompt, SystemUiResult::ConfirmButtonSelection);
+                        }
+                        else if (action == "cancel")
+                        {
+                            ret = finishButton(prompt, SystemUiResult::CancelButtonSelection);
+                        }
+                        else if (action == "custom")
+                        {
+                            ret = finishButton(prompt, SystemUiResult::CustomButtonSelection);
+                        }
+                        else if (action == "button")
+                        {
+                            ret = finishButton(prompt, SystemUiResult::ButtonSelection);
+                        }
+                        else
+                        {
+                            this->client->write(tr("ERROR: Need to specify cancel, " \
+                                                "confirm, custom or button") + "\r\n");
+                        }
+                    }
+                }
+                else
+                {
+                    this->client->write(tr("ERROR: Failed to find the System dialog") + "\r\n");
+                }
             }
         }
         else
@@ -92,8 +133,9 @@ namespace cascades
         return ret;
     }
 
-    bool SystemDialogCommand::finishButton(SystemDialog * const dialog,
-                                           const SystemUiResult::Type result)
+    bool SystemDialogCommand::finishButton(
+            SystemDialog * const dialog,
+            const SystemUiResult::Type result)
     {
         bool ret = false;
         if (dialog)
@@ -111,6 +153,30 @@ namespace cascades
                               result));
             bb::cascades::Application::processEvents();
             dialog->cancel();
+        }
+        return ret;
+    }
+
+    bool SystemDialogCommand::finishButton(
+            SystemPrompt * const prompt,
+            const bb::system::SystemUiResult::Type result)
+    {
+        bool ret = false;
+        if (prompt)
+        {
+            bb::cascades::Application::processEvents();
+            ret = QMetaObject::invokeMethod(
+                        prompt,
+                        "finished",
+                        Q_ARG(bb::system::SystemUiResult::Type,
+                              result));
+            ret |= QMetaObject::invokeMethod(
+                        prompt,
+                        "finished",
+                        Q_ARG(int,
+                              result));
+            bb::cascades::Application::processEvents();
+            //prompt->cancel();
         }
         return ret;
     }

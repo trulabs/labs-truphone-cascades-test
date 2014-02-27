@@ -14,6 +14,7 @@ namespace bb
     namespace system
     {
         class SystemDialog;
+        class SystemPrompt;
     }  // namespace system
 }  // namespace bb
 
@@ -102,6 +103,17 @@ namespace cascades
          * @since test-cascades 1.0.10
          */
         bool finishButton(bb::system::SystemDialog * const dialog,
+                          const bb::system::SystemUiResult::Type result);
+        /*!
+         * \brief finishButton Complete the prompt
+         *
+         * \param dialog The prompt to complete
+         *
+         * \return True if the finish completes Ok
+         *
+         * @since test-cascades 1.1.0
+         */
+        bool finishButton(bb::system::SystemPrompt * const prompt,
                           const bb::system::SystemUiResult::Type result);
     };
 }  // namespace cascades
