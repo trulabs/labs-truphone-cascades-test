@@ -11,6 +11,7 @@
 #include <bb/cascades/DataModel>
 #include <bb/cascades/MultiSelectHandler>
 #include <bb/cascades/MultiSelectActionItem>
+#include <bb/cascades/ContextMenuHandler>
 
 #include "Connection.h"
 #include "Utils.h"
@@ -151,6 +152,10 @@ namespace cascades
                 else if (command == "tap")
                 {
                     ret = tapPath(arguments, listView);
+                }
+                else if (command == "context")
+                {
+                    ret = contextPath(arguments, listView);
                 }
                 else
                 {
@@ -343,6 +348,37 @@ namespace cascades
             listView->multiSelectHandler()->setActive(select);
             bb::cascades::Application::processEvents();
             ret = true;
+        }
+        return ret;
+    }
+
+    bool ListCommand::contextPath(
+            QStringList * const arguments,
+            bb::cascades::ListView * const listView)
+    {
+        bool ret = false;
+        QVariantList indexPath;
+        ret = convertPathToIndex(arguments, listView, indexPath);
+        if (ret)
+        {
+            QVariant element = listView->dataModel()->data(indexPath);
+            ret = not element.isNull() and element.isValid();
+            if (ret)
+            {
+                bb::cascades::Application::processEvents();
+                listView->select(indexPath, true);
+                bb::cascades::Application::processEvents();
+                listView->contextMenuHandler();
+                bb::cascades::Application::processEvents();
+            }
+            else
+            {
+                this->client->write(tr("ERROR: Tried to hold invalid item") + "\r\n");
+            }
+        }
+        else
+        {
+            this->client->write(tr("ERROR: failed to convert path to to index") + "\r\n");
         }
         return ret;
     }

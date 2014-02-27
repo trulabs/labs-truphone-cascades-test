@@ -365,7 +365,7 @@ namespace cascades
         if ( msSinceLastTx > SLEEP_GRANULARITY)
         {
             this->client->write(QString(("sleep %1\r\n"))
-                                .arg("%1", msSinceLastTx));
+                                .arg(msSinceLastTx));
             this->client->flush();
         }
         return msSinceLastTx;
@@ -384,11 +384,11 @@ namespace cascades
             const QString title = tab->title();
             if (not title.isNull() and not title.isEmpty())
             {
-                tmp = QString("tab %1\r\n").arg("%1", title);
+                tmp = QString("tab %1\r\n").arg(title);
             }
             else
             {
-                tmp = QString("tab %1\r\n").arg("%1", pane->indexOf(tab));
+                tmp = QString("tab %1\r\n").arg(pane->indexOf(tab));
             }
             this->client->write(tmp);
         }
@@ -441,7 +441,7 @@ namespace cascades
         }
         else
         {
-            QString tmp("key %d %d %d %d %d %s\r\n");
+            QString tmp("key %1 %2 %3 %4 %5 %6\r\n");
             updateSleepValue();
 
             this->ctrlAndShiftPressed = false;

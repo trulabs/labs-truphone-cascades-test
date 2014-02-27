@@ -179,11 +179,13 @@ namespace cascades
                 bb::cascades::ListView * const listView);
 
         /*!
-         * \brief tapPath Execute (selectionChanged) for an item
-         * as if it was being clicked on and held (long-press).
+         * \brief holdPath Execute (selectionChanged) for an item
+         * as if it was being clicked on and held (long-press) for
+         * multi-selection.
          *
          * \param arguments The arguments for the tap
          * \param listView The list view to work on
+         * \param select @c true to select an element
          *
          * \return
          *
@@ -193,6 +195,22 @@ namespace cascades
                 QStringList * const arguments,
                 bb::cascades::ListView * const listView,
                 const bool select = true);
+
+        /*!
+         * \brief contextPath Execute (selectionChanged) for an item
+         * as if it was being clicked on and held (long-press) for
+         * access to the context menu.
+         *
+         * \param arguments The arguments for the tap
+         * \param listView The list view to work on
+         *
+         * \return
+         *
+         * @since test-cascades 1.0.10
+         */
+        bool contextPath(
+                QStringList * const arguments,
+                bb::cascades::ListView * const listView);
 
         /*!
          * \brief scrollToPath Scrolls to a known path

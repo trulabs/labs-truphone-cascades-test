@@ -132,6 +132,10 @@ namespace cascades
 
     const QString Utils::objectPath(const QObject * const obj)
     {
+        if (obj and not obj->objectName().isEmpty())
+        {
+            return obj->objectName();
+        }
         QStringList pathElements;
         const QObject * e = obj;
         while (e)
