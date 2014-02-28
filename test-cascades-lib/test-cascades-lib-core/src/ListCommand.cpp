@@ -668,8 +668,7 @@ namespace cascades
                         keyValuePair.removeFirst();
                         const QString value = keyValuePair.first().trimmed();
 
-                        if (not key.isNull() and not key.isEmpty()
-                                and not value.isNull() and not value.isEmpty())
+                        if (not key.isNull() and not key.isEmpty())
                         {
                             const QVariantMap elementMap(element.toMap());
                             const QString actual = elementMap[key].toString();
