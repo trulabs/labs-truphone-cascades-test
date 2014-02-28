@@ -82,7 +82,8 @@ HEADERS +=\
     include/ListCommand.h \
     include/SegmentCommand.h \
     include/SystemDialogCommand.h \
-    include/QuitCommand.h
+    include/QuitCommand.h \
+    include/SystemPromptFacade.h
 
 unix:!symbian {
     maemo5 {

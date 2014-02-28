@@ -11,10 +11,10 @@
 #include <bb/system/SystemPrompt>
 #include <bb/system/SystemUiButton>
 #include <bb/system/SystemUiResult>
-#include <bb/system/SystemUiReturnKeyAction>
 
 #include "Connection.h"
 #include "Utils.h"
+#include "SystemPromptFacade.h"
 
 using bb::system::SystemDialog;
 using bb::system::SystemPrompt;
@@ -89,35 +89,80 @@ namespace cascades
                         qobject_cast<SystemPrompt*>(Utils::findObject(dialogName));
                 if (prompt)
                 {
-                    if (arguments->isEmpty())
+                    QObject * target;
+                    if (arguments->first() == "parent()")
                     {
-                        ret = finishButton(prompt, SystemUiResult::None);
+                        target = prompt->parent();
                     }
                     else
                     {
-                        const QString action = arguments->first();
-                        arguments->removeFirst();
-                        if (action == "confirm")
+                        target = Utils::findObject(arguments->first());
+                    }
+                    arguments->removeFirst();
+                    const QString slot = arguments->first();
+                    arguments->removeFirst();
+                    if (arguments->size() > 2)
+                    {
+                        if (arguments->isEmpty())
                         {
-                            ret = finishButton(prompt, SystemUiResult::ConfirmButtonSelection);
-                        }
-                        else if (action == "cancel")
-                        {
-                            ret = finishButton(prompt, SystemUiResult::CancelButtonSelection);
-                        }
-                        else if (action == "custom")
-                        {
-                            ret = finishButton(prompt, SystemUiResult::CustomButtonSelection);
-                        }
-                        else if (action == "button")
-                        {
-                            ret = finishButton(prompt, SystemUiResult::ButtonSelection);
+                            ret = finishButton(
+                                        prompt,
+                                        target,
+                                        slot,
+                                        "",
+                                        SystemUiResult::None);
                         }
                         else
                         {
-                            this->client->write(tr("ERROR: Need to specify cancel, " \
-                                                "confirm, custom or button") + "\r\n");
+                            const QString action = arguments->first();
+                            arguments->removeFirst();
+                            const QString text = arguments->join(" ");
+                            if (action == "confirm")
+                            {
+                                ret = finishButton(
+                                            prompt,
+                                            target,
+                                            slot,
+                                            text,
+                                            SystemUiResult::ConfirmButtonSelection);
+                            }
+                            else if (action == "cancel")
+                            {
+                                ret = finishButton(
+                                            prompt,
+                                            target,
+                                            slot,
+                                            text,
+                                            SystemUiResult::CancelButtonSelection);
+                            }
+                            else if (action == "custom")
+                            {
+                                ret = finishButton(
+                                            prompt,
+                                            target,
+                                            slot,
+                                            text,
+                                            SystemUiResult::CustomButtonSelection);
+                            }
+                            else if (action == "button")
+                            {
+                                ret = finishButton(
+                                            prompt,
+                                            target,
+                                            slot,
+                                            text,
+                                            SystemUiResult::ButtonSelection);
+                            }
+                            else
+                            {
+                                this->client->write(tr("ERROR: Need to specify cancel, " \
+                                                    "confirm, custom or button") + "\r\n");
+                            }
                         }
+                    }
+                    else
+                    {
+
                     }
                 }
                 else
@@ -159,24 +204,38 @@ namespace cascades
 
     bool SystemDialogCommand::finishButton(
             SystemPrompt * const prompt,
+            QObject * const object,
+            const QString& slot,
+            const QString& text,
             const bb::system::SystemUiResult::Type result)
     {
         bool ret = false;
         if (prompt)
         {
+            SystemPromptFacade * fakePrompt = new
+                    SystemPromptFacade(text, object);
+            connect(fakePrompt,
+                    SIGNAL(finished(bb::system::SystemUiResult::Type)),
+                    object,
+                    QString("1" + slot
+                            + "(bb::system::SystemUiResult::Type)").toUtf8().constData());
+            connect(fakePrompt,
+                    SIGNAL(finished(int)),
+                    object,
+                    QString("1" + slot + "(int)").toUtf8().constData());
             bb::cascades::Application::processEvents();
             ret = QMetaObject::invokeMethod(
-                        prompt,
+                        fakePrompt,
                         "finished",
                         Q_ARG(bb::system::SystemUiResult::Type,
                               result));
             ret |= QMetaObject::invokeMethod(
-                        prompt,
+                        fakePrompt,
                         "finished",
                         Q_ARG(int,
                               result));
             bb::cascades::Application::processEvents();
-            //prompt->cancel();
+            prompt->cancel();
         }
         return ret;
     }

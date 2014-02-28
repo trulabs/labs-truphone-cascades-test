@@ -97,6 +97,7 @@ namespace cascades
          * \brief finishButton Complete the dialog
          *
          * \param dialog The dialog to complete
+         * \param result The result you want to return
          *
          * \return True if the finish completes Ok
          *
@@ -107,13 +108,19 @@ namespace cascades
         /*!
          * \brief finishButton Complete the prompt
          *
-         * \param dialog The prompt to complete
+         * \param prompt The prompt to complete
+         * \param object The object that we're calling
+         * \param slot The slot to call on the object
+         * \param text The text to return
          *
          * \return True if the finish completes Ok
          *
          * @since test-cascades 1.1.0
          */
         bool finishButton(bb::system::SystemPrompt * const prompt,
+                          QObject * const object,
+                          const QString& slot,
+                          const QString& text,
                           const bb::system::SystemUiResult::Type result);
     };
 }  // namespace cascades
