@@ -51,6 +51,9 @@ BSD 3-Clause / new / simplified (see LICENSE)
 #### v1.1.0
 * Change the project structure to support extensions
 * Add an XMPP extension (requires QXmpp - provided)
+* Add List action command to run Context Menu Actions
+* Fixed the Spy command for signals with parameters
+* SystemDialog can be used on SystemPrompts - but the text is lost :(
 
 ## Prerequisites
 - Qt4 (sdk) & make
