@@ -88,52 +88,45 @@ namespace cascades
                         qobject_cast<SystemPrompt*>(Utils::findObject(dialogName));
                 if (prompt)
                 {
-                    if (arguments->size() > 2)
+                    if (arguments->isEmpty())
                     {
-                        if (arguments->isEmpty())
-                        {
-                            ret = finishButton(
-                                        prompt,
-                                        SystemUiResult::None);
-                        }
-                        else
-                        {
-                            const QString action = arguments->first();
-                            arguments->removeFirst();
-                            if (action == "confirm")
-                            {
-                                ret = finishButton(
-                                            prompt,
-                                            SystemUiResult::ConfirmButtonSelection);
-                            }
-                            else if (action == "cancel")
-                            {
-                                ret = finishButton(
-                                            prompt,
-                                            SystemUiResult::CancelButtonSelection);
-                            }
-                            else if (action == "custom")
-                            {
-                                ret = finishButton(
-                                            prompt,
-                                            SystemUiResult::CustomButtonSelection);
-                            }
-                            else if (action == "button")
-                            {
-                                ret = finishButton(
-                                            prompt,
-                                            SystemUiResult::ButtonSelection);
-                            }
-                            else
-                            {
-                                this->client->write(tr("ERROR: Need to specify cancel, " \
-                                                    "confirm, custom or button") + "\r\n");
-                            }
-                        }
+                        ret = finishButton(
+                                    prompt,
+                                    SystemUiResult::None);
                     }
                     else
                     {
-
+                        const QString action = arguments->first();
+                        arguments->removeFirst();
+                        if (action == "confirm")
+                        {
+                            ret = finishButton(
+                                        prompt,
+                                        SystemUiResult::ConfirmButtonSelection);
+                        }
+                        else if (action == "cancel")
+                        {
+                            ret = finishButton(
+                                        prompt,
+                                        SystemUiResult::CancelButtonSelection);
+                        }
+                        else if (action == "custom")
+                        {
+                            ret = finishButton(
+                                        prompt,
+                                        SystemUiResult::CustomButtonSelection);
+                        }
+                        else if (action == "button")
+                        {
+                            ret = finishButton(
+                                        prompt,
+                                        SystemUiResult::ButtonSelection);
+                        }
+                        else
+                        {
+                            this->client->write(tr("ERROR: Need to specify cancel, " \
+                                                "confirm, custom or button") + "\r\n");
+                        }
                     }
                 }
                 else
