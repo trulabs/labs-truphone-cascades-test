@@ -48,12 +48,8 @@ like easyB or JBehave.
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
-#### v1.1.0
-* Change the project structure to support extensions
-* Add an XMPP extension (requires QXmpp - provided)
-* Add List action command to run Context Menu Actions
-* Fixed the Spy command for signals with parameters
-* SystemDialog can be used on SystemPrompts - but the text is lost :(
+#### v1.1.1
+* TBD
 
 ## Prerequisites
 - Qt4 (sdk) & make
@@ -365,6 +361,13 @@ the html documentation under ./doc directory.
 * I'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly.
 
 ## Older versions
+#### v1.1.0
+* Change the project structure to support extensions
+* Add an XMPP extension (requires QXmpp - provided)
+* Add List action command to run Context Menu Actions
+* Fixed the Spy command for signals with parameters
+* SystemDialog can be used on SystemPrompts - but the text is lost :(
+
 #### v1.0.19
 * test-cascades-lib uses qDebug to print what's running.
 This can be used to correlate the activity of the CLI
