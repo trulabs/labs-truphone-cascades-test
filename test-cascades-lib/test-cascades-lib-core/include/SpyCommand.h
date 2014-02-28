@@ -5,8 +5,6 @@
 #define SPYCOMMAND_H_
 
 #include <QObject>
-#include <QSemaphore>
-#include <QTimer>
 
 #include "Command.h"
 
