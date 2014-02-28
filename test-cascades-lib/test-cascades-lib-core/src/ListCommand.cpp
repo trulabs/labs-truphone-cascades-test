@@ -405,7 +405,7 @@ namespace cascades
                         }
                         else
                         {
-                            this->client->write(tr("ERROR: Couldn't map an element" \
+                            this->client->write(tr("ERROR: Couldn't map an element " \
                                                    "to a ListComponent") + "\r\n");
                         }
                     }
