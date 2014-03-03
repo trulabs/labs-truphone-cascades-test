@@ -49,7 +49,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
 #### v1.1.1
-* TBD
+* xmppTest uses all arguments for the test
 
 ## Prerequisites
 - Qt4 (sdk) & make
