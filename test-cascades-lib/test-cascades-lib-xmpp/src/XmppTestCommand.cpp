@@ -167,8 +167,7 @@ namespace cascades
                         }
                         else
                         {
-                            const QString expected = arguments->first();
-                            arguments->removeFirst();
+                            const QString expected = arguments->join(" ");
                             ret = (value.toString() == expected);
                             expectedValue = expected;
                         }
