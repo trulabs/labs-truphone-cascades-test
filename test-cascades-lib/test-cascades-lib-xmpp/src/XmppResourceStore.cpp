@@ -150,6 +150,16 @@ namespace cascades
                             false,
                             &message);
             }
+            if (message.hasMessageCarbon())
+            {
+                this->lastMsgSentMap[client]->setStanza(message);
+                if (XMPPDebugCommand::isDebugEnabled())
+                {
+                    XMPPPrintCommand::printMessage(
+                                true,
+                                &message);
+                }
+            }
         }
     }
 
