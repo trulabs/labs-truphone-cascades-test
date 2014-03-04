@@ -45,16 +45,23 @@ namespace cascades
             arguments->removeFirst();
             if (client)
             {
-                QSharedPointer<QXmppStanza> lastRecievedStanza
-                        = XMPPResourceStore::instance()->getLastMessageReceived(
-                            client);
-                QSharedPointer<QXmppMessage> lastReceivedMessage(NULL);
-                if (lastRecievedStanza)
+                QSharedPointer<QXmppStanza> lastStanza(NULL);
+                if (arguments->first() == "tx")
                 {
-                    lastReceivedMessage
-                            = lastRecievedStanza.dynamicCast<QXmppMessage>();
+                    arguments->removeFirst();
+                    lastStanza = XMPPResourceStore::instance()->getLastMessageSent(client);
                 }
-                if (lastReceivedMessage)
+                else
+                {
+                    lastStanza = XMPPResourceStore::instance()->getLastMessageReceived(client);
+                }
+                QSharedPointer<QXmppMessage> lastMessage(NULL);
+                if (lastStanza)
+                {
+                    lastMessage
+                            = lastStanza.dynamicCast<QXmppMessage>();
+                }
+                if (lastMessage)
                 {
                     bool propertyOk = true;
                     const QString property = arguments->first();
@@ -64,95 +71,95 @@ namespace cascades
                     // It didn't work - might use reflection on function calls later
                     if (property == "body")
                     {
-                        value = lastReceivedMessage->body();
+                        value = lastMessage->body();
                     }
                     else if (property == "attentionRequired")
                     {
-                        value = lastReceivedMessage->isAttentionRequested();
+                        value = lastMessage->isAttentionRequested();
                     }
                     else if (property == "mucInvitationJid")
                     {
-                        value = lastReceivedMessage->mucInvitationJid();
+                        value = lastMessage->mucInvitationJid();
                     }
                     else if (property == "mucInvitationPassword")
                     {
-                        value = lastReceivedMessage->mucInvitationPassword();
+                        value = lastMessage->mucInvitationPassword();
                     }
                     else if (property == "mucInvitationReason")
                     {
-                        value = lastReceivedMessage->mucInvitationReason();
+                        value = lastMessage->mucInvitationReason();
                     }
                     else if (property == "receiptId")
                     {
-                        value = lastReceivedMessage->receiptId();
+                        value = lastMessage->receiptId();
                     }
                     else if (property == "stamp")
                     {
-                        value = lastReceivedMessage->stamp();
+                        value = lastMessage->stamp();
                     }
                     else if (property == "state")
                     {
-                        value = lastReceivedMessage->state();
+                        value = lastMessage->state();
                     }
                     else if (property == "subject")
                     {
-                        value = lastReceivedMessage->subject();
+                        value = lastMessage->subject();
                     }
                     else if (property == "thread")
                     {
-                        value = lastReceivedMessage->thread();
+                        value = lastMessage->thread();
                     }
                     else if (property == "type")
                     {
-                        value = lastReceivedMessage->type();
+                        value = lastMessage->type();
                     }
                     else if (property == "hasForward")
                     {
-                        value = lastReceivedMessage->hasForwarded();
+                        value = lastMessage->hasForwarded();
                     }
                     else if (property == "forwardBody")
                     {
-                        value = lastReceivedMessage->forwarded().body();
+                        value = lastMessage->forwarded().body();
                     }
                     else if (property == "hasCarbon")
                     {
-                        value = lastReceivedMessage->hasMessageCarbon();
+                        value = lastMessage->hasMessageCarbon();
                     }
                     else if (property == "carbonBody")
                     {
-                        value = lastReceivedMessage->carbonMessage().body();
+                        value = lastMessage->carbonMessage().body();
                     }
                     else if (property == "markable")
                     {
-                        value = lastReceivedMessage->isMarkable();
+                        value = lastMessage->isMarkable();
                     }
                     else if (property == "marker")
                     {
-                        value = lastReceivedMessage->marker();
+                        value = lastMessage->marker();
                     }
                     else if (property == "markedId")
                     {
-                        value = lastReceivedMessage->markedId();
+                        value = lastMessage->markedId();
                     }
                     else if (property == "markedThread")
                     {
-                        value = lastReceivedMessage->markedThread();
+                        value = lastMessage->markedThread();
                     }
                     else if (property == "isReplace")
                     {
-                        value = lastReceivedMessage->isReplace();
+                        value = lastMessage->isReplace();
                     }
                     else if (property == "replaceId")
                     {
-                        value = lastReceivedMessage->replaceId();
+                        value = lastMessage->replaceId();
                     }
                     else if (property == "from")
                     {
-                        value = lastReceivedMessage->from();
+                        value = lastMessage->from();
                     }
                     else if (property == "to")
                     {
-                        value = lastReceivedMessage->to();
+                        value = lastMessage->to();
                     }
                     else
                     {
@@ -202,8 +209,9 @@ namespace cascades
 
     void XMPPTestCommand::showHelp()
     {
-        this->client->write(tr("> xmppTest <resource> <field> <optional: value>") + "\r\n");
+        this->client->write(tr("> xmppTest <resource> <opt: tx> <field> <optional: value>") + "\r\n");
         this->client->write(tr("Test a field in the last received message") + "\r\n");
+        this->client->write(tr("If <tx> is specified, the last sent message is used."));
         this->client->write(tr("If <value> is missing it'll test for null/empty") + "\r\n");
         this->client->write(tr("Supported <value> options:") + "\r\n");
         this->client->write("\t" + tr("body") + "\r\n");
