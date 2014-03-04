@@ -5,6 +5,7 @@
 
 #include <QXmppClient.h>
 #include <QXmppPubSubIq.h>
+#include <QXmppMessageCarbonsIq.h>
 
 #include "XmppDebugCommand.h"
 #include "XmppPrintCommand.h"
@@ -21,58 +22,54 @@ namespace cascades
         : QObject(parent),
           message(NULL),
           presence(NULL),
-          pubSub(NULL)
+          pubSub(NULL),
+          carbon(NULL)
     {
     }
 
-    XMPPResourceStoreItem::XMPPResourceStoreItem(const XMPPResourceStoreItem &other,
-                                                 QObject * const parent)
-        : QObject(parent),
-          message(other.message not_eq NULL ? new QXmppMessage(*other.message) : NULL),
-          presence(other.presence not_eq NULL ? new QXmppPresence(*other.presence) : NULL),
-          pubSub(other.pubSub not_eq NULL ? new QXmppPubSubIq(*other.pubSub) : NULL)
+    void XMPPResourceStoreItem::setStanza(const QXmppMessage& stanza)
     {
+        QSharedPointer<QXmppMessage> newMsg(new QXmppMessage(stanza));
+        message.swap(newMsg);
+        presence.clear();
+        pubSub.clear();
+        carbon.clear();
+    }
+    void XMPPResourceStoreItem::setStanza(const QXmppPresence& stanza)
+    {
+        QSharedPointer<QXmppPresence> newMsg(new QXmppPresence(stanza));
+        message.clear();
+        presence.swap(newMsg);
+        pubSub.clear();
+        carbon.clear();
+    }
+    void XMPPResourceStoreItem::setStanza(const QXmppPubSubIq& stanza)
+    {
+        QSharedPointer<QXmppPubSubIq> newMsg(new QXmppPubSubIq(stanza));
+        message.clear();
+        presence.clear();
+        pubSub.swap(newMsg);
+        carbon.clear();
+    }
+    void XMPPResourceStoreItem::setStanza(const QXmppMessageCarbonsIq& stanza)
+    {
+        QSharedPointer<QXmppMessageCarbonsIq> newMsg(new QXmppMessageCarbonsIq(stanza));
+        message.clear();
+        presence.clear();
+        pubSub.clear();
+        carbon.swap(newMsg);
     }
 
-    XMPPResourceStoreItem::XMPPResourceStoreItem(const QXmppMessage& stanza,
-                                                 QObject * const parent)
-        : QObject(parent),
-          message(new QXmppMessage(stanza)),
-          presence(NULL),
-          pubSub(NULL)
+    const QSharedPointer<QXmppStanza> XMPPResourceStoreItem::getStanza() const
     {
-    }
-    XMPPResourceStoreItem::XMPPResourceStoreItem(const QXmppPresence& stanza,
-                                                 QObject * const parent)
-        : QObject(parent),
-          message(NULL),
-          presence(new QXmppPresence(stanza)),
-          pubSub(NULL)
-    {
-    }
-    XMPPResourceStoreItem::XMPPResourceStoreItem(const QXmppPubSubIq& stanza,
-                                                 QObject * const parent)
-        : QObject(parent),
-          message(NULL),
-          presence(NULL),
-          pubSub(new QXmppPubSubIq(stanza))
-    {
-    }
-    XMPPResourceStoreItem::~XMPPResourceStoreItem()
-    {
-        if (message) { delete message; }
-        if (presence) { delete presence; }
-        if (pubSub) { delete pubSub; }
-    }
-    const QXmppStanza* XMPPResourceStoreItem::getStanza() const
-    {
-        if (message) { return message; }
-        if (presence) { return presence; }
-        if (pubSub) { return pubSub; }
-        return NULL;
+        if (not message.isNull()) { return QSharedPointer<QXmppMessage>(message); }
+        if (not presence.isNull()) { return QSharedPointer<QXmppPresence>(presence); }
+        if (not pubSub.isNull()) { return QSharedPointer<QXmppPubSubIq>(pubSub); }
+        if (not carbon.isNull()) { return QSharedPointer<QXmppMessageCarbonsIq>(carbon); }
+        return QSharedPointer<QXmppStanza>();
     }
 
-    XMPPResourceStore::XMPPResourceStore(QObject *parent)
+    XMPPResourceStore::XMPPResourceStore(QObject * const parent)
         : QObject(parent)
     {
     }
@@ -102,9 +99,11 @@ namespace cascades
                     SIGNAL(messageReceived(const QXmppMessage&)),
                     SLOT(messageReceived(const QXmppMessage&)));
         Q_ASSERT(ok); Q_UNUSED(ok);
+        this->lastMsgReceivedMap[client] = new XMPPResourceStoreItem(client);
+        this->lastMsgSentMap[client] = new XMPPResourceStoreItem(client);
     }
 
-    QXmppClient * XMPPResourceStore::getFromStore(const QString &resource)
+    QXmppClient * XMPPResourceStore::getFromStore(const QString &resource) const
     {
         return this->map.value(resource, NULL);
     }
@@ -114,14 +113,26 @@ namespace cascades
         this->map.remove(resource);
     }
 
-    const XMPPResourceStoreItem* XMPPResourceStore::getLastMessageReceived(
-            QXmppClient * const client)
+    const QSharedPointer<QXmppStanza> XMPPResourceStore::getLastMessageReceived(
+            QXmppClient * const client) const
     {
-        XMPPResourceStoreItem * ret = NULL;
+        QSharedPointer<QXmppStanza> ret(NULL);
         Q_ASSERT(client);
         if (this->lastMsgReceivedMap.contains(client))
         {
-            ret = new XMPPResourceStoreItem(*this->lastMsgReceivedMap[client].data());
+            ret = this->lastMsgReceivedMap[client]->getStanza();
+        }
+        return ret;
+    }
+
+    const QSharedPointer<QXmppStanza> XMPPResourceStore::getLastMessageSent(
+            QXmppClient * const client) const
+    {
+        QSharedPointer<QXmppStanza> ret(NULL);
+        Q_ASSERT(client);
+        if (this->lastMsgSentMap.contains(client))
+        {
+            ret = this->lastMsgSentMap[client]->getStanza();
         }
         return ret;
     }
@@ -132,9 +143,7 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgReceivedMap[client] = QSharedPointer<XMPPResourceStoreItem>
-                    (new XMPPResourceStoreItem(
-                        message));
+            this->lastMsgReceivedMap[client]->setStanza(message);
             if (XMPPDebugCommand::isDebugEnabled())
             {
                 XMPPPrintCommand::printMessage(
@@ -144,17 +153,6 @@ namespace cascades
         }
     }
 
-    const XMPPResourceStoreItem* XMPPResourceStore::getLastMessageSent(
-            QXmppClient * const client)
-    {
-        XMPPResourceStoreItem * ret = NULL;
-        if (this->lastMsgSentMap.contains(client))
-        {
-            ret = new XMPPResourceStoreItem(this->lastMsgSentMap[client].data());
-        }
-        return ret;
-    }
-
     void XMPPResourceStore::setLastMessageSent(
             QXmppClient * const client,
             const QXmppMessage& message)
@@ -162,8 +160,7 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgSentMap[client] = QSharedPointer<XMPPResourceStoreItem>
-                    (new XMPPResourceStoreItem(message));
+            this->lastMsgSentMap[client]->setStanza(message);
         }
     }
 
@@ -174,8 +171,7 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgSentMap[client] = QSharedPointer<XMPPResourceStoreItem>
-                    (new XMPPResourceStoreItem(pubsub));
+            this->lastMsgSentMap[client]->setStanza(pubsub);
         }
     }
 
@@ -186,8 +182,18 @@ namespace cascades
         Q_ASSERT(client);
         if (client)
         {
-            this->lastMsgSentMap[client] = QSharedPointer<XMPPResourceStoreItem>
-                    (new XMPPResourceStoreItem(presence));
+            this->lastMsgSentMap[client]->setStanza(presence);
+        }
+    }
+
+    void XMPPResourceStore::setLastMessageSent(
+            QXmppClient * const client,
+            const QXmppMessageCarbonsIq& carbon)
+    {
+        Q_ASSERT(client);
+        if (client)
+        {
+            this->lastMsgSentMap[client]->setStanza(carbon);
         }
     }
 }  // namespace cascades

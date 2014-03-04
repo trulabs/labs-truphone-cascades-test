@@ -27,7 +27,8 @@ HEADERS +=\
     include/XmppCorrectCommand.h \
     include/XmppTestCommand.h \
     include/XmppPrintCommand.h \
-    include/XmppDebugCommand.h
+    include/XmppDebugCommand.h \
+    include/XmppCarbonsCommand.h
 
 SOURCES += \
     src/XmppHarness.cpp \
@@ -43,7 +44,8 @@ SOURCES += \
     src/XmppCorrectCommand.cpp \
     src/XmppTestCommand.cpp \
     src/XmppPrintCommand.cpp \
-    src/XmppDebugCommand.cpp
+    src/XmppDebugCommand.cpp \
+    src/XmppCarbonsCommand.cpp
 
 unix:!symbian {
     maemo5 {

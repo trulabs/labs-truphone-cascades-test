@@ -46,7 +46,7 @@ namespace cascades
             if (client)
             {
                 const QString direction = arguments->first();
-                const XMPPResourceStoreItem * message = NULL;
+                QSharedPointer<QXmppStanza> message(NULL);
                 if (direction == "rx")
                 {
                     message = XMPPResourceStore::instance()->getLastMessageReceived(
@@ -63,9 +63,8 @@ namespace cascades
                 }
                 if (message)
                 {
-                    printMessage(direction=="tx", message->getStanza(), this->client);
+                    printMessage(direction=="tx", message.data(), this->client);
                     ret = true;
-                    delete message;
                 }
                 else
                 {

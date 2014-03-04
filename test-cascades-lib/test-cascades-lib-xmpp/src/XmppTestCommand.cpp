@@ -45,14 +45,14 @@ namespace cascades
             arguments->removeFirst();
             if (client)
             {
-                const XMPPResourceStoreItem * lastRecievedStanza
+                QSharedPointer<QXmppStanza> lastRecievedStanza
                         = XMPPResourceStore::instance()->getLastMessageReceived(
                             client);
-                const QXmppMessage * lastReceivedMessage = NULL;
+                QSharedPointer<QXmppMessage> lastReceivedMessage(NULL);
                 if (lastRecievedStanza)
                 {
                     lastReceivedMessage
-                            = dynamic_cast<const QXmppMessage*>(lastRecievedStanza->getStanza());
+                            = lastRecievedStanza.dynamicCast<QXmppMessage>();
                 }
                 if (lastReceivedMessage)
                 {
@@ -190,10 +190,6 @@ namespace cascades
                 {
                     this->client->write(tr("ERROR: Couldn't find the last received message")
                                         + "\r\n");
-                }
-                if (lastRecievedStanza)
-                {
-                    delete lastRecievedStanza;
                 }
             }
             else

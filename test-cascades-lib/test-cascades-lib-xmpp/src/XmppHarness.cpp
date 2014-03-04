@@ -14,6 +14,7 @@
 #include "XmppCorrectCommand.h"
 #include "XmppTestCommand.h"
 #include "XmppPrintCommand.h"
+#include "XmppCarbonsCommand.h"
 #include "XmppDebugCommand.h"
 #include "XmppConnectCommand.h"
 #include "XmppResourceStore.h"
@@ -70,6 +71,9 @@ namespace cascades
         CommandFactory::installCommand(
                     XMPPDebugCommand::getCmd(),
                     &XMPPDebugCommand::create);
+        CommandFactory::installCommand(
+                    XMPPCarbonsCommand::getCmd(),
+                    &XMPPCarbonsCommand::create);
         return true;
     }
 

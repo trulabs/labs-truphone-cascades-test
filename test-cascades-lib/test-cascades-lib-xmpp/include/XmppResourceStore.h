@@ -11,6 +11,7 @@ class QXmppClient;
 #include <QXmppMessage.h>
 class QXmppPresence;
 class QXmppPubSubIq;
+class QXmppMessageCarbonsIq;
 
 namespace truphone
 {
@@ -36,51 +37,37 @@ namespace cascades
          */
         XMPPResourceStoreItem(QObject * const parent = 0);
         /*!
-         * \brief XMPPResourceStoreItem Copy constructor
-         *
-         * \param other The other item
-         * \param parent The parent item
-         *
-         * @since test-cascades 1.1.0
-         */
-        XMPPResourceStoreItem(const XMPPResourceStoreItem &other,
-                              QObject * const parent = 0);
-        /*!
          * \brief XMPPResourceStoreItem Create storage for a message
          *
          * \param stanza The message
-         * \param parent The parent
          *
          * @since test-cascades 1.1.0
          */
-        XMPPResourceStoreItem(const QXmppMessage& stanza,
-                              QObject * const parent = 0);
+        void setStanza(const QXmppMessage& stanza);
         /*!
          * \brief XMPPResourceStoreItem Create storage for a presence
          *
          * \param stanza The message
-         * \param parent The parent
          *
          * @since test-cascades 1.1.0
          */
-        XMPPResourceStoreItem(const QXmppPresence& stanza,
-                              QObject * const parent = 0);
+        void setStanza(const QXmppPresence& stanza);
         /*!
          * \brief XMPPResourceStoreItem Create storage for a pubsub iq
          *
          * \param stanza The message
-         * \param parent The parent
          *
          * @since test-cascades 1.1.0
          */
-        XMPPResourceStoreItem(const QXmppPubSubIq& stanza,
-                              QObject * const parent = 0);
+        void setStanza(const QXmppPubSubIq& stanza);
         /*!
-         * \brief ~XMPPResourceStoreItem Destructor
+         * \brief XMPPResourceStoreItem Create storage for a pubsub iq
+         *
+         * \param stanza The message
          *
          * @since test-cascades 1.1.0
          */
-        virtual ~XMPPResourceStoreItem();
+        void setStanza(const QXmppMessageCarbonsIq& stanza);
         /*!
          * \brief getStanza Get a pointer to the stanza
          *
@@ -88,20 +75,25 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        const QXmppStanza* getStanza() const;
+        const QSharedPointer<QXmppStanza> getStanza() const;
     private:
+        Q_DISABLE_COPY(XMPPResourceStoreItem)
         /*!
          * \brief message Stored message
          */
-        const QXmppMessage * message;
+        QSharedPointer<QXmppMessage> message;
         /*!
          * \brief presence Stored presence
          */
-        const QXmppPresence * presence;
+        QSharedPointer<QXmppPresence> presence;
         /*!
          * \brief pubSub Stored pubsub
          */
-        const QXmppPubSubIq * pubSub;
+        QSharedPointer<QXmppPubSubIq> pubSub;
+        /*!
+         * \brief pubSub Stored carbon
+         */
+        QSharedPointer<QXmppMessageCarbonsIq> carbon;
     };
 
     /*!
@@ -149,7 +141,7 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        QXmppClient * getFromStore(const QString& resource);
+        QXmppClient * getFromStore(const QString& resource) const;
         /*!
          * \brief removeFromStore Remove a resource from the store.
          *
@@ -168,8 +160,8 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        const XMPPResourceStoreItem* getLastMessageReceived(
-                QXmppClient * const client);
+        const QSharedPointer<QXmppStanza> getLastMessageReceived(
+                QXmppClient * const client) const;
         /*!
          * \brief getLastMessageSent Gets the latest message that was
          * sent by the client.
@@ -180,8 +172,8 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        const XMPPResourceStoreItem* getLastMessageSent(
-                QXmppClient * const client);
+        const QSharedPointer<QXmppStanza> getLastMessageSent(
+                QXmppClient * const client) const;
         /*!
          * \brief setLastMessageSent Sets the latest message that was
          * sent by the client.
@@ -212,6 +204,16 @@ namespace cascades
          * @since test-cascades 1.1.0
          */
         void setLastMessageSent(QXmppClient * const client, const QXmppPubSubIq& pubsub);
+        /*!
+         * \brief setLastMessageSent Sets the latest message that was
+         * sent by the client.
+         *
+         * \param client The client that sent the message.
+         * \param carbon A reference to the carbon
+         *
+         * @since test-cascades 1.1.1
+         */
+        void setLastMessageSent(QXmppClient * const client, const QXmppMessageCarbonsIq& carbon);
     private slots:
         /*!
          * \brief messageReceived Event that occurs when we receive a message.
@@ -233,7 +235,7 @@ namespace cascades
          *
          * @since test-cascades 1.1.0
          */
-        explicit XMPPResourceStore(QObject * parent = 0);
+        explicit XMPPResourceStore(QObject * const parent = 0);
         /*!
          * \brief ~XMPPResourceStore Destructor
          *
@@ -248,12 +250,12 @@ namespace cascades
          * \brief lastMsgMap Contains the last message received
          * from each client.
          */
-        QMap<QXmppClient*, QSharedPointer<XMPPResourceStoreItem> > lastMsgReceivedMap;
+        QMap<QXmppClient*, XMPPResourceStoreItem*> lastMsgReceivedMap;
         /*!
          * \brief lastMsgMap Contains the last message sent
          * from each client.
          */
-        QMap<QXmppClient*, QSharedPointer<XMPPResourceStoreItem> > lastMsgSentMap;
+        QMap<QXmppClient*, XMPPResourceStoreItem*> lastMsgSentMap;
     };
 }  // namespace cascades
 }  // namespace test

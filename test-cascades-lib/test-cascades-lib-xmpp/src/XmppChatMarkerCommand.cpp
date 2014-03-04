@@ -48,13 +48,13 @@ namespace cascades
             arguments->removeFirst();
             if (client)
             {
-                const XMPPResourceStoreItem * lastStanza
+                QSharedPointer<QXmppStanza> lastStanza
                         = XMPPResourceStore::instance()->getLastMessageReceived(
                             client);
                 if (lastStanza)
                 {
-                    const QXmppMessage * const lastMsg
-                            = dynamic_cast<const QXmppMessage*>(lastStanza->getStanza());
+                    const QSharedPointer<QXmppMessage> lastMsg
+                            = lastStanza.dynamicCast<QXmppMessage>();
                     if (lastMsg and lastMsg->isMarkable())
                     {
                         bool markerOk = true;
@@ -115,7 +115,6 @@ namespace cascades
                     {
                         this->client->write(tr("ERROR: The last message isn't Markable") + "\r\n");
                     }
-                    delete lastStanza;
                 }
                 else
                 {
