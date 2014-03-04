@@ -50,6 +50,8 @@ BSD 3-Clause / new / simplified (see LICENSE)
 ## Latest Changes
 #### v1.1.1
 * xmppTest uses all arguments for the test
+* xmppCarbons command to enable carbons
+* Fixes
 
 ## Prerequisites
 - Qt4 (sdk) & make
