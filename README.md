@@ -48,9 +48,9 @@ like easyB or JBehave.
 BSD 3-Clause / new / simplified (see LICENSE)
 
 ## Latest Changes
-#### v1.1.2
-* carbons are stored as sent (not received) messages
-* xmppTest can read tx messages (to read carbons)
+#### v1.1.3
+* telnet support
+* fixes for help command on the exit/quit command
 
 ## Prerequisites
 - Qt4 (sdk) & make
@@ -362,6 +362,10 @@ the html documentation under ./doc directory.
 * I'd like to use libscreen/bps events to capture/reproduce proper touch events but at the moment it doesn't seem to work properly.
 
 ## Older versions
+#### v1.1.2
+* carbons are stored as sent (not received) messages
+* xmppTest can read tx messages (to read carbons)
+
 #### v1.1.1
 * xmppTest uses all arguments for the test
 * xmppCarbons command to enable carbons
