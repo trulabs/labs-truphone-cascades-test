@@ -59,11 +59,13 @@ namespace cascades
              * test client connections
              *
              * \param port The TCP port to listen for connections on
+             * \param telnetPort The telnet port to use
              * \return Returns @c true if the server was started
              *
              * @since test-cascades 1.0.0
              */
-            bool startHarness(const quint16 port = (quint16)(15000u));
+            bool startHarness(const quint16 port = (quint16)(15000u),
+                              const quint16 telnetPort = (quint16)(0));
             /*!
              * \brief loadLocale Load a locale
              *
@@ -82,9 +84,17 @@ namespace cascades
              */
             class Server * const serverSocket;
             /*!
+             * \brief telnetSocket The Telnet socket instance
+             */
+            class Server * const telnetSocket;
+            /*!
              * \brief delim A constant buffer containing all the delimiters we check
              */
             const QString delim;
+            /*!
+             * \brief telnetBuffer The current telnet buffer
+             */
+            QString telnetBuffer;
         private slots:
             /*!
              * \brief processPacket Slot used to process a packet from a connection
@@ -95,6 +105,14 @@ namespace cascades
              */
             void processPacket(class Connection * connection, const QString& packet);
             /*!
+             * \brief processPacket Slot used to process a packet from a connection
+             *
+             * \param packet Buffer containing the packet received from the network
+             *
+             * @since test-cascades 1.1.3
+             */
+            void processTelnetPacket(class Connection * connection, const QString& packet);
+            /*!
              * \brief handleNewConnection Handle a new client connection
              *
              * \param connection The new connection
@@ -102,6 +120,14 @@ namespace cascades
              * @since test-cascades 1.0.0
              */
             void handleNewConnection(class Connection * connection);
+            /*!
+             * \brief handleNewConnection Handle a new client connection
+             *
+             * \param connection The new connection
+             *
+             * @since test-cascades 1.1.3
+             */
+            void handleNewTelnetConnection(class Connection * connection);
     };
 }  // namespace cascades
 }  // namespace test

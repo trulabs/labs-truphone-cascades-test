@@ -24,6 +24,7 @@ namespace cascades
             QObject* parent) :
         QObject(parent),
         serverSocket(new Server(this)),
+        telnetSocket(new Server(this)),
         delim(", ")
     {
         if (this->serverSocket)
@@ -31,6 +32,12 @@ namespace cascades
             connect(this->serverSocket,
                     SIGNAL(newConnection(Connection*)),
                     SLOT(handleNewConnection(Connection*)));
+        }
+        if (this->telnetSocket)
+        {
+            connect(this->telnetSocket,
+                    SIGNAL(newConnection(Connection*)),
+                    SLOT(handleNewTelnetConnection(Connection*)));
         }
     }
 
@@ -46,14 +53,30 @@ namespace cascades
             {
                 qWarning("Caught an unexpected exception on socket close");
             }
-            delete this->serverSocket;
+        }
+        if (this->telnetSocket)
+        {
+            try
+            {
+                this->telnetSocket->close();
+            }
+            catch (...)  // NOLINT(whitespace/parens)
+            {
+                qWarning("Caught an unexpected exception on tsocket close");
+            }
         }
     }
 
     // cppcheck-suppress unusedFunction This is the entry point for clients
-    bool CascadesHarness::startHarness(const quint16 port)
+    bool CascadesHarness::startHarness(const quint16 port,
+                                       const quint16 telnetPort)
     {
-        return this->serverSocket->startServer(port);
+        bool serverOk = this->serverSocket->startServer(port);
+        if (serverOk and telnetPort not_eq 0)
+        {
+            serverOk = this->telnetSocket->startServer(telnetPort);
+        }
+        return serverOk;
     }
 
     bool CascadesHarness::loadLocale(const QLocale& locale, const QString& directory)
@@ -74,6 +97,41 @@ namespace cascades
         connect(connection,
                 SIGNAL(packetReceived(Connection*, const QString&)),
                 SLOT(processPacket(Connection*, const QString&)));
+    }
+
+    void CascadesHarness::handleNewTelnetConnection(Connection * connection)
+    {
+        connect(connection,
+                SIGNAL(packetReceived(Connection*, const QString&)),
+                SLOT(processTelnetPacket(Connection*, const QString&)));
+    }
+
+    void CascadesHarness::processTelnetPacket(Connection * connection, const QString& packet)
+    {
+        Q_FOREACH(QChar c, packet)
+        {
+            const int asciiCode = (int)(c.toAscii());
+            if (13 == asciiCode)
+            {
+                if (not telnetBuffer.isEmpty())
+                {
+                    processPacket(connection, telnetBuffer);
+                    telnetBuffer.clear();
+                }
+            }
+            if (10 == asciiCode) { /* ignore */ }
+            else if (8 == asciiCode)
+            {
+                if (not telnetBuffer.isEmpty())
+                {
+                    telnetBuffer.remove(telnetBuffer.length() - 1, 1);
+                }
+            }
+            else
+            {
+                telnetBuffer += c;
+            }
+        }
     }
 
     void CascadesHarness::processPacket(Connection * connection, const QString& packet)
