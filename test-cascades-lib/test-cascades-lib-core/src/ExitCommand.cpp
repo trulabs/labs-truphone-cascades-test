@@ -20,7 +20,8 @@ namespace cascades
     ExitCommand::ExitCommand(Connection * const socket,
                              QObject* parent)
         : Command(parent),
-          client(socket)
+          client(socket),
+          isHelp(false)
     {
     }
 
@@ -36,11 +37,19 @@ namespace cascades
 
     void ExitCommand::cleanUp(void)
     {
-        this->client->close();
+        if (not isHelp)
+        {
+            this->client->close();
+        }
+        else
+        {
+            this->deleteLater();
+        }
     }
 
     void ExitCommand::showHelp()
     {
+        isHelp = true;
         this->client->write(tr("> exit") + "\r\n");
         this->client->write(tr("Terminate this connection to the server") + "\r\n");
     }

@@ -89,6 +89,10 @@ namespace cascades
          * \brief client The TCP socket associated with the client
          */
         class Connection * const client;
+        /*!
+         * \brief isHelp Are we printing help
+         */
+        bool isHelp;
     };
 }  // namespace cascades
 }  // namespace test

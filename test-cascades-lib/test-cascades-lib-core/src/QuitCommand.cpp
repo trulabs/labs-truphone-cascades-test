@@ -21,7 +21,8 @@ namespace cascades
     QuitCommand::QuitCommand(Connection * const socket,
                              QObject* parent)
         : Command(parent),
-          client(socket)
+          client(socket),
+          isHelp(false)
     {
     }
 
@@ -37,11 +38,16 @@ namespace cascades
 
     void QuitCommand::cleanUp(void)
     {
-        bb::cascades::Application::instance()->exit();
+        if (not isHelp)
+        {
+            bb::cascades::Application::instance()->exit();
+        }
+        this->deleteLater();
     }
 
     void QuitCommand::showHelp()
     {
+        isHelp = true;
         this->client->write(tr("> quit") + "\r\n");
         this->client->write(tr("Terminate this application") + "\r\n");
     }
