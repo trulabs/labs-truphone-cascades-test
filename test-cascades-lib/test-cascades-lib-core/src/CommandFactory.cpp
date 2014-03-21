@@ -188,8 +188,6 @@ namespace cascades
                new CommandFactoryEntry(&TouchCommand::create));
         insert(RecordCommand::getCmd(),
                new CommandFactoryEntry(&RecordCommand::create));
-        insert(RecordCommand::getStopCmd(),
-               new CommandFactoryEntry(&RecordCommand::createStop));
         insert(HelpCommand::getCmd(),
                new CommandFactoryEntry(&HelpCommand::create));
         insert(QmlCommand::getCmd(),

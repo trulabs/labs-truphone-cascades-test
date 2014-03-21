@@ -91,73 +91,12 @@ namespace cascades
         static Command* create(class Connection * const s,
                                QObject * parent = 0)
         {
-            instance = new RecordCommand(s, parent);
-            return instance;
-        }
-        /*!
-         * \brief getStopCmd Return the name of the stop command
-         *
-         * \return Command name
-         *
-         * @since test-cascades 1.0.0
-         */
-        static QString getStopCmd()
-        {
-            return "stop";
-        }
-
-        /*!
-         * \brief The StopRecordingCommand class is used to stop recording
-         *
-         * @since test-cascades 1.0.0
-         */
-        class StopRecordingCommand : public Command
-        {
-        public:
-            /*!
-             * \brief StopRecordingCommand Constructor
-             *
-             * \param s The connection for the command
-             * \param parent The parent object
-             *
-             * @since test-cascades 1.0.0
-             */
-            StopRecordingCommand(class Connection * const s,
-                                 QObject * parent = 0);
-            /*!
-             * \brief ~StopRecordingCommand Destructor
-             *
-             * @since test-cascades 1.0.0
-             */
-            ~StopRecordingCommand();
-            bool executeCommand(QStringList * const arguments);
-            void showHelp(void);
-        protected:
-        private:
-            /*!
-             * \brief client The TCP socket associated with the client
-             */
-            class Connection * const client;
-        };
-
-        /*!
-         * \brief createStop Create a command to stop the recording
-         *
-         * \param s The TCP socket associated with the client
-         * \param parent The parent object
-         *
-         * \return Returns a new instance of the Command
-         *
-         * @since test-cascades 1.0.0
-         */
-        static Command* createStop(class Connection * const s,
-                                   QObject * parent = 0)
-        {
             if (instance)
             {
-                delete instance;
+                instance->deleteLater();
             }
-            return new StopRecordingCommand(s, parent);
+            instance = new RecordCommand(s, parent);
+            return instance;
         }
 
         /*!

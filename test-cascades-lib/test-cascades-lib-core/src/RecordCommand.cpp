@@ -124,7 +124,15 @@ namespace cascades
         bool ret = false;
         if (not arguments->isEmpty())
         {
-            this->client->write(tr("ERROR: record doesn't take arguments") + "\r\n");
+            if (arguments->first() == "stop")
+            {
+                instance->deleteLater();
+                ret = true;
+            }
+            else
+            {
+                this->client->write(tr("ERROR: record <optional: stop>") + "\r\n");
+            }
         }
         else
         {
@@ -623,35 +631,12 @@ namespace cascades
 
     void RecordCommand::showHelp()
     {
-        this->client->write(tr("> record") + "\r\n");
+        this->client->write(tr("> record <optional: stop>") + "\r\n");
         this->client->write(tr("Record events - to stop listening you will have to " \
                             "terminate the connection") + "\r\n");
         this->client->write(tr("- it's really for debugging rather than for use in scripts")
                             + "\r\n");
-    }
-
-    RecordCommand::StopRecordingCommand::StopRecordingCommand(
-            class Connection * const s,
-            QObject * parent) :
-        Command(parent),
-        client(s)
-    {
-    }
-
-    RecordCommand::StopRecordingCommand::~StopRecordingCommand()
-    {
-    }
-
-    bool RecordCommand::StopRecordingCommand::executeCommand(QStringList * const arguments)
-    {
-        Q_UNUSED(arguments);
-        return true;
-    }
-
-    void RecordCommand::StopRecordingCommand::showHelp(void)
-    {
-        this->client->write(tr("> stop") + "\r\n");
-        this->client->write(tr("Stop the current recording session") + "\r\n");
+        this->client->write(tr("Use the stop subcommand to stop recording") + "\r\n");
     }
 }  // namespace cascades
 }  // namespace test
