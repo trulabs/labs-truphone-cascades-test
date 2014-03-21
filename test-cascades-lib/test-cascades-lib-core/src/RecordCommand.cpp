@@ -127,6 +127,7 @@ namespace cascades
             if (arguments->first() == "stop")
             {
                 instance->deleteLater();
+                instance = NULL;
                 ret = true;
             }
             else
