@@ -55,7 +55,7 @@ BSD 3-Clause / new / simplified (see LICENSE)
 - Qt4 (sdk) & make
 - BlackBerry NDK 10.1.0.1020+
 - QtCreator (2.8.x+) optional: for editing only
-
+- optional for building QXMPP: https://github.com/trulabs/qxmpp which is our fork.
 ## ToDo
 
 - [ ] Look at integrating the new Automatic Input Control (_sys_inject_events)
@@ -120,7 +120,7 @@ The Core is the main UI testing framework, it'll let you manipulate the UI and c
 
 ### XMPP
 
-This is the first extension and doesn't have to be included, it's optional. It lets you create XMPP clients so that you can automate the testing of messaging clients.
+This is the first extension and doesn't have to be included, it's optional. It lets you create XMPP clients so that you can automate the testing of messaging clients.  Note this requires truphone's public fork of QXMPP available here: https://github.com/trulabs/qxmpp
 
 ## Java Library
 
@@ -329,6 +329,8 @@ From version 1.1.0 onwards the the main functionality has been renamed 'core'. N
 be available via 'extensions'.
 
 ### XMPP Extension
+
+Note Again please not you need to use truphones QXMPP fork available here: https://github.com/trulabs/qxmpp
 
 The XMPP extension can be used to help automate XMPP messaging clients.
 
